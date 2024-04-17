@@ -18,8 +18,11 @@ services:
             - ./docker/xdebug/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
         depends_on:
             - database
+#            - rabbitmq
+#            - redis
         networks:
             - inner_net
+
     database:
         healthcheck:
             test: mysqladmin ping -h 127.0.0.1 -u root --password=$$MYSQL_ROOT_PASSWORD
@@ -38,6 +41,7 @@ services:
             MYSQL_DATABASE: 'database'
         networks:
             - inner_net
+
     myadmin:
         image: phpmyadmin/phpmyadmin:5
         environment:
@@ -50,15 +54,128 @@ services:
             - inner_net
         volumes:
             - db_admin_data:/var/www/html
-    # mailcatcher:
-    #     networks:
-    #         - inner_net
-    #     image: yappabe/mailcatcher
-    #     ports:
-    #         - 1025:1025
-    #         - 1080:1080
+
+#    mailcatcher:
+#        image: yappabe/mailcatcher
+#        ports:
+#            - "1025:1025"
+#            - "1080:1080"
+#        networks:
+#            - inner_net
+
+#    rabbitmq:
+#        image: rabbitmq:management
+#        ports:
+#            - "5672:5672"
+#            - "15672:15672"
+#        networks:
+#            - inner_net
+
+#    elasticsearch:
+#        image: docker.elastic.co/elasticsearch/elasticsearch:8.13.1
+#        volumes:
+#            - elasticsearch-data:/usr/share/elasticsearch/data
+#        networks:
+#            - inner_net
+#        ports:
+#            - 9200:9200
+#        restart: always
+#        environment:
+#            - xpack.security.enabled=false
+#            - discovery.type=single-node
+#        ulimits:
+#            memlock:
+#                soft: -1
+#                hard: -1
+
+#    kibana:
+#        depends_on:
+#            - elasticsearch
+#        image: docker.elastic.co/kibana/kibana:8.13.1
+#        volumes:
+#            - kibana-data:/usr/share/kibana/data
+#        networks:
+#            - inner_net
+#        ports:
+#            - 5601:5601
+#        restart: always
+#        environment:
+#            - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+
+#    s3:
+#        image: minio/minio
+#        networks:
+#            - inner_net
+#        environment:
+#            MINIO_ROOT_USER: access1234
+#            MINIO_ROOT_PASSWORD: secret1234
+#        volumes:
+#            - ./data/minio:/data
+#        command: server /data --console-address ":9001"
+#        ports:
+#            - 9000:9000
+#            - 9001:9001
+
+#    graylog:
+#        image: graylog/graylog:4.2.0
+#        environment:
+#            GRAYLOG_HTTP_EXTERNAL_URI: http://127.0.0.1:9000/
+#        ports:
+#            - "9010:9000"
+#            - "514:514"
+#            - "514:514/udp"
+#            - "12201:12201"
+#            - "12201:12201/udp"
+#        networks:
+#            - inner_net
+
+#    graylog:
+#        image: graylog/graylog:5.0.0
+#        volumes:
+#            - graylog_data:/usr/share/graylog/data # Persisted Graylog data
+#        environment:
+#            - GRAYLOG_PASSWORD_SECRET=YOURPASSWORD
+#            - GRAYLOG_ROOT_PASSWORD_SHA2=YOURPASSWORDSHA2
+#            - GRAYLOG_HTTP_EXTERNAL_URI=http://127.0.0.1:3000/
+#            - GRAYLOG_WEB_ENDPOINT_URI=http://127.0.0.1:3000/api
+#        # Command to run as soon as components are started
+#        entrypoint: /usr/bin/tini -- wait-for-it elasticsearch:9200 --  /docker-entrypoint.sh
+#        restart: always # Graylog container set to always restart when stopped
+#        ports:
+#            # Graylog web interface and REST API
+#            - 3000:9000
+#            # Syslog TCP
+#            - 1514:1514
+#            # Syslog UDP
+#            - 1514:1514/udp
+#            # GELF TCP
+#            - 12201:12201
+#            # GELF UDP
+#            - 12201:12201/udp
+#        networks:
+#            - inner_net
+
+#    redis:
+#        container_name: redis
+#        hostname: redis
+#        image: redis
+#
+#    redis-commander:
+#        container_name: redis-commander
+#        hostname: redis-commander
+#        image: rediscommander/redis-commander:latest
+#        restart: always
+#        environment:
+#            - REDIS_HOSTS=local:redis:6379
+#        ports:
+#            - "8081:8081"
+
 volumes:
     db_data:
     db_admin_data:
+    elasticsearch-data:
+    kibana-data:
+    graylog_data:
+        driver: local
 networks:
     inner_net:
