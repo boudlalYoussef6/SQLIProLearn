@@ -55,6 +55,26 @@ services:
         volumes:
             - db_admin_data:/var/www/html
 
+    mongo:
+        image: mongo
+        restart: on-failure
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: root
+            MONGO_INITDB_ROOT_PASSWORD: example
+        volumes:
+            - "mongodb_data:/data/db"
+
+    mongo-express:
+        image: mongo-express
+        restart: always
+        ports:
+            - 8081:8081
+        environment:
+            ME_CONFIG_MONGODB_ADMINUSERNAME: root
+            ME_CONFIG_MONGODB_ADMINPASSWORD: example
+            ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
+            ME_CONFIG_BASICAUTH: false
+
 #    mailcatcher:
 #        image: yappabe/mailcatcher
 #        ports:
@@ -116,44 +136,56 @@ services:
 #            - 9000:9000
 #            - 9001:9001
 
-#    graylog:
-#        image: graylog/graylog:4.2.0
+#    opensearch:
+#        image: "opensearchproject/opensearch:2.4.0"
 #        environment:
-#            GRAYLOG_HTTP_EXTERNAL_URI: http://127.0.0.1:9000/
-#        ports:
-#            - "9010:9000"
-#            - "514:514"
-#            - "514:514/udp"
-#            - "12201:12201"
-#            - "12201:12201/udp"
-#        networks:
-#            - inner_net
+#            - "OPENSEARCH_JAVA_OPTS=-Xms1g -Xmx1g"
+#            - "bootstrap.memory_lock=true"
+#            - "discovery.type=single-node"
+#            - "action.auto_create_index=false"
+#            - "plugins.security.ssl.http.enabled=false"
+#            - "plugins.security.disabled=true"
+#        ulimits:
+#            memlock:
+#                hard: -1
+#                soft: -1
+#            nofile:
+#                soft: 65536
+#                hard: 65536
+#        volumes:
+#            - "os_data:/usr/share/opensearch/data"
+#        restart: "on-failure"
 
 #    graylog:
-#        image: graylog/graylog:5.0.0
-#        volumes:
-#            - graylog_data:/usr/share/graylog/data # Persisted Graylog data
+#        hostname: "server"
+#        image: "graylog/graylog:5.1.5"
+#        depends_on:
+#            - opensearch
+#            - mongo
+#        entrypoint: "/usr/bin/tini -- wait-for-it opensearch:9200 --  /docker-entrypoint.sh"
 #        environment:
-#            - GRAYLOG_PASSWORD_SECRET=YOURPASSWORD
-#            - GRAYLOG_ROOT_PASSWORD_SHA2=YOURPASSWORDSHA2
-#            - GRAYLOG_HTTP_EXTERNAL_URI=http://127.0.0.1:3000/
-#            - GRAYLOG_WEB_ENDPOINT_URI=http://127.0.0.1:3000/api
-#        # Command to run as soon as components are started
-#        entrypoint: /usr/bin/tini -- wait-for-it elasticsearch:9200 --  /docker-entrypoint.sh
-#        restart: always # Graylog container set to always restart when stopped
+#            GRAYLOG_NODE_ID_FILE: "/usr/share/graylog/data/config/node-id"
+#            GRAYLOG_PASSWORD_SECRET: "my_graylog_password_secret"
+#            GRAYLOG_ROOT_PASSWORD_SHA2: "my_graylog_root_password_sha2"
+#            GRAYLOG_HTTP_BIND_ADDRESS: "0.0.0.0:9000"
+#            GRAYLOG_HTTP_EXTERNAL_URI: "http://localhost:9000/"
+#            GRAYLOG_ELASTICSEARCH_HOSTS: "http://opensearch:9200"
+#            GRAYLOG_MONGODB_URI: "mongodb://mongodb:27017/graylog"
 #        ports:
-#            # Graylog web interface and REST API
-#            - 3000:9000
-#            # Syslog TCP
-#            - 1514:1514
-#            # Syslog UDP
-#            - 1514:1514/udp
-#            # GELF TCP
-#            - 12201:12201
-#            # GELF UDP
-#            - 12201:12201/udp
-#        networks:
-#            - inner_net
+#            - "5044:5044/tcp"   # Beats
+#            - "5140:5140/udp"   # Syslog
+#            - "5140:5140/tcp"   # Syslog
+#            - "5555:5555/tcp"   # RAW TCP
+#            - "5555:5555/udp"   # RAW TCP
+#            - "9000:9000/tcp"   # Server API
+#            - "12201:12201/tcp" # GELF TCP
+#            - "12201:12201/udp" # GELF UDP
+#            - "13301:13301/tcp" # Forwarder data
+#            - "13302:13302/tcp" # Forwarder config
+#        volumes:
+#            - "graylog_data:/usr/share/graylog/data/data"
+#            - "graylog_journal:/usr/share/graylog/data/journal"
+#        restart: "on-failure"
 
 #    redis:
 #        container_name: redis
@@ -175,7 +207,10 @@ volumes:
     db_admin_data:
     elasticsearch-data:
     kibana-data:
+    mongodb_data:
+    os_data:
     graylog_data:
-        driver: local
+    graylog_journal:
+
 networks:
     inner_net:
