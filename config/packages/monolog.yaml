@@ -20,7 +20,6 @@ when@dev:
                     hostname: "%env(GRAYLOG_HOST)%"
                     port: "%env(GRAYLOG_PORT)%"
                 level: debug
-                channels: ["!event", "!doctrine", "!console"]
 
 when@test:
     monolog:
