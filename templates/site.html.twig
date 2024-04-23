@@ -41,7 +41,14 @@
                 </button>
               </div>
             </div>
-          </form>
+            <!-- /.sidebar -->
+        </aside>
+    {%block content%}{% endblock %}
+    <footer class="main-footer">
+        <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong>
+        All rights reserved.
+        <div class="float-right d-none d-sm-inline-block">
+            <b>Version</b> 3.2.0
         </div>
       </li>
 
@@ -248,8 +255,10 @@
       <!-- Default to the left -->
       <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights reserved.
     </footer>
-  </div>
-{% block stylesheets  %} <!-- Google Font: Source Sans Pro -->
+{% endblock body %}
+
+{% block stylesheets  %}
+    <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="{{ asset('plugins/fontawesome-free/css/all.min.css') }}">
@@ -268,8 +277,11 @@
     <!-- Daterange picker -->
     <link rel="stylesheet" href="{{ asset('plugins/daterangepicker/daterangepicker.css')}}">
     <!-- summernote -->
-    <link rel="stylesheet" href="{{ asset('plugins/summernote/summernote-bs4.min.css')}}">{% endblock %}
-    {% block javascripts %}<script src="{{ asset('plugins/jquery/jquery.min.js')}}"></script>
+    <link rel="stylesheet" href="{{ asset('plugins/summernote/summernote-bs4.min.css')}}">
+{% endblock %}
+
+{% block javascripts %}
+        <script src="{{ asset('plugins/jquery/jquery.min.js')}}"></script>
         <!-- jQuery UI 1.11.4 -->
         <script src="{{ asset('plugins/jquery-ui/jquery-ui.min.js')}}"></script>
         <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
@@ -301,6 +313,5 @@
         <!-- AdminLTE for demo purposes -->
         <script src="{{ asset('dist/js/demo.js')}}"></script>
         <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-        <script src="{{ asset('dist/js/pages/dashboard.js')}}"></script>{% endblock %}
-
-{% endblock %}
+        <script src="{{ asset('dist/js/pages/dashboard.js')}}"></script>
+    {% endblock %}

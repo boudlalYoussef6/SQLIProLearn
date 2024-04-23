@@ -3,15 +3,14 @@
     <head>
         <meta charset="UTF-8">
         <title>SQLI ProLearn - {% block title %}{% endblock %}</title>
-        <link rel="icon" href="{{ asset('images/SQLI_Logo.ico') }}">
+        <link rel="icon" href="{{ asset('imgs/favicon.ico') }}">
         {% block stylesheets %}
-        {% endblock %}
-
-        {% block javascripts %}
-            {% block importmap %}{{ importmap('app') }}{% endblock %}
         {% endblock %}
     </head>
     <body>
         {% block body %}{% endblock %}
+        {% block javascripts %}
+            {% block importmap %}{{ importmap('app') }}{% endblock %}
+        {% endblock %}
     </body>
 </html>
