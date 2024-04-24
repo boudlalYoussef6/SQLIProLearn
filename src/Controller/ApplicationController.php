@@ -15,4 +15,11 @@ class ApplicationController extends AbstractController
             'controller_name' => 'ApplicationController',
         ]);
     }
+    #[Route('/addApplication', name: 'app_application_add')]
+    public function addApplication(): Response
+    {
+        return $this->render('application/add_application.html.twig', [
+            'controller_name' => 'ApplicationController',
+        ]);
+    }
 }

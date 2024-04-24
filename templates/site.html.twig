@@ -115,7 +115,7 @@
         <a class="nav-link" data-toggle="dropdown" href="#">
           <i class="far fa-bell"></i>
           <span class="badge badge-warning navbar-badge">15</span>
-        </a>
+        </a>>>>>>>> template
         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
           <span class="dropdown-header">15 Notifications</span>
           <div class="dropdown-divider"></div>
@@ -245,7 +245,7 @@
         </div><!-- /.row -->
       </div><!-- /.container-fluid -->
     </div>
-    {% block content %}{% endblock %}
+
    
     <footer class="main-footer">
       <!-- To the right -->
@@ -281,8 +281,13 @@
     {% block custum_css %}{% endblock %}
 {% endblock %}
 
-{% block javascripts %}
-        <script src="{{ asset('plugins/jquery/jquery.min.js')}}"></script>
+
+
+
+  {% block custum_css %}{% endblock %}
+{% endblock %}
+    {% block javascripts %}<script src="{{ asset('plugins/jquery/jquery.min.js')}}"></script>
+
         <!-- jQuery UI 1.11.4 -->
         <script src="{{ asset('plugins/jquery-ui/jquery-ui.min.js')}}"></script>
         <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
