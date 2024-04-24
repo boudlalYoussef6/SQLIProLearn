@@ -278,10 +278,16 @@
     <link rel="stylesheet" href="{{ asset('plugins/daterangepicker/daterangepicker.css')}}">
     <!-- summernote -->
     <link rel="stylesheet" href="{{ asset('plugins/summernote/summernote-bs4.min.css')}}">
+<<<<<<< HEAD
 {% endblock %}
 
 {% block javascripts %}
         <script src="{{ asset('plugins/jquery/jquery.min.js')}}"></script>
+=======
+  {% block custum_css %}{% endblock %}
+{% endblock %}
+    {% block javascripts %}<script src="{{ asset('plugins/jquery/jquery.min.js')}}"></script>
+>>>>>>> template
         <!-- jQuery UI 1.11.4 -->
         <script src="{{ asset('plugins/jquery-ui/jquery-ui.min.js')}}"></script>
         <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
@@ -314,4 +320,11 @@
         <script src="{{ asset('dist/js/demo.js')}}"></script>
         <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
         <script src="{{ asset('dist/js/pages/dashboard.js')}}"></script>
+<<<<<<< HEAD
     {% endblock %}
+=======
+      {% block custum_js %}{% endblock %}
+    {% endblock %}
+
+{% endblock %}
+>>>>>>> template

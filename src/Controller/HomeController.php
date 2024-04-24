@@ -9,8 +9,10 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class HomeController extends AbstractController
 {
+
     public function __construct(private readonly LoggerInterface $logger){
     }
+
 
     #[Route('/', name: 'app_home')]
     public function index(): Response
