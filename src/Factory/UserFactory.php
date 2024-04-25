@@ -3,7 +3,6 @@
 namespace App\Factory;
 
 use App\Entity\User;
-use App\Enum\UserEnum;
 use App\Repository\UserRepository;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Zenstruck\Foundry\ModelFactory;
@@ -31,16 +30,13 @@ use Zenstruck\Foundry\RepositoryProxy;
  */
 final class UserFactory extends ModelFactory
 {
-    private $hasher;
-
     /**
      * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#factories-as-services
      *
      * @todo inject services if required
      */
-    public function __construct(UserPasswordHasherInterface $hasher)
+    public function __construct(private readonly UserPasswordHasherInterface $hasher)
     {
-        $this->hasher = $hasher;
         parent::__construct();
     }
 
@@ -54,6 +50,8 @@ final class UserFactory extends ModelFactory
         return [
             'connectedAt' => \DateTimeImmutable::createFromMutable(self::faker()->dateTime()),
             'email' => self::faker()->email(),
+
+            'roles' => [],
             'username' => self::faker()->userName(),
         ];
     }
@@ -63,13 +61,13 @@ final class UserFactory extends ModelFactory
      */
     protected function initialize(): self
     {
-        return $this
-            ->afterInstantiate(function(User $user): void {
-                $password = '12345';
-                $newPassword = $this->hasher->hashPassword($user, $password);
-                $user->setPassword($newPassword);
-                $user->setRoles([self::faker()->randomElement(UserEnum::cases())]);
-            })
+
+        return $this->afterInstantiate(function(User $user): void {
+            $plainPassword='1234';
+            $hasherPassword=$this->hasher->hashPassword($user, $plainPassword);
+            $user->setPassword($hasherPassword);
+
+        })
         ;
     }
 
