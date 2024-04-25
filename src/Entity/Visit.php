@@ -21,11 +21,11 @@ class Visit
 
     #[ORM\ManyToOne(inversedBy: 'visits')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?User $userId = null;
+    private ?User $user = null;
 
     #[ORM\ManyToOne(inversedBy: 'visits')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Course $courseId = null;
+    private ?Course $course = null;
 
     public function getId(): ?int
     {
@@ -56,26 +56,26 @@ class Visit
         return $this;
     }
 
-    public function getUserId(): ?User
+    public function getUser(): ?User
     {
-        return $this->userId;
+        return $this->user;
     }
 
-    public function setUserId(?User $userId): static
+    public function setUser(?User $user): static
     {
-        $this->userId = $userId;
+        $this->user = $user;
 
         return $this;
     }
 
-    public function getCourseId(): ?Course
+    public function getCourse(): ?Course
     {
-        return $this->courseId;
+        return $this->course;
     }
 
-    public function setCourseId(?Course $courseId): static
+    public function setCourse(?Course $course): static
     {
-        $this->courseId = $courseId;
+        $this->course = $course;
 
         return $this;
     }

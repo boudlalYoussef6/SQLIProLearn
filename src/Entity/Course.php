@@ -31,12 +31,17 @@ class Course
     #[ORM\OneToMany(targetEntity: Visit::class, mappedBy: 'courseId', orphanRemoval: true)]
     private Collection $visits;
 
-    #[ORM\OneToOne(mappedBy: 'courseId', cascade: ['persist', 'remove'])]
-    private ?Request $request = null;
+    #[ORM\ManyToMany(targetEntity: Category::class, inversedBy: 'courses')]
+    private Collection $categoryId;
+
+    #[ORM\OneToMany(targetEntity: Application::class, mappedBy: 'coursId', orphanRemoval: true)]
+    private Collection $applications;
 
     public function __construct()
     {
         $this->visits = new ArrayCollection();
+        $this->categoryId = new ArrayCollection();
+        $this->applications = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -104,7 +109,7 @@ class Course
     {
         if (!$this->visits->contains($visit)) {
             $this->visits->add($visit);
-            $visit->setCourseId($this);
+            $visit->setCourse($this);
         }
 
         return $this;
@@ -114,27 +119,64 @@ class Course
     {
         if ($this->visits->removeElement($visit)) {
             // set the owning side to null (unless already changed)
-            if ($visit->getCourseId() === $this) {
-                $visit->setCourseId(null);
+            if ($visit->getCourse() === $this) {
+                $visit->setCourse(null);
             }
         }
 
         return $this;
     }
 
-    public function getRequest(): ?Request
+    /**
+     * @return Collection<int, Category>
+     */
+    public function getCategoryId(): Collection
     {
-        return $this->request;
+        return $this->categoryId;
     }
 
-    public function setRequest(Request $request): static
+    public function addCategoryId(Category $categoryId): static
     {
-        // set the owning side of the relation if necessary
-        if ($request->getCourseId() !== $this) {
-            $request->setCourseId($this);
+        if (!$this->categoryId->contains($categoryId)) {
+            $this->categoryId->add($categoryId);
         }
 
-        $this->request = $request;
+        return $this;
+    }
+
+    public function removeCategoryId(Category $categoryId): static
+    {
+        $this->categoryId->removeElement($categoryId);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Application>
+     */
+    public function getApplications(): Collection
+    {
+        return $this->applications;
+    }
+
+    public function addApplication(Application $application): static
+    {
+        if (!$this->applications->contains($application)) {
+            $this->applications->add($application);
+            $application->setCours($this);
+        }
+
+        return $this;
+    }
+
+    public function removeApplication(Application $application): static
+    {
+        if ($this->applications->removeElement($application)) {
+            // set the owning side to null (unless already changed)
+            if ($application->getCours() === $this) {
+                $application->setCours(null);
+            }
+        }
 
         return $this;
     }
