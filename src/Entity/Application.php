@@ -2,33 +2,33 @@
 
 namespace App\Entity;
 
-use App\Repository\RequestRepository;
+use App\Repository\ApplicationRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: RequestRepository::class)]
-class Request
+#[ORM\Entity(repositoryClass: ApplicationRepository::class)]
+class Application
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 50)]
     private ?string $status = null;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $dateSent = null;
 
-    #[ORM\Column(nullable: true)]
+    #[ORM\Column]
     private ?\DateTimeImmutable $dateValidation = null;
 
-    #[ORM\OneToOne(inversedBy: 'request', cascade: ['persist', 'remove'])]
+    #[ORM\ManyToOne(inversedBy: 'applications')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Course $courseId = null;
+    private ?Course $cours = null;
 
-    #[ORM\ManyToOne(inversedBy: 'requests')]
+    #[ORM\ManyToOne(inversedBy: 'applications')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?User $userId = null;
+    private ?User $user = null;
 
     public function getId(): ?int
     {
@@ -64,33 +64,33 @@ class Request
         return $this->dateValidation;
     }
 
-    public function setDateValidation(?\DateTimeImmutable $dateValidation): static
+    public function setDateValidation(\DateTimeImmutable $dateValidation): static
     {
         $this->dateValidation = $dateValidation;
 
         return $this;
     }
 
-    public function getCourseId(): ?Course
+    public function getCours(): ?Course
     {
-        return $this->courseId;
+        return $this->cours;
     }
 
-    public function setCourseId(Course $courseId): static
+    public function setCours(?Course $cours): static
     {
-        $this->courseId = $courseId;
+        $this->cours = $cours;
 
         return $this;
     }
 
-    public function getUserId(): ?User
+    public function getUser(): ?User
     {
-        return $this->userId;
+        return $this->user;
     }
 
-    public function setUserId(?User $userId): static
+    public function setUser(?User $user): static
     {
-        $this->userId = $userId;
+        $this->user = $user;
 
         return $this;
     }
