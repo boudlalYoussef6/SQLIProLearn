@@ -43,13 +43,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Visit::class, mappedBy: 'userId', orphanRemoval: true)]
     private Collection $visits;
 
-    #[ORM\OneToMany(targetEntity: Request::class, mappedBy: 'userId', orphanRemoval: true)]
-    private Collection $requests;
+    #[ORM\OneToMany(targetEntity: Application::class, mappedBy: 'userId', orphanRemoval: true)]
+    private Collection $applications;
 
     public function __construct()
     {
         $this->visits = new ArrayCollection();
-        $this->requests = new ArrayCollection();
+        $this->applications = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -163,7 +163,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if (!$this->visits->contains($visit)) {
             $this->visits->add($visit);
-            $visit->setUserId($this);
+            $visit->setUser($this);
         }
 
         return $this;
@@ -173,8 +173,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->visits->removeElement($visit)) {
             // set the owning side to null (unless already changed)
-            if ($visit->getUserId() === $this) {
-                $visit->setUserId(null);
+            if ($visit->getUser() === $this) {
+                $visit->setUser(null);
             }
         }
 
@@ -182,29 +182,29 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection<int, Request>
+     * @return Collection<int, Application>
      */
-    public function getRequests(): Collection
+    public function getApplications(): Collection
     {
-        return $this->requests;
+        return $this->applications;
     }
 
-    public function addRequest(Request $request): static
+    public function addApplication(Application $application): static
     {
-        if (!$this->requests->contains($request)) {
-            $this->requests->add($request);
-            $request->setUserId($this);
+        if (!$this->applications->contains($application)) {
+            $this->applications->add($application);
+            $application->setUser($this);
         }
 
         return $this;
     }
 
-    public function removeRequest(Request $request): static
+    public function removeApplication(Application $application): static
     {
-        if ($this->requests->removeElement($request)) {
+        if ($this->applications->removeElement($application)) {
             // set the owning side to null (unless already changed)
-            if ($request->getUserId() === $this) {
-                $request->setUserId(null);
+            if ($application->getUser() === $this) {
+                $application->setUser(null);
             }
         }
 
