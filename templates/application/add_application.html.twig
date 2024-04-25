@@ -1,48 +1,12 @@
 {% extends 'site.html.twig' %}
 
 {% block custum_css %}
-<link rel="stylesheet" type="text/css" href="{{ asset('formulaire/css/style.css') }}">
-<link href="https://fonts.googleapis.com/css?family=Poppins:600&display=swap" rel="stylesheet">
+
 {% endblock %}
 {% block content  %}
 
-    <title>Animated Login Form</title>
-
-    <script src="https://kit.fontawesome.com/a81368914c.js"></script>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+formulaire
 
 
-    <img class="wave" src="{{ asset('formulaire/img/wave.png')}}">
-    <div class="container">
-        <div class="img">
-            <img src="{{ asset('formulaire/img/bg.svg')}}"> add
-        </div>
-        <div class="login-content">
-            <form action="index.html">
-                <img src="{{ asset('formulaire/img/avatar.svg')}}">
-                <h2 class="title">Welcome</h2>
-                <div class="input-div one">
-                    <div class="i">
-                        <i class="fas fa-user"></i>
-                    </div>
-                    <div class="div">
-                        <h5>Label</h5>
-                        <input type="text" class="input">
-                    </div>
-                </div>
-                <div class="input-div pass">
-                    <div class="i">
-                        <i class="fas fa-lock"></i>
-                    </div>
-                    <div class="div">
-                        <h5>description</h5>s
-                        <input type="text" class="input">
-                    </div>
-                </div>
 
-                <input type="submit" class="btn" value="Envoyer la demande">
-            </form>
-        </div>
-    </div>
 {% endblock %}
-{% block custum_js %}   <script type="text/javascript" src="{{ asset('formulaire/js/main.js')}}"></script> {% endblock %}
