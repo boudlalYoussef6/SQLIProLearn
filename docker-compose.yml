@@ -1,6 +1,7 @@
 version: '3.7'
 
 services:
+
     server:
         build:
             context: .
@@ -18,8 +19,6 @@ services:
             - ./docker/xdebug/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
         depends_on:
             - database
-#            - rabbitmq
-#            - redis
         networks:
             - inner_net
 
@@ -76,50 +75,6 @@ services:
             ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
             ME_CONFIG_BASICAUTH: false
 
-#    mailcatcher:
-#        image: yappabe/mailcatcher
-#        ports:
-#            - "1025:1025"
-#            - "1080:1080"
-#        networks:
-#            - inner_net
-
-#    rabbitmq:
-#        image: rabbitmq:management
-#        ports:
-#            - "5672:5672"
-#            - "15672:15672"
-#        networks:
-#            - inner_net
-
-#    kibana:
-#        depends_on:
-#            - elasticsearch
-#        image: docker.elastic.co/kibana/kibana:8.13.1
-#        volumes:
-#            - kibana-data:/usr/share/kibana/data
-#        networks:
-#            - inner_net
-#        ports:
-#            - 5601:5601
-#        restart: always
-#        environment:
-#            - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
-
-#    s3:
-#        image: minio/minio
-#        networks:
-#            - inner_net
-#        environment:
-#            MINIO_ROOT_USER: access1234
-#            MINIO_ROOT_PASSWORD: secret1234
-#        volumes:
-#            - ./data/minio:/data
-#        command: server /data --console-address ":9001"
-#        ports:
-#            - 9000:9000
-#            - 9001:9001
-
     elasticsearch:
         image: "docker.elastic.co/elasticsearch/elasticsearch:7.12.1"
         environment:
@@ -172,20 +127,48 @@ services:
         networks:
             - inner_net
 
-#    redis:
-#        container_name: redis
-#        hostname: redis
-#        image: redis
-#
-#    redis-commander:
-#        container_name: redis-commander
-#        hostname: redis-commander
-#        image: rediscommander/redis-commander:latest
-#        restart: always
-#        environment:
-#            - REDIS_HOSTS=local:redis:6379
-#        ports:
-#            - "8081:8081"
+    openldap:
+        image:  osixia/openldap:latest
+        container_name: openldap
+        hostname: openldap
+        ports:
+            -   "389:389"
+            -   "636:636"
+
+        volumes:
+              - ./data/certificates:/container/service/slapd/assets/certs
+              - ./data/slapd/database:/var/lib/ldap
+              - ./data/slapd/config:/etc/ldap/slapd.d
+        networks:
+            - inner_net
+
+        environment:
+            - LDAP_ORGANISATION=ramhlocal
+            - LDAP_DOMAIN=ramhlocal.com
+            - LDAP_ADMIN_USERNAME=admin
+            - LDAP_ADMIN_PASSWORD=admin_pass
+            - LDAP_CONFIG_PASSWORD=config_pass
+            - "LDAP_BASE_DN=dc=ramhlocal,dc=com"
+            - LDAP_TLS_CRT_FILENAME=server.crt
+            - LDAP_TLS_KEY_FILENAME=server.key
+            - LDAP_TLS_CA_CRT_FILENAME=ramhlocal.com.ca.crt
+            - LDAP_READONLY_USER=true
+            - LDAP_READONLY_USER_USERNAME=user-ro
+            - LDAP_READONLY_USER_PASSWORD=ro_pass
+    phpldapadmin:
+        container_name: 'phpldapadmin'
+        image: osixia/phpldapadmin:latest
+        hostname: 'phpldapadmin'
+        ports:
+            -   "8082:80"
+        environment:
+            - PHPLDAPADMIN_LDAP_HOSTS=openldap
+            - PHPLDAPADMIN_HTTPS=false
+        depends_on:
+             -   openldap
+        networks:
+           - inner_net
+
 
 volumes:
     db_data:

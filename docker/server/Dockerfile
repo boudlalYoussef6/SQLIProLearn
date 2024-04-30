@@ -38,5 +38,6 @@ RUN apt install symfony-cli
 
 # Install Nodejs
 RUN apt install -y nodejs npm
+RUN apt update && apt install -y libldap2-dev && docker-php-ext-install ldap && rm -rf /var/lib/apt/lists/*
 
 EXPOSE 8585

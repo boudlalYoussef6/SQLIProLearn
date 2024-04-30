@@ -29,9 +29,8 @@ class CustomLdapAuthenticator extends AbstractLoginFormAuthenticator
 
     public function authenticate(Request $request): Passport
     {
-//        dd(__FUNCTION__);
-        $email = $request->request->get('email', '');
-
+        $email = $request->request->get('text', '');
+//        dd( $request->request->all());
         $request->getSession()->set(SecurityRequestAttributes::LAST_USERNAME, $email);
 
         return new Passport(
@@ -58,8 +57,8 @@ class CustomLdapAuthenticator extends AbstractLoginFormAuthenticator
         }
 
         // For example:
-        // return new RedirectResponse($this->urlGenerator->generate('some_route'));
-        throw new \Exception('TODO: provide a valid redirect inside ' . __FILE__);
+         return new RedirectResponse($this->urlGenerator->generate('app_home'));
+//        throw new \Exception('TODO: provide a valid redirect inside ' . __FILE__);
     }
 
     protected function getLoginUrl(Request $request): string
