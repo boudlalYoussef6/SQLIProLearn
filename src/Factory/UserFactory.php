@@ -3,6 +3,7 @@
 namespace App\Factory;
 
 use App\Entity\User;
+use App\Enum\UserEnum;
 use App\Repository\UserRepository;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Zenstruck\Foundry\ModelFactory;
@@ -50,8 +51,6 @@ final class UserFactory extends ModelFactory
         return [
             'connectedAt' => \DateTimeImmutable::createFromMutable(self::faker()->dateTime()),
             'email' => self::faker()->email(),
-
-            'roles' => [],
             'username' => self::faker()->userName(),
         ];
     }
@@ -63,10 +62,10 @@ final class UserFactory extends ModelFactory
     {
 
         return $this->afterInstantiate(function(User $user): void {
-            $plainPassword='1234';
-            $hasherPassword=$this->hasher->hashPassword($user, $plainPassword);
-            $user->setPassword($hasherPassword);
-
+            $password = 'issam';
+            $newPassword = $this->hasher->hashPassword($user, $password);
+            $user->setPassword($newPassword);
+            $user->setRoles([self::faker()->randomElement(UserEnum::cases())]);
         })
         ;
     }
