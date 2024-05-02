@@ -9,6 +9,12 @@
                 <li class="nav-item">
                     <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
                 </li>
+                {% if not app.user %}
+                <li class="nav-item d-none d-sm-inline-block">
+                    <a href="{{ url('app_login') }}" class="nav-link">Login</a>
+                </li>
+                {% else %}
+
                 <li class="nav-item d-none d-sm-inline-block">
                     <a href="{{ url('app_home') }}" class="nav-link">Home</a>
                 </li>
@@ -18,7 +24,13 @@
                 <li class="nav-item d-none d-sm-inline-block">
                     <a href="{{ url('app_cours') }}" class="nav-link">Mes cours</a>
                 </li>
+                <li class="nav-item d-none d-sm-inline-block">
+                    <a href="{{ url('app_logout') }}" class="nav-link">Logout</a>
+                <li class="nav-item d-none d-sm-inline-block"><a href="#" class="nav-link">Connected as :{{ app.user.getUserIdentifier}}</a>
+                </li>
+                </li>
             </ul>
+            {% endif %}
 
             <!-- Right navbar links -->
             <ul class="navbar-nav ml-auto">
