@@ -25,9 +25,6 @@ class Course
     #[ORM\Column(length: 10)]
     private ?string $fileFormat = null;
 
-    #[ORM\Column(type: Types::TEXT)]
-    private ?string $path = null;
-
     #[ORM\OneToMany(targetEntity: Visit::class, mappedBy: 'courseId', orphanRemoval: true)]
     private Collection $visits;
 
@@ -81,18 +78,6 @@ class Course
     public function setFileFormat(string $fileFormat): static
     {
         $this->fileFormat = $fileFormat;
-
-        return $this;
-    }
-
-    public function getPath(): ?string
-    {
-        return $this->path;
-    }
-
-    public function setPath(string $path): static
-    {
-        $this->path = $path;
 
         return $this;
     }

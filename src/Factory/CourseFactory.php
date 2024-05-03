@@ -51,9 +51,8 @@ final class CourseFactory extends ModelFactory
     {
         return [
             'description' => self::faker()->paragraph(),
-            'fileFormat' => self::faker()->randomElement(['pdf','video','doc','docx','udemy']),
+            'fileFormat' => self::faker()->randomElement(['classic','udemy']),
             'label' => self::faker()->name(),
-            'path' => self::faker()->filePath(),
         ];
     }
 

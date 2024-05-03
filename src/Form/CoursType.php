@@ -9,16 +9,18 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class CourseType extends AbstractType
+class CoursType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('label')
             ->add('description')
+            ->add('fileFormat')
             ->add('categoryId', EntityType::class, [
                 'class' => Category::class,
                 'choice_label' => 'label',
+                'choice_name' => 'id',
                 'multiple' => true,
             ])
         ;
