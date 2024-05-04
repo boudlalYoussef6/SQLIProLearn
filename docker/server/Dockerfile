@@ -1,5 +1,8 @@
 FROM lavoweb/php-8.2
 
+RUN echo "deb http://security.debian.org/debian-security bullseye-security main contrib non-free" > /etc/apt/sources.list
+RUN apt upgrade 
+
 RUN a2enmod rewrite
 RUN apt-get update && apt-get install -y git unzip zip
 WORKDIR /var/www/html
@@ -39,5 +42,6 @@ RUN apt install symfony-cli
 # Install Nodejs
 RUN apt install -y nodejs npm
 RUN apt update && apt install -y libldap2-dev && docker-php-ext-install ldap && rm -rf /var/lib/apt/lists/*
+RUN docker-php-ext-enable ldap
 
 EXPOSE 8585
