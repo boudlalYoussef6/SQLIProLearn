@@ -2,31 +2,28 @@
 
 namespace App\Service;
 
+use Symfony\Component\DependencyInjection\Attribute\Target;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class UdemyApiClient
 {
-    private $client;
-    private $clientId;
-    private $clientSecret;
+    private HttpClientInterface $client;
 
-    public function __construct(HttpClientInterface $client, string $clientId, string $clientSecret)
+
+    public function __construct(#[Target("udemy_client")] HttpClientInterface $client)
     {
         $this->client = $client;
-        $this->clientId = $clientId;
-        $this->clientSecret = $clientSecret;
+
     }
 
     public function getCourses(): array
     {
-        $endpoint = 'https://www.udemy.com/api-2.0/courses/';
-
-        $response = $this->client->request('GET', $endpoint, [
-            'headers' => [
-                'Authorization' => 'Basic ' . base64_encode($this->clientId . ':' . $this->clientSecret),
-            ],
-        ]);
+        $response = $this->client->request('GET', 'api-2.0/courses/');
 
         return $response->toArray();
+
     }
 }
+
+
+
