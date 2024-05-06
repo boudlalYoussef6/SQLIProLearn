@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Category;
 use App\Entity\Course;
+use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -15,8 +16,7 @@ class CoursType extends AbstractType
     {
         $builder
             ->add('label')
-            ->add('description')
-            ->add('fileFormat')
+            ->add('description', CKEditorType::class)
             ->add('categoryId', EntityType::class, [
                 'class' => Category::class,
                 'choice_label' => 'label',

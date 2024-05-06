@@ -26,45 +26,27 @@ class CoursController extends AbstractController
         ]);
     }
 
+    #[Route('/cours/add', name: 'app_cours_add')]
+    public function CoursAdd(Request $request): Response
+    {
+        $course = new Course();
+        $form = $this->createForm(CoursType::class, $course);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+        }
+
+        return $this->render('cours/ajout.html.twig', [
+            'form' => $form,
+        ]);
+    }
+
     #[Route('/cours/{id}', name: 'app_cours_details')]
     public function coursDetails(CourseRepository $courseRepository, $id, Request $request): Response
     {
         $course = $courseRepository->findBy($id);
 
-        $course = new Course();
-
         return $this->render('cours/index.html.twig', [
             'course' => $course,
-        ]);
-    }
-
-    #[Route('/cours/add', name: 'app_cours_add')]
-    public function CoursAdd(CourseRepository $courseRepository): Response
-    {
-        $courses = $courseRepository->findAll();
-
-        return $this->render('cours/index.html.twig', [
-            'courses' => $courses,
-        ]);
-    }
-
-    #[Route('/cours/edit/{id}', name: 'app_cours_edit')]
-    public function CoursEdit(CourseRepository $courseRepository, $id): Response
-    {
-        $courses = $courseRepository->findAll();
-
-        return $this->render('cours/index.html.twig', [
-            'courses' => $courses,
-        ]);
-    }
-
-    #[Route('/cours/delete/{id}', name: 'app_cours_delete')]
-    public function CoursDelete(CourseRepository $courseRepository, $id): Response
-    {
-        $courses = $courseRepository->findAll();
-
-        return $this->render('cours/index.html.twig', [
-            'courses' => $courses,
         ]);
     }
 }
