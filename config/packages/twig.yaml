@@ -1,7 +1,7 @@
 twig:
     file_name_pattern: '*.twig'
     globals:
-        key: 'u2ovfe0s1z5bahn1e6qxbl4orzv7crny0j0w1ti2novpckid'
+        key: '%env(KEY)%'
 
 when@test:
     twig:
