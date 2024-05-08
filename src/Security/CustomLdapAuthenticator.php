@@ -29,7 +29,7 @@ class CustomLdapAuthenticator extends AbstractLoginFormAuthenticator
 
     public function authenticate(Request $request): Passport
     {
-        $email = $request->request->get('text', '');
+        $email = $request->request->get('username', '');
 //        dd( $request->request->all());
         $request->getSession()->set(SecurityRequestAttributes::LAST_USERNAME, $email);
 

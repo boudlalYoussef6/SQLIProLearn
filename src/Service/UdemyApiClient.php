@@ -13,7 +13,6 @@ class UdemyApiClient
     public function __construct(#[Target("udemy_client")] HttpClientInterface $client)
     {
         $this->client = $client;
-
     }
 
     public function getCourses(): array
@@ -21,9 +20,12 @@ class UdemyApiClient
         $response = $this->client->request('GET', 'api-2.0/courses/');
 
         return $response->toArray();
+    }
 
+    public function getCourseById(int $id): string
+    {
+        $response = $this->client->request('GET', 'api-2.0/courses/'.$id);
+
+        return $response->getContent();
     }
 }
-
-
-

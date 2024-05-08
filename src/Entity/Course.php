@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\SerializedName;
 
 #[ORM\Entity(repositoryClass: CourseRepository::class)]
 class Course
@@ -16,11 +17,21 @@ class Course
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 50)]
+    #[ORM\Column(length: 200)]
+    #[SerializedName('title')]
     private ?string $label = null;
 
-    #[ORM\Column(type: Types::TEXT)]
+    #[ORM\Column(type: Types::BOOLEAN)]
+    #[SerializedName('is_paid')]
     private ?string $description = null;
+
+    #[ORM\Column(length: 200)]
+    #[SerializedName('image_125_H')]
+    private ?string $fileFormat = null;
+
+    #[ORM\Column(type: Types::TEXT)]
+    #[SerializedName('image_480x270')]
+    private ?string $path = null;
 
     #[ORM\OneToMany(targetEntity: Visit::class, mappedBy: 'courseId', orphanRemoval: true)]
     private Collection $visits;
