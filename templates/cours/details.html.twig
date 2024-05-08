@@ -1,25 +1,22 @@
 {% extends 'site.html.twig' %}
 
-{% block title %}Cours{% endblock %}
+{% block title %}{{ course.label }}{% endblock %}
 
 {% block content %}
     <section class="content">
         <div class="container-fluid">
-            <h2>list of Courses</h2>
+            <h2>{{ course.label }}</h2>
             <div class="row" style="gap: 0.8rem;">
-                {% for cours in courses %}
-                    <div class="card" style="width: 25vw;">
+                    <div class="card" style="width: 75vw;">
                         <img class="card-img-top"
                              src="{{ asset(random(['images/php_Elephant.jpg', 'images/php_Elephant_V2.jpg', 'images/php_Elephant_V3.jpg'])) }}"
                              alt="image of the course"
                              style="height: 20vh; object-fit: cover;">
                         <div class="card-body">
-                            <h3 class="card-title font-weight-bold">{{ cours.label }}</h3>
-                            <p class="card-text">{{ cours.description|length > 50 ? cours.description|slice(0, 50) ~ '...' : cours.description  }}</p>
-                            <a href="{{ url('app_cours_details', {'id': cours.id}) }}" class="btn btn-primary">More info</a>
+                            <h3 class="card-title font-weight-bold">{{ course.label }}</h3>
+                            <p class="card-text">{{ course.description  }}</p>
                         </div>
                     </div>
-                {% endfor %}
             </div>
         </div>
     </section>

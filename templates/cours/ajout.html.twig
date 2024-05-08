@@ -11,25 +11,24 @@
                 </div>
                 <div class="row">
                     {{ form_start(form) }}
-                    <form>
                         <div class="card-body">
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Label</label>
                                 {{ form_widget(form.label, {'attr': {'class': 'form-control', 'placeholder': 'Label'}}) }}
                             </div>
                             <div class="form-group">
-                                <label for="exampleInputPassword1">Description</label>
-                                {{ form_widget(form.description, {'attr': {'class': 'form-control', 'placeholder': 'description'}}) }}
+                                <label>Description</label>
+                                {{ form_widget(form.description, {'attr': {'id': 'editor'}}) }}
                             </div>
                             <div class="form-group">
-                                <label for="exampleInputPassword1">categories</label>
+                                <label>categories</label>
                                 {{ form_widget(form.categoryId, {'attr': {'class': 'form-control', 'placeholder': 'categories'}}) }}
                             </div>
                             <div class="form-group">
                                 <label for="exampleInputFile">File input</label>
                                 <div class="input-group">
                                     <div class="custom-file">
-                                        <input type="file" class="custom-file-input" id="exampleInputFile">
+                                        {{ form_widget(form.videoPath, {'attr': {'class': 'custom-file-input'}}) }}
                                         <label class="custom-file-label" for="exampleInputFile">Choose file</label>
                                     </div>
                                 </div>
@@ -44,7 +43,6 @@
                         <div class="card-footer">
                             <button type="submit" class="btn btn-primary">Submit</button>
                         </div>
-                    </form>
                     {{ form_end(form) }}
                 </div>
             </div>
@@ -53,52 +51,22 @@
 {% endblock %}
 
 {% block custum_js %}
+    <!-- Place the first <script> tag in your HTML's <head> -->
+    <script src="https://cdn.tiny.cloud/1/{{ key }}/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
+
+    <!-- Place the following <script> and <textarea> tags your HTML's <body> -->
     <script>
-        // Fonction pour extraire les données du tableau
-        function extractData() {
-            // Sélection du tableau par son ID
-            var table = document.getElementById("example");
-
-            // Initialisation de la variable pour stocker les données extraites
-            var data = [];
-
-            // Boucle à travers chaque ligne du tableau
-            for (var i = 1; i < table.rows.length; i++) {
-                // Sélection de la ligne actuelle
-                var row = table.rows[i];
-
-                // Extraction des valeurs des colonnes "id", "label" et "description"
-                var id = row.cells[0].innerText;
-                var label = row.cells[1].innerText;
-                var description = row.cells[2].innerText;
-
-                // Création d'un objet contenant les valeurs extraites
-                var rowData = {
-                    id: id,
-                    label: label,
-                    description: description
-                };
-
-                // Ajout de l'objet à la liste des données
-                data.push(rowData);
-            }
-
-            // Retourne les données extraites
-            return data;
-        }
-
-        // Appel de la fonction d'extraction des données lors du chargement du document
-        document.addEventListener("DOMContentLoaded", function () {
-            var extractedData = extractData();
-            console.log(extractedData);
-            // Utilisez les données extraites comme vous le souhaitez ici
+        tinymce.init({
+            selector: 'textarea',
+            plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount checklist mediaembed casechange export formatpainter pageembed linkchecker a11ychecker tinymcespellchecker permanentpen powerpaste advtable advcode editimage advtemplate ai mentions tinycomments tableofcontents footnotes mergetags autocorrect typography inlinecss markdown',
+            toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
+            tinycomments_mode: 'embedded',
+            tinycomments_author: 'Author name',
+            mergetags_list: [
+                { value: 'First.Name', title: 'First Name' },
+                { value: 'Email', title: 'Email' },
+            ],
+            ai_request: (request, respondWith) => respondWith.string(() => Promise.reject("See docs to implement AI Assistant")),
         });
-    </script>
-    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.datatables.net/2.0.5/js/dataTables.js"></script>
-    <script src="https://cdn.datatables.net/2.0.5/js/dataTables.bootstrap5.js"></script>
-    <script>
-        new DataTable('#example');
     </script>
 {% endblock %}
