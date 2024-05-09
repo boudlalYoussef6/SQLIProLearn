@@ -22,12 +22,6 @@ class Course
     #[ORM\Column(type: Types::TEXT)]
     private ?string $description = null;
 
-    #[ORM\Column(length: 10)]
-    private ?string $fileFormat = null;
-
-    #[ORM\Column(type: Types::TEXT)]
-    private ?string $path = null;
-
     #[ORM\OneToMany(targetEntity: Visit::class, mappedBy: 'courseId', orphanRemoval: true)]
     private Collection $visits;
 
@@ -36,6 +30,9 @@ class Course
 
     #[ORM\OneToMany(targetEntity: Application::class, mappedBy: 'coursId', orphanRemoval: true)]
     private Collection $applications;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $videoPath = null;
 
     public function __construct()
     {
@@ -81,18 +78,6 @@ class Course
     public function setFileFormat(string $fileFormat): static
     {
         $this->fileFormat = $fileFormat;
-
-        return $this;
-    }
-
-    public function getPath(): ?string
-    {
-        return $this->path;
-    }
-
-    public function setPath(string $path): static
-    {
-        $this->path = $path;
 
         return $this;
     }
@@ -177,6 +162,18 @@ class Course
                 $application->setCours(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getVideoPath(): ?string
+    {
+        return $this->videoPath;
+    }
+
+    public function setVideoPath(?string $videoPath): static
+    {
+        $this->videoPath = $videoPath;
 
         return $this;
     }
