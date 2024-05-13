@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use phpDocumentor\Reflection\Types\Nullable;
 use Symfony\Component\Serializer\Attribute\SerializedName;
 
 #[ORM\Entity(repositoryClass: CourseRepository::class)]
@@ -21,9 +22,9 @@ class Course
     #[SerializedName('title')]
     private ?string $label = null;
 
-    #[ORM\Column(type: Types::BOOLEAN)]
+    #[ORM\Column(type: Types::BOOLEAN,nullable: true)]
     #[SerializedName('is_paid')]
-    private ?string $description = null;
+    private ?string $paid= null;
 
     #[ORM\Column(length: 200)]
     #[SerializedName('image_125_H')]
@@ -75,14 +76,14 @@ class Course
         return $this;
     }
 
-    public function getDescription(): ?string
+    public function getPaid(): ?string
     {
-        return $this->description;
+        return $this->paid;
     }
 
-    public function setDescription(string $description): static
+    public function setPaid(string $isPaid): static
     {
-        $this->description = $description;
+        $this->paid = $isPaid;
 
         return $this;
     }

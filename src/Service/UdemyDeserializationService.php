@@ -4,8 +4,9 @@ namespace App\Service;
 
 use App\Entity\Course;
 use Symfony\Component\Serializer\SerializerInterface;
+use App\Service\UdemyApiClientInterface;
 
-class UdemyDeserializationService
+class UdemyDeserializationService 
 {
     private $serializer;
 

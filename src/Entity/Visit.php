@@ -24,7 +24,7 @@ class Visit
     private ?User $user = null;
 
     #[ORM\ManyToOne(inversedBy: 'visits')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
     private ?Course $course = null;
 
     public function getId(): ?int

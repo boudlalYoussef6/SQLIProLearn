@@ -5,7 +5,7 @@ namespace App\Service;
 use Symfony\Component\DependencyInjection\Attribute\Target;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
-class UdemyApiClient
+class UdemyApiClient implements UdemyApiClientInterface
 {
     private HttpClientInterface $client;
 
