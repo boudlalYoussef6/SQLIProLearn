@@ -7,7 +7,6 @@ use App\Form\UdemyType;
 use App\Service\HandlerDataBase;
 use App\Service\UdemyApiClient;
 use App\Service\UdemyDeserializationService;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
