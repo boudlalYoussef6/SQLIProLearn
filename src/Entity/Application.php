@@ -24,7 +24,7 @@ class Application
 
     #[ORM\ManyToOne(inversedBy: 'applications')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Course $cours = null;
+    private ?Course $course = null;
 
     #[ORM\ManyToOne(inversedBy: 'applications')]
     #[ORM\JoinColumn(nullable: false)]
@@ -71,14 +71,14 @@ class Application
         return $this;
     }
 
-    public function getCours(): ?Course
+    public function getCourse(): ?Course
     {
-        return $this->cours;
+        return $this->course;
     }
 
-    public function setCours(?Course $cours): static
+    public function setCourse(?Course $course): static
     {
-        $this->cours = $cours;
+        $this->course = $course;
 
         return $this;
     }

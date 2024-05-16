@@ -28,17 +28,23 @@ class Course
     #[ORM\ManyToMany(targetEntity: Category::class, inversedBy: 'courses')]
     private Collection $categoryId;
 
-    #[ORM\OneToMany(targetEntity: Application::class, mappedBy: 'coursId', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Application::class, mappedBy: 'course', orphanRemoval: true)]
     private Collection $applications;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $videoPath = null;
+
+
+      #[ORM\OneToMany(targetEntity: Section::class, mappedBy: 'course', cascade: ['persist'], orphanRemoval: true)]
+
+    private Collection $sections;
 
     public function __construct()
     {
         $this->visits = new ArrayCollection();
         $this->categoryId = new ArrayCollection();
         $this->applications = new ArrayCollection();
+        $this->sections = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -148,7 +154,7 @@ class Course
     {
         if (!$this->applications->contains($application)) {
             $this->applications->add($application);
-            $application->setCours($this);
+            $application->setCourse($this);
         }
 
         return $this;
@@ -158,8 +164,8 @@ class Course
     {
         if ($this->applications->removeElement($application)) {
             // set the owning side to null (unless already changed)
-            if ($application->getCours() === $this) {
-                $application->setCours(null);
+            if ($application->getCourse() === $this) {
+                $application->setCourse(null);
             }
         }
 
@@ -174,6 +180,36 @@ class Course
     public function setVideoPath(?string $videoPath): static
     {
         $this->videoPath = $videoPath;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Section>
+     */
+    public function getSections(): Collection
+    {
+        return $this->sections;
+    }
+
+    public function addSection(Section $section): static
+    {
+        if (!$this->sections->contains($section)) {
+            $this->sections->add($section);
+            $section->setCourse($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSection(Section $section): static
+    {
+        if ($this->sections->removeElement($section)) {
+            // set the owning side to null (unless already changed)
+            if ($section->getCourse() === $this) {
+                $section->setCourse(null);
+            }
+        }
 
         return $this;
     }

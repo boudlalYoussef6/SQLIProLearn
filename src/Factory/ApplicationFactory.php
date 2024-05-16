@@ -64,7 +64,7 @@ final class ApplicationFactory extends ModelFactory
                 $courses = $this->courseRepository->findAll();
                 $users = $this->userRepository->findAll();
 
-                $application->setCours(self::faker()->randomElement($courses));
+                $application->setCourse(self::faker()->randomElement($courses));
                 $application->setUser(self::faker()->randomElement($users));
 
                 $application->setStatus(self::faker()->randomElement(['published','rejected','pending']));

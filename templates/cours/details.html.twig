@@ -7,17 +7,41 @@
         <div class="container-fluid">
             <h2>{{ course.label }}</h2>
             <div class="row" style="gap: 0.8rem;">
-                    <div class="card" style="width: 75vw;">
-                        <img class="card-img-top"
-                             src="{{ asset(random(['images/php_Elephant.jpg', 'images/php_Elephant_V2.jpg', 'images/php_Elephant_V3.jpg'])) }}"
-                             alt="image of the course"
-                             style="height: 20vh; object-fit: cover;">
-                        <div class="card-body">
-                            <h3 class="card-title font-weight-bold">{{ course.label }}</h3>
-                            <p class="card-text">{{ course.description  }}</p>
-                        </div>
+                <div class="card" style="width: 75vw;">
+                    <img class="card-img-top"
+                         src="{{ asset(random(['images/php_Elephant.jpg',
+                             'images/php_Elephant_V2.jpg',
+                             'images/php_Elephant_V3.jpg'])) }}"
+                         alt="image of the course"
+                         style="height: 20vh; object-fit: cover;">
+                    <div class="card-body">
+                        <h3 class="card-title font-weight-bold">{{ course.label }}</h3>
+                        <p class="card-text">{{ course.description }}</p>
                     </div>
+                </div>
             </div>
         </div>
     </section>
+
+    <div class="accordion" id="accordionExample">
+        {% for section in sections %}
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="heading{{ loop.index }}">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapse{{ loop.index }}" aria-expanded="true" aria-controls="collapse{{ loop.index }}">
+                        <strong>{{ section.title }}</strong>
+                    </button>
+                </h2>
+                <div id="collapse{{ loop.index }}" class="accordion-collapse collapse" aria-labelledby="heading{{ loop.index }}"
+                     data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                        {{ section.description }}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+
+    </div>
 {% endblock %}
+
+
