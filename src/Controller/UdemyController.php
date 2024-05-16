@@ -26,10 +26,13 @@ class UdemyController extends AbstractController
 
             $data = $form->getData();
             $id = $data['id'];
+            $categoryId = $data['category'];
 
             $courseData = $udemyApiClient->getCourseById($id);
 
             $course = $deserializationService->deserializeCourse($courseData);
+            $course->setCategory($categoryId); 
+
             $handlerDataBase->storeCourse($course);
             return $this->redirectToRoute('app_home');
         }

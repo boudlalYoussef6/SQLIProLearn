@@ -4,10 +4,8 @@ namespace App\Form;
 
 use App\Entity\Category;
 use App\Entity\Course;
-use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -18,15 +16,16 @@ class CoursType extends AbstractType
     {
         $builder
             ->add('label')
-            ->add('description', TextareaType::class)
-            ->add('categoryId', EntityType::class, [
+            ->add('description', TextareaType::class, ['required' => false,])
+            ->add('category', EntityType::class, [
                 'class' => Category::class,
-                'choice_label' => 'label',
-                'choice_name' => 'id',
-                'multiple' => true,
-            ])
-            ->add('videoPath', FileType::class)
-        ;
+                'choice_label' => 'label', // Le champ à afficher dans le champ de sélection
+            'placeholder' => 'Sélectionnez une catégorie', // Texte de l'option par défaut
+            'label' => 'Catégorie', // Label du champ de sélection
+            // Vous pouvez ajouter plus d'options selon vos besoins
+            ]);
+            
+        
     }
 
     public function configureOptions(OptionsResolver $resolver): void

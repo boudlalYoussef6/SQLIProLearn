@@ -1,5 +1,51 @@
 {% extends 'site.html.twig' %}
 
-{% block  content%}
-{{ form(form) }}
+{% block title %}Cours{% endblock %}
+
+{% block content %}
+    <section class="content">
+        <div class="container-fluid">
+            <div class="card card-primary">
+                <div class="card-header">
+                    <h3 class="card-title">Create New Course</h3>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        {{ form_start(form) }}
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label for="id">Identifiant</label>
+                                    {{ form_widget(form.id, {'attr': {'class': 'form-control', 'placeholder': 'Identifiant'}}) }}
+                                </div>
+                                <div class="form-group">
+                                    <label for="category">Catégorie</label>
+                                    {{ form_widget(form.category, {'attr': {'class': 'form-control', 'placeholder': 'Sélectionnez une catégorie'}}) }}
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                {{ form_widget(form.rechercher, {'attr': {'class': 'btn btn-primary'}}) }}
+                            </div>
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+{% block custum_js %}
+    <script src="https://cdn.tiny.cloud/1/{{ key }}/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
+    <script>
+        tinymce.init({
+            selector: 'textarea',
+            plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount checklist mediaembed casechange export formatpainter pageembed linkchecker a11ychecker tinymcespellchecker permanentpen powerpaste advtable advcode editimage advtemplate ai mentions tinycomments tableofcontents footnotes mergetags autocorrect typography inlinecss markdown',
+            toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
+            tinycomments_mode: 'embedded',
+            tinycomments_author: 'Author name',
+            mergetags_list: [
+                { value: 'First.Name', title: 'First Name' },
+                { value: 'Email', title: 'Email' },
+            ],
+            ai_request: (request, respondWith) => respondWith.string(() => Promise.reject("See docs to implement AI Assistant")),
+        });
+    </script>
 {% endblock %}

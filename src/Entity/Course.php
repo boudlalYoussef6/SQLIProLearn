@@ -7,7 +7,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use phpDocumentor\Reflection\Types\Nullable;
 use Symfony\Component\Serializer\Attribute\SerializedName;
 
 #[ORM\Entity(repositoryClass: CourseRepository::class)]
@@ -22,39 +21,30 @@ class Course
     #[SerializedName('title')]
     private ?string $label = null;
 
-    #[ORM\Column(type: Types::BOOLEAN,nullable: true)]
-    #[SerializedName('is_paid')]
-    private ?string $paid= null;
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[SerializedName('description')]
+    private ?string $description = null;
 
-    #[ORM\Column(length: 200)]
-    #[SerializedName('image_125_H')]
-    private ?string $fileFormat = null;
-
-    #[ORM\Column(type: Types::TEXT)]
-    #[SerializedName('image_480x270')]
-    private ?string $path = null;
-
-    #[ORM\OneToMany(targetEntity: Visit::class, mappedBy: 'courseId', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Visit::class, mappedBy: 'course', orphanRemoval: true)]
     private Collection $visits;
-
-    #[ORM\ManyToMany(targetEntity: Category::class, inversedBy: 'courses')]
-    private Collection $categoryId;
 
     #[ORM\OneToMany(targetEntity: Application::class, mappedBy: 'course', orphanRemoval: true)]
     private Collection $applications;
 
-    #[ORM\Column(type: Types::TEXT, nullable: true)]
-    private ?string $videoPath = null;
+    #[ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'courses')]
+    #[ORM\JoinColumn(name: 'category_id', referencedColumnName: 'id')]
+    private ?Category $category = null;
 
+    #[ORM\Column(nullable: true)]
+    #[SerializedName('id')]
+    private ?int $idGene = null;
 
-      #[ORM\OneToMany(targetEntity: Section::class, mappedBy: 'course', cascade: ['persist'], orphanRemoval: true)]
-
+    #[ORM\OneToMany(targetEntity: Section::class, mappedBy: 'course', cascade: ['persist'], orphanRemoval: true)]
     private Collection $sections;
 
     public function __construct()
     {
         $this->visits = new ArrayCollection();
-        $this->categoryId = new ArrayCollection();
         $this->applications = new ArrayCollection();
         $this->sections = new ArrayCollection();
     }
@@ -72,35 +62,51 @@ class Course
     public function setLabel(string $label): static
     {
         $this->label = $label;
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): static
+    {
+        $this->description = $description;
+        return $this;
+    }
+
+     /**
+     * @return Collection<int, Application>
+     */
+    public function getApplications(): Collection
+    {
+        return $this->applications;
+    }
+
+    public function addApplication(Application $application): static
+    {
+        if (!$this->applications->contains($application)) {
+            $this->applications->add($application);
+            $application->setCours($this);
+        }
 
         return $this;
     }
 
-    public function getPaid(): ?string
+    public function removeApplication(Application $application): static
     {
-        return $this->paid;
-    }
-
-    public function setPaid(string $isPaid): static
-    {
-        $this->paid = $isPaid;
+        if ($this->applications->removeElement($application)) {
+            // set the owning side to null (unless already changed)
+            if ($application->getCours() === $this) {
+                $application->setCours(null);
+            }
+        }
 
         return $this;
     }
 
-    public function getFileFormat(): ?string
-    {
-        return $this->fileFormat;
-    }
-
-    public function setFileFormat(string $fileFormat): static
-    {
-        $this->fileFormat = $fileFormat;
-
-        return $this;
-    }
-
-    /**
+     /**
      * @return Collection<int, Visit>
      */
     public function getVisits(): Collection
@@ -130,68 +136,25 @@ class Course
         return $this;
     }
 
-    /**
-     * @return Collection<int, Category>
-     */
-    public function getCategoryId(): Collection
+    public function getCategory(): ?Category
     {
-        return $this->categoryId;
+        return $this->category;
     }
 
-    public function addCategoryId(Category $categoryId): static
+    public function setCategory(?Category $category): static
     {
-        if (!$this->categoryId->contains($categoryId)) {
-            $this->categoryId->add($categoryId);
-        }
-
+        $this->category = $category;
         return $this;
     }
 
-    public function removeCategoryId(Category $categoryId): static
+    public function getIdGene(): ?int
     {
-        $this->categoryId->removeElement($categoryId);
-
-        return $this;
+        return $this->idGene;
     }
 
-    /**
-     * @return Collection<int, Application>
-     */
-    public function getApplications(): Collection
+    public function setIdGene(int $idGene): static
     {
-        return $this->applications;
-    }
-
-    public function addApplication(Application $application): static
-    {
-        if (!$this->applications->contains($application)) {
-            $this->applications->add($application);
-            $application->setCourse($this);
-        }
-
-        return $this;
-    }
-
-    public function removeApplication(Application $application): static
-    {
-        if ($this->applications->removeElement($application)) {
-            // set the owning side to null (unless already changed)
-            if ($application->getCourse() === $this) {
-                $application->setCourse(null);
-            }
-        }
-
-        return $this;
-    }
-
-    public function getVideoPath(): ?string
-    {
-        return $this->videoPath;
-    }
-
-    public function setVideoPath(?string $videoPath): static
-    {
-        $this->videoPath = $videoPath;
+        $this->idGene = $idGene;
 
         return $this;
     }

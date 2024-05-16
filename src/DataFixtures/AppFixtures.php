@@ -22,6 +22,7 @@ class AppFixtures extends Fixture
 
     public function load(ObjectManager $manager): void
     {
+        CourseFactory::createMany(self::NBR_COURSE);
         UserFactory::createMany(self::NBR_USER);
         CategoryFactory::createMany(self::NBR_CATEGORY);
         CourseFactory::createMany(self::NBR_COURSE);

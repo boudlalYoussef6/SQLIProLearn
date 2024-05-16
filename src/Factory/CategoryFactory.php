@@ -58,11 +58,23 @@ final class CategoryFactory extends ModelFactory
     protected function initialize(): self
     {
         return $this
-            ->afterInstantiate(function(Category $category): void {
-                $categories = $this->categoryRepository->findAll();
-                $category->setParentId(self::faker()->randomElement($categories));
-            })
-        ;
+        ->afterInstantiate(function(Category $category): void {
+            $categories = $this->categoryRepository->findAll();
+
+            // Vérifiez si la liste des catégories n'est pas vide
+            if (!empty($categories)) {
+                // Sélectionnez un élément aléatoire de la liste
+                $randomCategory = self::faker()->randomElement($categories);
+            } else {
+                // Si la liste des catégories est vide, attribuez null à parentId
+                $randomCategory = null;
+            }
+
+            // Assurez-vous que $randomCategory est une instance de Category avant de l'assigner
+            if ($randomCategory instanceof Category) {
+                $category->setParentId($randomCategory);
+            }
+        });
     }
 
     protected static function getClass(): string
