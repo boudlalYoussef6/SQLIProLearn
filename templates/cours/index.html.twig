@@ -1,13 +1,13 @@
 {% extends 'site.html.twig' %}
 
-{% block title %}Cours{% endblock %}
+{% block title %}Courses{% endblock %}
 
 {% block content %}
     <section class="content">
         <div class="container-fluid">
-            <h2>list of Courses</h2>
+            <h2>List of Courses</h2>
             <div class="row" style="gap: 0.8rem;">
-                {% for cours in courses %}
+                {% for cours in pagination %}
                     <div class="card" style="width: 25vw;">
                         <img class="card-img-top"
                              src="{{ asset(random(['images/php_Elephant.jpg', 'images/php_Elephant_V2.jpg', 'images/php_Elephant_V3.jpg'])) }}"
@@ -23,6 +23,10 @@
                         </div>
                     </div>
                 {% endfor %}
+            </div>
+
+            <div class="pagination">
+                {{ knp_pagination_render(pagination) }}
             </div>
         </div>
     </section>

@@ -9,6 +9,7 @@ use App\Form\SectionType;
 use App\Repository\CourseRepository;
 use App\Repository\SectionRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,17 +17,23 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class CoursController extends AbstractController
 {
-    #[Route('/cours', name: 'app_cours')]
-    public function index(CourseRepository $courseRepository, Request $request): Response
-    {
-        $courses = $courseRepository->findAll();
+    #[Route('/', name: 'app_cours')]
+    public function index(CourseRepository $courseRepository, Request $request,PaginatorInterface $paginator): Response
+    {$queryBuilder = $courseRepository->createQueryBuilder('c');
+
+       
+        $pagination = $paginator->paginate(
+            $queryBuilder, 
+            $request->query->getInt('page', 1), 
+            6 
+        );
 
         $course = new Course();
         $form = $this->createForm(CoursType::class, $course);
 
         return $this->render('cours/index.html.twig', [
-            'courses' => $courses,
-            'form' => $form
+            'pagination' => $pagination,
+            'form' => $form->createView(),
         ]);
     }
 

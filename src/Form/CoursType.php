@@ -19,8 +19,8 @@ class CoursType extends AbstractType
             ->add('description', TextareaType::class, ['required' => false,])
             ->add('category', EntityType::class, [
                 'class' => Category::class,
-                'choice_label' => 'label', // Le champ à afficher dans le champ de sélection
-            'placeholder' => 'Sélectionnez une catégorie', // Texte de l'option par défaut
+                'choice_label' => 'label', 
+            'placeholder' => 'Sélectionnez une catégorie', 
             'label' => 'Catégorie', // Label du champ de sélection
             // Vous pouvez ajouter plus d'options selon vos besoins
             ]);
