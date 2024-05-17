@@ -10,43 +10,30 @@
                     <h3 class="card-title">Create New Course</h3>
                 </div>
                 <div class="row">
-                    {{ form_start(form) }}
-                        <div class="card-body">
-                            <div class="form-group">
-                                <label for="exampleInputEmail1">Label</label>
-                                {{ form_widget(form.label, {'attr': {'class': 'form-control', 'placeholder': 'Label'}}) }}
+                    <div class="col-md-12">
+                        {{ form_start(form) }}
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label for="id">Identifiant</label>
+                                    {{ form_widget(form.id, {'attr': {'class': 'form-control', 'placeholder': 'Identifiant'}}) }}
+                                </div>
+                                <div class="form-group">
+                                    <label for="category">Catégorie</label>
+                                    {{ form_widget(form.category, {'attr': {'class': 'form-control', 'placeholder': 'Sélectionnez une catégorie'}}) }}
+                                </div>
                             </div>
-                            <div class="form-group">
-                                <label>Description</label>
-                                {{ form_widget(form.description, {'attr': {'id': 'editor'}}) }}
+                            <div class="card-footer">
+                                {{ form_widget(form.rechercher, {'attr': {'class': 'btn btn-primary'}}) }}
                             </div>
-                            <div class="form-group">
-                                <label>categories</label>
-                                {{ form_widget(form.category, {'attr': {'class': 'form-control', 'placeholder': 'categories'}}) }}
-                            </div>
-                        
-                            <div class="form-check">
-                                <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                                <label class="form-check-label" for="exampleCheck1">
-                                    Ready to unlock a new jutsu, honing both mind and body through course enrollment.
-                                </label>
-                            </div>
-                        </div>
-                        <div class="card-footer">
-                            <button type="submit" class="btn btn-primary">Submit</button>
-                        </div>
-                    {{ form_end(form) }}
+                        {{ form_end(form) }}
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 {% endblock %}
-
 {% block custum_js %}
-    <!-- Place the first <script> tag in your HTML's <head> -->
     <script src="https://cdn.tiny.cloud/1/{{ key }}/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
-
-    <!-- Place the following <script> and <textarea> tags your HTML's <body> -->
     <script>
         tinymce.init({
             selector: 'textarea',

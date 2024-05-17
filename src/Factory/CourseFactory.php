@@ -30,44 +30,27 @@ use Zenstruck\Foundry\RepositoryProxy;
  */
 final class CourseFactory extends ModelFactory
 {
-    private $categoryRepository;
-    /**
-     * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#factories-as-services
-     *
-     * @todo inject services if required
-     */
+    private CategoryRepository $categoryRepository;
+
     public function __construct(CategoryRepository $categoryRepository)
     {
         $this->categoryRepository = $categoryRepository;
         parent::__construct();
     }
 
-    /**
-     * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#model-factories
-     *
-     * @todo add your default values here
-     */
     protected function getDefaults(): array
     {
         return [
             'description' => self::faker()->paragraph(),
-            'fileFormat' => self::faker()->randomElement(['classic','udemy']),
             'label' => self::faker()->name(),
+            'paid' => self::faker()->boolean(),
+            'videoPath' => self::faker()->filePath(),
         ];
     }
 
-    /**
-     * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#initialization
-     */
-    protected function initialize(): self
+    protected function initialize()
     {
-        return $this
-            ->afterInstantiate(function(Course $course): void {
-                $categories = $this->categoryRepository->findAll();
-                $randomCategory = self::faker()->randomElement($categories);
-                $course->addCategoryId($randomCategory);
-            })
-        ;
+        
     }
 
     protected static function getClass(): string

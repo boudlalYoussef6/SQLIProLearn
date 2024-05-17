@@ -24,9 +24,10 @@ class Category
     #[ORM\OneToOne(targetEntity: self::class, mappedBy: 'parentId', cascade: ['persist', 'remove'])]
     private ?self $category = null;
 
-    #[ORM\ManyToMany(targetEntity: Course::class, mappedBy: 'categoryId')]
+    #[ORM\OneToMany(targetEntity: Course::class, mappedBy: 'category', orphanRemoval: true)]
     private Collection $courses;
 
+  
     public function __construct()
     {
         $this->courses = new ArrayCollection();
@@ -95,7 +96,7 @@ class Category
     {
         if (!$this->courses->contains($course)) {
             $this->courses->add($course);
-            $course->addCategoryId($this);
+            $course->setCategory($this);
         }
 
         return $this;
@@ -104,9 +105,16 @@ class Category
     public function removeCourse(Course $course): static
     {
         if ($this->courses->removeElement($course)) {
-            $course->removeCategoryId($this);
+            // set the owning side to null (unless already changed)
+            if ($course->getCategory() === $this) {
+                $course->setCategory(null);
+            }
         }
 
         return $this;
     }
+    
+
+    
+   
 }

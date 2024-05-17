@@ -63,8 +63,10 @@ final class VisitFactory extends ModelFactory
             ->afterInstantiate(function(Visit $visit): void {
                 $users = $this->userRepository->findAll();
                 $courses = $this->courseRepository->findAll();
+
                 $visit->setUser(self::faker()->randomElement($users));
                 $visit->setCourse(self::faker()->randomElement($courses));
+
             })
         ;
     }
