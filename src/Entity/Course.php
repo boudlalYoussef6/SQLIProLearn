@@ -9,6 +9,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use phpDocumentor\Reflection\Types\Nullable;
 use Symfony\Component\Serializer\Attribute\SerializedName;
 
 #[ORM\Entity(repositoryClass: CourseRepository::class)]
@@ -92,7 +93,7 @@ class Course
     {
         if (!$this->applications->contains($application)) {
             $this->applications->add($application);
-            $application->setCours($this);
+            $application->setCourse($this);
         }
 
         return $this;
@@ -102,8 +103,8 @@ class Course
     {
         if ($this->applications->removeElement($application)) {
             // set the owning side to null (unless already changed)
-            if ($application->getCours() === $this) {
-                $application->setCours(null);
+            if ($application->getCourse() === $this) {
+                $application->setCourse(null);
             }
         }
 

@@ -1,0 +1,23 @@
+# config/packages/old_sound_rabbit_mq.yaml
+old_sound_rabbit_mq:
+    connections:
+        default:
+            host: '%env(RABBITMQ_HOST)%'
+            port: 5672
+            user: '%env(RABBITMQ_USER)%'
+            password: '%env(RABBITMQ_PASSWORD)%'
+            vhost: '/'
+            lazy: true
+            connection_timeout: 3
+            read_write_timeout: 3
+            keepalive: false
+            heartbeat: 0
+    producers:
+        my_producer:
+            connection: default
+            exchange_options: { name: 'my_exchange', type: direct }
+    consumers:
+        my_consumer:
+            connection: default
+            queue_options: { name: 'my_queue' }
+            callback: 'App\\Consumer\\MessageConsumer'

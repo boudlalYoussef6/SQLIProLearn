@@ -23,6 +23,7 @@ class Category
     #[ORM\OneToOne(targetEntity: self::class, inversedBy: 'category', cascade: ['persist', 'remove'])]
     private ?self $parentId = null;
 
+    
     #[ORM\OneToOne(targetEntity: self::class, mappedBy: 'parentId', cascade: ['persist', 'remove'])]
     private ?self $category = null;
 
