@@ -9,7 +9,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use phpDocumentor\Reflection\Types\Nullable;
 use Symfony\Component\Serializer\Attribute\SerializedName;
 
 #[ORM\Entity(repositoryClass: CourseRepository::class)]
@@ -40,7 +39,7 @@ class Course
 
     #[ORM\Column(nullable: true)]
     #[SerializedName('id')]
-    private ?int $idGene = null;
+    private ?int $idReference = null;
 
     #[ORM\OneToMany(targetEntity: Section::class, mappedBy: 'course', cascade: ['persist'], orphanRemoval: true)]
     private Collection $sections;
@@ -153,14 +152,14 @@ class Course
         return $this;
     }
 
-    public function getIdGene(): ?int
+    public function getIdReference(): ?int
     {
-        return $this->idGene;
+        return $this->idReference;
     }
 
-    public function setIdGene(int $idGene): static
+    public function setIdReference(?int $idReference): static
     {
-        $this->idGene = $idGene;
+        $this->idReference = $idReference;
 
         return $this;
     }

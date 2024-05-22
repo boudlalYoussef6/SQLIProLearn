@@ -10,6 +10,5 @@ class SmsNotificationHandler
 {
     public function __invoke(SmsNotification $message)
     {
-       
     }
 }
