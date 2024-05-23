@@ -69,10 +69,14 @@ class CoursController extends AbstractController
     public function coursDetails(CourseRepository $courseRepository, Course $course): Response
     {
         $sections = $course->getSections();
+        $author = $course->getAuthor();
+        $category = $course->getCategory();
 
         return $this->render('cours/details.html.twig', [
             'course' => $course,
             'sections' => $sections,
+            'author' => $author,
+            'category' => $category,
         ]);
     }
 

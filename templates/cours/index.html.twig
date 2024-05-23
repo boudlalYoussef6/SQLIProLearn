@@ -16,7 +16,7 @@
                         <div class="card-body">
                             <h3 class="card-title font-weight-bold">{{ cours.label }}</h3>
                             <p class="card-text">
-                                {{ cours.description|raw|length > 50 ? cours.description|slice(0, 50) ~ '...' : cours.description }}
+                                {{ cours.description|striptags|length > 50 ? cours.description|striptags|slice(0, 50) ~ '...' : cours.description|striptags }}
                             </p>
 
                             <a href="{{ url('app_cours_details', {'id': cours.id}) }}" class="btn btn-primary">More info</a>

@@ -47,6 +47,10 @@ class Course
     #[ORM\Column(length: 50)]
     private ?string $type = null;
 
+    #[ORM\ManyToOne(inversedBy: 'cours')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Author $author = null;
+
     public function __construct()
     {
         $this->visits = new ArrayCollection();
@@ -205,6 +209,18 @@ class Course
     public function setType(string $type): static
     {
         $this->type = $type;
+
+        return $this;
+    }
+
+    public function getAuthor(): ?Author
+    {
+        return $this->author;
+    }
+
+    public function setAuthor(?Author $author): static
+    {
+        $this->author = $author;
 
         return $this;
     }

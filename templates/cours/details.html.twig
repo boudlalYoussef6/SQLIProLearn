@@ -6,24 +6,39 @@
     <section class="content">
         <div class="container-fluid">
             <h2>{{ course.label }}</h2>
-            <div class="row" style="gap: 0.8rem;">
-                <div class="card" style="width: 75vw;">
-                    <img class="card-img-top"
-                         src="{{ asset(random(['images/php_Elephant.jpg',
-                             'images/php_Elephant_V2.jpg',
-                             'images/php_Elephant_V3.jpg'])) }}"
-                         alt="image of the course"
-                         style="height: 20vh; object-fit: cover;">
-                    <div class="card-body">
-                        <h3 class="card-title font-weight-bold">{{ course.label }}</h3>
-                        <p class="card-text">{{ course.description }}</p>
+            <div class="row">
+                <!-- Main course card -->
+                <div class="col-md-9">
+                    <div class="card">
+                        <img class="card-img-top"
+                             src="{{ asset(random(['images/php_Elephant.jpg',
+                                 'images/php_Elephant_V2.jpg',
+                                 'images/php_Elephant_V3.jpg'])) }}"
+                             alt="image of the course"
+                             style="height: 20vh; object-fit: cover;">
+                        <div class="card-body">
+                            <h3 class="card-title font-weight-bold">{{ course.label }}</h3>
+                            <p class="card-text">{{ course.description|raw }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Author and Category card -->
+                <div class="col-md-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">Details</h4>
+                            <p class="card-text"><strong>Author:</strong> {{ author.name }}</p>
+                            <p class="card-text"><strong>Category:</strong> {{ category.label }}</p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
+    <a href="{{ path('app_cours_ajout_section', {'id': course.id}) }}" class="btn btn-primary">Ajouter section</a>
 
-    <div class="accordion" id="accordionExample">
+    <div class="accordion" id="accordionExample" style="margin-top: 1rem;">
         {% for section in sections %}
             <div class="accordion-item">
                 <h2 class="accordion-header" id="heading{{ loop.index }}">
@@ -35,13 +50,10 @@
                 <div id="collapse{{ loop.index }}" class="accordion-collapse collapse" aria-labelledby="heading{{ loop.index }}"
                      data-bs-parent="#accordionExample">
                     <div class="accordion-body">
-                        {{ section.description }}
+                        {{ section.description|raw }}
                     </div>
                 </div>
             </div>
         {% endfor %}
-
     </div>
 {% endblock %}
-
-

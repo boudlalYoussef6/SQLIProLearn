@@ -71,12 +71,11 @@ class Category
 
     public function setCategory(?self $category): static
     {
-        // unset the owning side of the relation if necessary
+        
         if (null === $category && null !== $this->category) {
             $this->category->setParentId(null);
         }
 
-        // set the owning side of the relation if necessary
         if (null !== $category && $category->getParentId() !== $this) {
             $category->setParentId($this);
         }
@@ -107,7 +106,6 @@ class Category
     public function removeCourse(Course $course): static
     {
         if ($this->courses->removeElement($course)) {
-            // set the owning side to null (unless already changed)
             if ($course->getCategory() === $this) {
                 $course->setCategory(null);
             }
