@@ -8,8 +8,9 @@ use App\Entity\Course;
 use App\Form\CoursType;
 use App\Form\DetailsCourseType;
 use App\Repository\CourseRepository;
+use App\Repository\SectionRepository;
+use App\Service\CourseService;
 use Doctrine\ORM\EntityManagerInterface;
-
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -46,7 +47,7 @@ class CoursController extends AbstractController
     }
 
     #[Route('/cours/add', name: 'app_cours_add')]
-    public function coursAdd(Request $request): Response
+    public function CoursAdd(Request $request, CourseService $courseService): Response
     {
         $course = new Course();
         $form = $this->createForm(CoursType::class, $course);
@@ -54,6 +55,7 @@ class CoursController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $courseService->createCourse($course);
             $this->addCourseCommand->run($course);
             return $this->redirectToRoute('app_cours');
         }

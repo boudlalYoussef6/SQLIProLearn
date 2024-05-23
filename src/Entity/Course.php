@@ -44,6 +44,9 @@ class Course
     #[ORM\OneToMany(targetEntity: Section::class, mappedBy: 'course', cascade: ['persist'], orphanRemoval: true)]
     private Collection $sections;
 
+    #[ORM\Column(length: 50)]
+    private ?string $type = null;
+
     public function __construct()
     {
         $this->visits = new ArrayCollection();
@@ -190,6 +193,18 @@ class Course
                 $section->setCourse(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    public function setType(string $type): static
+    {
+        $this->type = $type;
 
         return $this;
     }
