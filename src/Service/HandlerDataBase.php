@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Service;
 
 use App\Entity\Course;
@@ -19,5 +21,4 @@ class HandlerDataBase
         $this->entityManager->persist($course);
         $this->entityManager->flush();
     }
-
 }

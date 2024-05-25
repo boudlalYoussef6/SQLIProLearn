@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Service;
 
 use Symfony\Component\DependencyInjection\Attribute\Target;
@@ -9,8 +11,7 @@ class UdemyApiClient implements UdemyApiClientInterface
 {
     private HttpClientInterface $client;
 
-
-    public function __construct(#[Target("udemy_client")] HttpClientInterface $client)
+    public function __construct(#[Target('udemy_client')] HttpClientInterface $client)
     {
         $this->client = $client;
     }

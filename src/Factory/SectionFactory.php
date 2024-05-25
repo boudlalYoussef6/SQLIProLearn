@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Factory;
 
 use App\Entity\Section;
@@ -59,7 +61,7 @@ final class SectionFactory extends ModelFactory
     protected function initialize(): self
     {
         return $this
-            ->afterInstantiate(function(Section $section): void {
+            ->afterInstantiate(function (Section $section): void {
                 $courserepository = $this->courseRepository->findAll();
                 $section->setCourse(self::faker()->unique()->randomElement($courserepository));
             })

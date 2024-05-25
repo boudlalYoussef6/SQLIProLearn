@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Factory;
 
 use App\Entity\Application;
@@ -60,14 +62,14 @@ final class ApplicationFactory extends ModelFactory
     protected function initialize(): self
     {
         return $this
-            ->afterInstantiate(function(Application $application): void {
+            ->afterInstantiate(function (Application $application): void {
                 $courses = $this->courseRepository->findAll();
                 $users = $this->userRepository->findAll();
 
                 $application->setCourse(self::faker()->randomElement($courses));
                 $application->setUser(self::faker()->randomElement($users));
 
-                $application->setStatus(self::faker()->randomElement(['published','rejected','pending']));
+                $application->setStatus(self::faker()->randomElement(['published', 'rejected', 'pending']));
             })
         ;
     }

@@ -1,13 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Entity\Course;
 use App\Form\CoursType;
 use App\Form\DetailsCourseType;
-use App\Form\SectionType;
 use App\Repository\CourseRepository;
-use App\Repository\SectionRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -18,14 +18,14 @@ use Symfony\Component\Routing\Attribute\Route;
 class CoursController extends AbstractController
 {
     #[Route('/', name: 'app_cours')]
-    public function index(CourseRepository $courseRepository, Request $request,PaginatorInterface $paginator): Response
-    {$queryBuilder = $courseRepository->createQueryBuilder('c');
+    public function index(CourseRepository $courseRepository, Request $request, PaginatorInterface $paginator): Response
+    {
+        $queryBuilder = $courseRepository->createQueryBuilder('c');
 
-       
         $pagination = $paginator->paginate(
-            $queryBuilder, 
-            $request->query->getInt('page', 1), 
-            6 
+            $queryBuilder,
+            $request->query->getInt('page', 1),
+            6
         );
 
         $course = new Course();
@@ -48,6 +48,7 @@ class CoursController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($course);
             $entityManager->flush();
+
             return $this->redirectToRoute('app_cours');
         }
 
@@ -55,7 +56,6 @@ class CoursController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
-
 
     #[Route('/cours/{id}', name: 'app_cours_details')]
     public function courseDetails(CourseRepository $courseRepository, $id, Request $request, EntityManagerInterface $entityManager): Response
@@ -86,7 +86,7 @@ class CoursController extends AbstractController
 
         return $this->render('cours/section-ajout.html.twig', [
             'course' => $course,
-            'form' => $form
+            'form' => $form,
         ]);
     }
 }

@@ -1,4 +1,8 @@
-<?php namespace App\Form;
+<?php
+
+declare(strict_types=1);
+
+namespace App\Form;
 
 use App\Entity\Category;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -14,18 +18,18 @@ class UdemyType extends AbstractType
     {
         $builder->add('id', IntegerType::class, [
             'label' => 'Identifiant',
-            'attr' => ['class' => 'form-control', 'placeholder' => 'Identifiant']
+            'attr' => ['class' => 'form-control', 'placeholder' => 'Identifiant'],
         ])
         ->add('category', EntityType::class, [
             'class' => Category::class,
             'choice_label' => 'label',
             'placeholder' => 'Sélectionnez une catégorie',
             'label' => 'Catégorie',
-            'attr' => ['class' => 'form-control']
+            'attr' => ['class' => 'form-control'],
         ])
         ->add('rechercher', SubmitType::class, [
             'label' => 'Rechercher',
-            'attr' => ['class' => 'btn btn-primary']
+            'attr' => ['class' => 'btn btn-primary'],
         ]);
     }
 

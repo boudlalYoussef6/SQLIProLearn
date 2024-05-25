@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\DataFixtures;
 
+use App\Factory\ApplicationFactory;
 use App\Factory\CategoryFactory;
 use App\Factory\CourseFactory;
-use App\Factory\ApplicationFactory;
 use App\Factory\SectionFactory;
 use App\Factory\UserFactory;
 use App\Factory\VisitFactory;
@@ -13,12 +15,12 @@ use Doctrine\Persistence\ObjectManager;
 
 class AppFixtures extends Fixture
 {
-    const NBR_USER = 30;
-    const NBR_COURSE = 30;
-    const NBR_VISIT = 30;
-    const NBR_CATEGORY = 30;
-    const NBR_REQUEST = 30;
-    const NBR_SECTION = 30;
+    public const NBR_USER = 30;
+    public const NBR_COURSE = 30;
+    public const NBR_VISIT = 30;
+    public const NBR_CATEGORY = 30;
+    public const NBR_REQUEST = 30;
+    public const NBR_SECTION = 30;
 
     public function load(ObjectManager $manager): void
     {
@@ -33,5 +35,3 @@ class AppFixtures extends Fixture
         $manager->flush();
     }
 }
-
-

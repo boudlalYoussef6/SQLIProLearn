@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Repository\CategoryRepository;
@@ -27,7 +29,6 @@ class Category
     #[ORM\OneToMany(targetEntity: Course::class, mappedBy: 'category', orphanRemoval: true)]
     private Collection $courses;
 
-  
     public function __construct()
     {
         $this->courses = new ArrayCollection();
@@ -113,8 +114,4 @@ class Category
 
         return $this;
     }
-    
-
-    
-   
 }
