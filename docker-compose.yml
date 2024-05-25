@@ -3,6 +3,7 @@ version: '3.7'
 services:
 
     server:
+        container_name: "sqli__learn-pro__webserver"
         build:
             context: .
             dockerfile: ./docker/server/Dockerfile
@@ -23,6 +24,7 @@ services:
             - inner_net
 
     database:
+        container_name: "sqli__learn-pro__database"
         healthcheck:
             test: mysqladmin ping -h 127.0.0.1 -u root --password=$$MYSQL_ROOT_PASSWORD
             interval: 5s
@@ -42,6 +44,7 @@ services:
             - inner_net
 
     myadmin:
+        container_name: "sqli__learn-pro__phpmyadmin"
         image: phpmyadmin/phpmyadmin:5
         environment:
             PMA_HOST: database
@@ -55,6 +58,7 @@ services:
             - db_admin_data:/var/www/html
 
     mongodb:
+        container_name: "sqli__learn-pro__mongodb"
         image: "mongo"
         volumes:
             - "mongodb_data:/data/db"
@@ -63,6 +67,7 @@ services:
             - inner_net
 
     mongo-express:
+        container_name: "sqli__learn-pro__mongo-express"
         networks:
             - inner_net
         image: mongo-express
@@ -76,6 +81,7 @@ services:
             ME_CONFIG_BASICAUTH: false
 
     elasticsearch:
+        container_name: "sqli__learn-pro__elasticsearch"
         image: "docker.elastic.co/elasticsearch/elasticsearch:7.12.1"
         environment:
             - node.name=elasticsearch
@@ -96,6 +102,7 @@ services:
             - inner_net
 
     graylog:
+        container_name: "sqli__learn-pro__graylog"
         image: "graylog/graylog:4.3.2"
         depends_on:
             -   elasticsearch
@@ -128,8 +135,8 @@ services:
             - inner_net
 
     openldap:
+        container_name: "sqli__learn-pro__openldap"
         image:  osixia/openldap:latest
-        container_name: openldap
         hostname: openldap
         ports:
             -   "389:389"
@@ -155,8 +162,9 @@ services:
             - LDAP_READONLY_USER=true
             - LDAP_READONLY_USER_USERNAME=user-ro
             - LDAP_READONLY_USER_PASSWORD=ro_pass
+
     phpldapadmin:
-        container_name: 'phpldapadmin'
+        container_name: 'sqli__learn-pro__php-ldap-admin'
         image: osixia/phpldapadmin:latest
         hostname: 'phpldapadmin'
         ports:
@@ -168,7 +176,6 @@ services:
              -   openldap
         networks:
            - inner_net
-
 
 volumes:
     db_data:
