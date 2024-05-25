@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Factory;
 
 use App\Entity\Course;
@@ -50,7 +52,6 @@ final class CourseFactory extends ModelFactory
 
     protected function initialize()
     {
-        
     }
 
     protected static function getClass(): string

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Factory;
 
 use App\Entity\Visit;
@@ -60,13 +62,12 @@ final class VisitFactory extends ModelFactory
     protected function initialize(): self
     {
         return $this
-            ->afterInstantiate(function(Visit $visit): void {
+            ->afterInstantiate(function (Visit $visit): void {
                 $users = $this->userRepository->findAll();
                 $courses = $this->courseRepository->findAll();
 
                 $visit->setUser(self::faker()->randomElement($users));
                 $visit->setCourse(self::faker()->randomElement($courses));
-
             })
         ;
     }

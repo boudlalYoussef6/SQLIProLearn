@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Form;
 
 use App\Entity\Category;
@@ -16,16 +18,14 @@ class CoursType extends AbstractType
     {
         $builder
             ->add('label')
-            ->add('description', TextareaType::class, ['required' => false,])
+            ->add('description', TextareaType::class, ['required' => false])
             ->add('category', EntityType::class, [
                 'class' => Category::class,
-                'choice_label' => 'label', 
-            'placeholder' => 'Sélectionnez une catégorie', 
-            'label' => 'Catégorie', // Label du champ de sélection
-            // Vous pouvez ajouter plus d'options selon vos besoins
+                'choice_label' => 'label',
+                'placeholder' => 'Sélectionnez une catégorie',
+                'label' => 'Catégorie', // Label du champ de sélection
+                // Vous pouvez ajouter plus d'options selon vos besoins
             ]);
-            
-        
     }
 
     public function configureOptions(OptionsResolver $resolver): void

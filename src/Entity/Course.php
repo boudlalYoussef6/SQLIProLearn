@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Repository\CourseRepository;
@@ -62,6 +64,7 @@ class Course
     public function setLabel(string $label): static
     {
         $this->label = $label;
+
         return $this;
     }
 
@@ -73,10 +76,11 @@ class Course
     public function setDescription(?string $description): static
     {
         $this->description = $description;
+
         return $this;
     }
 
-     /**
+    /**
      * @return Collection<int, Application>
      */
     public function getApplications(): Collection
@@ -106,7 +110,7 @@ class Course
         return $this;
     }
 
-     /**
+    /**
      * @return Collection<int, Visit>
      */
     public function getVisits(): Collection
@@ -144,6 +148,7 @@ class Course
     public function setCategory(?Category $category): static
     {
         $this->category = $category;
+
         return $this;
     }
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -15,6 +17,7 @@ class ApplicationController extends AbstractController
             'controller_name' => 'ApplicationController',
         ]);
     }
+
     #[Route('/addApplication', name: 'app_application_add')]
     public function addApplication(): Response
     {

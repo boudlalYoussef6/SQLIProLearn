@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Factory;
 
 use App\Entity\Category;
@@ -58,7 +60,7 @@ final class CategoryFactory extends ModelFactory
     protected function initialize(): self
     {
         return $this
-        ->afterInstantiate(function(Category $category): void {
+        ->afterInstantiate(function (Category $category): void {
             $categories = $this->categoryRepository->findAll();
 
             // Vérifiez si la liste des catégories n'est pas vide
