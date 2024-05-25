@@ -78,13 +78,17 @@
         "symfony/polyfill-php82": "*"
     },
     "scripts": {
+        "pre-commit": [
+            "bash .git/hooks/pre-commit"
+        ],
         "auto-scripts": {
             "cache:clear": "symfony-cmd",
             "assets:install %PUBLIC_DIR%": "symfony-cmd",
             "importmap:install": "symfony-cmd"
         },
         "post-install-cmd": [
-            "@auto-scripts"
+            "@auto-scripts",
+            "cp docker/pre-commit .git/hooks/pre-commit"
         ],
         "post-update-cmd": [
             "@auto-scripts"
@@ -101,6 +105,7 @@
     },
     "require-dev": {
         "doctrine/doctrine-fixtures-bundle": "^3.5",
+        "friendsofphp/php-cs-fixer": "^3.57",
         "phpunit/phpunit": "^9.5",
         "symfony/browser-kit": "7.0.*",
         "symfony/css-selector": "7.0.*",
