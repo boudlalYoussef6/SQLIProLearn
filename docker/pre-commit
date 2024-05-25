@@ -49,7 +49,7 @@ run_php_cs_fixer() {
         echo >&2 "Coding guidelines pre-commit check failed."
         echo >&2 "Running check again in verbose mode ..."
 
-        docker exec sqli-learning-platform-server-1 "$php_cs_fixer_bin" fix --config="$config"\
+        docker exec sqli__learn-pro__webserver "$php_cs_fixer_bin" fix --config="$config"\
             -vvv \
             --diff \
             --dry-run \
@@ -61,9 +61,7 @@ run_php_cs_fixer() {
         exit 1
     }
 
-	
-
-   	docker exec sqli-learning-platform-server-1  "$php_cs_fixer_bin" fix \
+   	docker exec sqli__learn-pro__webserver "$php_cs_fixer_bin" fix \
         --config="$config" \
         -q \
         --dry-run \
