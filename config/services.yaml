@@ -18,6 +18,7 @@ services:
                   protocol_version: 3
                   referrals: false
 
+
     # ...
 
     # default configuration for services in *this* file

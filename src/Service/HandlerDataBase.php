@@ -9,16 +9,13 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class HandlerDataBase
 {
-    private $entityManager;
-
-    public function __construct(EntityManagerInterface $entityManager)
-    {
-        $this->entityManager = $entityManager;
+    public function __construct(private readonly EntityManagerInterface $entityManager){
     }
 
-    public function storeCourse(Course $course)
+    public function storeCourse(Course $course): void
     {
         $this->entityManager->persist($course);
         $this->entityManager->flush();
     }
+
 }
