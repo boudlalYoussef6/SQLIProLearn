@@ -9,6 +9,7 @@ use App\Form\CoursType;
 use App\Form\DetailsCourseType;
 use App\Repository\CourseRepository;
 use Doctrine\ORM\EntityManagerInterface;
+
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,8 +18,15 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class CoursController extends AbstractController
 {
+    public function __construct(
+        private readonly AddCourseCommand $addCourseCommand,
+        private readonly DeleteCourseCommand $deleteCourseCommand,
+        private readonly UpdateCourseCommand $updateCourseCommand,
+    ) {
+    }
+
     #[Route('/', name: 'app_cours')]
-    public function index(CourseRepository $courseRepository, Request $request, PaginatorInterface $paginator): Response
+    public function index(CourseRepository $courseRepository, Request $request,PaginatorInterface $paginator): Response
     {
         $queryBuilder = $courseRepository->createQueryBuilder('c');
 
@@ -38,7 +46,7 @@ class CoursController extends AbstractController
     }
 
     #[Route('/cours/add', name: 'app_cours_add')]
-    public function CoursAdd(Request $request, EntityManagerInterface $entityManager): Response
+    public function coursAdd(Request $request): Response
     {
         $course = new Course();
         $form = $this->createForm(CoursType::class, $course);
@@ -46,9 +54,7 @@ class CoursController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($course);
-            $entityManager->flush();
-
+            $this->addCourseCommand->run($course);
             return $this->redirectToRoute('app_cours');
         }
 
@@ -58,9 +64,8 @@ class CoursController extends AbstractController
     }
 
     #[Route('/cours/{id}', name: 'app_cours_details')]
-    public function courseDetails(CourseRepository $courseRepository, $id, Request $request, EntityManagerInterface $entityManager): Response
+    public function coursDetails(CourseRepository $courseRepository, Course $course): Response
     {
-        $course = $courseRepository->findOneBy(['id' => $id]);
         $sections = $course->getSections();
 
         return $this->render('cours/details.html.twig', [
@@ -70,10 +75,8 @@ class CoursController extends AbstractController
     }
 
     #[Route('/cours/ajout/{id}', name: 'app_cours_ajout_section')]
-    public function courseAjoutSection(CourseRepository $courseRepository, $id, Request $request, EntityManagerInterface $entityManager): Response
+    public function courseAjoutSection(CourseRepository $courseRepository, Course $course, Request $request, EntityManagerInterface $entityManager): Response
     {
-        $course = $courseRepository->findOneBy(['id' => $id]);
-
         $form = $this->createForm(DetailsCourseType::class, $course);
         $form->handleRequest($request);
 

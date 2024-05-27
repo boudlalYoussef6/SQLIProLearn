@@ -9,11 +9,7 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class UdemyApiClient implements UdemyApiClientInterface
 {
-    private HttpClientInterface $client;
-
-    public function __construct(#[Target('udemy_client')] HttpClientInterface $client)
-    {
-        $this->client = $client;
+    public function __construct(#[Target("udemy_client")] private readonly HttpClientInterface $client){
     }
 
     public function getCourses(): array

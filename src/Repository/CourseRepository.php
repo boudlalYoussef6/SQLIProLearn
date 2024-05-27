@@ -6,6 +6,7 @@ namespace App\Repository;
 
 use App\Entity\Course;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -18,33 +19,25 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class CourseRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(private readonly EntityManagerInterface $registry)
     {
         parent::__construct($registry, Course::class);
     }
 
-    //    /**
-    //     * @return Course[] Returns an array of Course objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('c')
-    //            ->andWhere('c.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('c.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    public function add(Course $course): void
+    {
+        $this->registry->persist($course);
+        $this->registry->flush();
+    }
 
-    //    public function findOneBySomeField($value): ?Course
-    //    {
-    //        return $this->createQueryBuilder('c')
-    //            ->andWhere('c.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+    public function remove(Course $course): void
+    {
+        $this->registry->remove($course);
+        $this->registry->flush();
+    }
+
+    public function update(Course $course): void
+    {
+        $this->registry->flush();
+    }
 }
