@@ -78,7 +78,9 @@ services:
             ME_CONFIG_MONGODB_ADMINUSERNAME: root
             ME_CONFIG_MONGODB_ADMINPASSWORD: example
             ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
-            ME_CONFIG_BASICAUTH: false
+            ME_CONFIG_BASICAUTH_USER: ""
+            ME_CONFIG_BASICAUTH_PASS: ""
+
 
     elasticsearch:
         container_name: "sqli__learn-pro__elasticsearch"
@@ -105,8 +107,8 @@ services:
         container_name: "sqli__learn-pro__graylog"
         image: "graylog/graylog:4.3.2"
         depends_on:
-            -   elasticsearch
-            -   mongodb
+            - elasticsearch
+            - mongodb
         entrypoint: "/usr/bin/tini -- wait-for-it elasticsearch:9200 --  /docker-entrypoint.sh"
         environment:
             GRAYLOG_PASSWORD_SECRET: somepasswordpepper
@@ -139,16 +141,14 @@ services:
         image:  osixia/openldap:latest
         hostname: openldap
         ports:
-            -   "389:389"
-            -   "636:636"
-
+            - "389:389"
+            - "636:636"
         volumes:
-              - ./data/certificates:/container/service/slapd/assets/certs
-              - ./data/slapd/database:/var/lib/ldap
-              - ./data/slapd/config:/etc/ldap/slapd.d
+            - ./data/certificates:/container/service/slapd/assets/certs
+            - ./data/slapd/database:/var/lib/ldap
+            - ./data/slapd/config:/etc/ldap/slapd.d
         networks:
             - inner_net
-
         environment:
             - LDAP_ORGANISATION=ramhlocal
             - LDAP_DOMAIN=ramhlocal.com
@@ -168,14 +168,26 @@ services:
         image: osixia/phpldapadmin:latest
         hostname: 'phpldapadmin'
         ports:
-            -   "8082:80"
+            - "8082:80"
         environment:
             - PHPLDAPADMIN_LDAP_HOSTS=openldap
             - PHPLDAPADMIN_HTTPS=false
         depends_on:
-             -   openldap
+            - openldap
         networks:
-           - inner_net
+            - inner_net
+
+    rabbitmq:
+        container_name: "rabbitmq_server"
+        image: rabbitmq:3-management-alpine
+        environment:
+            - RABBITMQ_DEFAULT_USER=guest
+            - RABBITMQ_DEFAULT_PASS=guest
+        ports:
+            - 5672:5672 # port to use when writing
+            - 15672:15672 #port to use for UI admin
+        networks:
+            - inner_net
 
 volumes:
     db_data:

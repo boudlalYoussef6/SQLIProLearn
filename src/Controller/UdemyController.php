@@ -33,6 +33,7 @@ class UdemyController extends AbstractController
 
             $course = $deserializationService->deserializeCourse($courseData);
             $course->setCategory($categoryId);
+            $course->setType('udemy');
 
             $handlerDataBase->storeCourse($course);
 

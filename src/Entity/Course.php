@@ -39,10 +39,17 @@ class Course
 
     #[ORM\Column(nullable: true)]
     #[SerializedName('id')]
-    private ?int $idGene = null;
+    private ?int $idReference = null;
 
     #[ORM\OneToMany(targetEntity: Section::class, mappedBy: 'course', cascade: ['persist'], orphanRemoval: true)]
     private Collection $sections;
+
+    #[ORM\Column(length: 50)]
+    private ?string $type = null;
+
+    #[ORM\ManyToOne(inversedBy: 'cours')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Author $author = null;
 
     public function __construct()
     {
@@ -92,7 +99,7 @@ class Course
     {
         if (!$this->applications->contains($application)) {
             $this->applications->add($application);
-            $application->setCours($this);
+            $application->setCourse($this);
         }
 
         return $this;
@@ -102,8 +109,8 @@ class Course
     {
         if ($this->applications->removeElement($application)) {
             // set the owning side to null (unless already changed)
-            if ($application->getCours() === $this) {
-                $application->setCours(null);
+            if ($application->getCourse() === $this) {
+                $application->setCourse(null);
             }
         }
 
@@ -152,14 +159,14 @@ class Course
         return $this;
     }
 
-    public function getIdGene(): ?int
+    public function getIdReference(): ?int
     {
-        return $this->idGene;
+        return $this->idReference;
     }
 
-    public function setIdGene(int $idGene): static
+    public function setIdReference(?int $idReference): static
     {
-        $this->idGene = $idGene;
+        $this->idReference = $idReference;
 
         return $this;
     }
@@ -190,6 +197,30 @@ class Course
                 $section->setCourse(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    public function setType(string $type): static
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    public function getAuthor(): ?Author
+    {
+        return $this->author;
+    }
+
+    public function setAuthor(?Author $author): static
+    {
+        $this->author = $author;
 
         return $this;
     }
