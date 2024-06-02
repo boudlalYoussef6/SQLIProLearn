@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Doctrine\AddCourseCommand;
+use App\Doctrine\DeleteCourseCommand;
+use App\Doctrine\UpdateCourseCommand;
 use App\Entity\Course;
 use App\Form\CoursType;
 use App\Form\DetailsCourseType;
@@ -90,7 +93,7 @@ class CoursController extends AbstractController
             $entityManager->persist($course);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_cours_details', ['id' => $id]);
+            return $this->redirectToRoute('app_cours_details', ['id' => $course->getId()]);
         }
 
         return $this->render('cours/section-ajout.html.twig', [
