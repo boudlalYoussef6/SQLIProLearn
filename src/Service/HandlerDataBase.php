@@ -9,7 +9,8 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class HandlerDataBase
 {
-    public function __construct(private readonly EntityManagerInterface $entityManager){
+    public function __construct(private readonly EntityManagerInterface $entityManager)
+    {
     }
 
     public function storeCourse(Course $course): void
@@ -17,5 +18,4 @@ class HandlerDataBase
         $this->entityManager->persist($course);
         $this->entityManager->flush();
     }
-
 }
