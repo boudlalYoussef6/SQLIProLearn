@@ -49,19 +49,18 @@ run_php_cs_fixer() {
         echo >&2 "Coding guidelines pre-commit check failed."
         echo >&2 "Running check again in verbose mode ..."
 
-        docker exec sqli__learn-pro__webserver "$php_cs_fixer_bin" fix --config="$config"\
+        docker exec sqli__learn-pro__webserver "$php_cs_fixer_bin" fix --config="$config"  src/ tests/  \
             -vvv \
             --diff \
             --dry-run \
-            --stop-on-violation \
             --using-cache=no \
-			--allow-risky=yes \
+			      --allow-risky=yes \
             ${extra_args}
 
         exit 1
     }
 
-   	docker exec sqli__learn-pro__webserver "$php_cs_fixer_bin" fix \
+   	docker exec sqli__learn-pro__webserver "$php_cs_fixer_bin" fix src/ tests/ \
         --config="$config" \
         -q \
         --dry-run \

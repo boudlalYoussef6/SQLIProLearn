@@ -6,7 +6,6 @@ namespace App\Repository;
 
 use App\Entity\Course;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -19,25 +18,31 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class CourseRepository extends ServiceEntityRepository
 {
-    public function __construct(private readonly EntityManagerInterface $registry)
+    public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Course::class);
     }
 
     public function add(Course $course): void
     {
-        $this->registry->persist($course);
-        $this->registry->flush();
+        $manager = $this->getEntityManager();
+
+        $manager->persist($course);
+        $manager->flush();
     }
 
     public function remove(Course $course): void
     {
-        $this->registry->remove($course);
-        $this->registry->flush();
+        $manager = $this->getEntityManager();
+
+        $manager->remove($course);
+        $manager->flush();
     }
 
     public function update(Course $course): void
     {
-        $this->registry->flush();
+        $manager = $this->getEntityManager();
+
+        $manager->flush();
     }
 }
