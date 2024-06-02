@@ -1,15 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Doctrine;
 
 use App\Course\Persister\CourseCommandInterface;
 use App\Course\Persister\CoursePersisterInterface;
 use App\Entity\Course;
-use App\Repository\CourseRepository;
 
 class UpdateCourseCommand implements CourseCommandInterface
 {
-    public function __construct(private readonly CoursePersisterInterface $coursePersister){
+    public function __construct(private readonly CoursePersisterInterface $coursePersister)
+    {
     }
 
     public function execute(Course $course): void

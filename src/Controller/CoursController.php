@@ -11,7 +11,6 @@ use App\Entity\Course;
 use App\Form\CoursType;
 use App\Form\DetailsCourseType;
 use App\Repository\CourseRepository;
-use App\Repository\SectionRepository;
 use App\Service\CourseService;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
@@ -30,7 +29,7 @@ class CoursController extends AbstractController
     }
 
     #[Route('/', name: 'app_cours')]
-    public function index(CourseRepository $courseRepository, Request $request,PaginatorInterface $paginator): Response
+    public function index(CourseRepository $courseRepository, Request $request, PaginatorInterface $paginator): Response
     {
         $queryBuilder = $courseRepository->createQueryBuilder('c');
 
@@ -60,6 +59,7 @@ class CoursController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $courseService->createCourse($course);
             $this->addCourseCommand->run($course);
+
             return $this->redirectToRoute('app_cours');
         }
 

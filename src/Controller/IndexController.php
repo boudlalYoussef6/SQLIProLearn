@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\MessageService\CreatedIndexMessage;
@@ -16,6 +18,7 @@ class IndexController extends AbstractController
     {
         $this->indexationCommand = $indexationCommand;
     }
+
     #[Route('/index', name: 'app_index')]
     public function index(): Response
     {

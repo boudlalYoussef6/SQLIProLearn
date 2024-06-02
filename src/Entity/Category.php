@@ -23,7 +23,6 @@ class Category
     #[ORM\OneToOne(targetEntity: self::class, inversedBy: 'category', cascade: ['persist', 'remove'])]
     private ?self $parentId = null;
 
-    
     #[ORM\OneToOne(targetEntity: self::class, mappedBy: 'parentId', cascade: ['persist', 'remove'])]
     private ?self $category = null;
 
@@ -71,7 +70,6 @@ class Category
 
     public function setCategory(?self $category): static
     {
-        
         if (null === $category && null !== $this->category) {
             $this->category->setParentId(null);
         }

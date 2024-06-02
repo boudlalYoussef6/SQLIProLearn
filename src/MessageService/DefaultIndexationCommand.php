@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\MessageService;
 
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -15,9 +17,6 @@ class DefaultIndexationCommand implements IndexationCommandInterface
 
     /**
      * Execute the indexation command.
-     *
-     * @param IndexationMessageInterface $message
-     * @return void
      */
     public function execute(IndexationMessageInterface $message): void
     {

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\MessageService;
 
 class RevokeIndexMessage implements IndexationMessageInterface
@@ -10,9 +12,7 @@ class RevokeIndexMessage implements IndexationMessageInterface
     private $courseReference;
 
     /**
-     * Get the value of courseReference
-     *
-     * @return int|null
+     * Get the value of courseReference.
      */
     public function getCourseReference(): ?int
     {
@@ -20,14 +20,12 @@ class RevokeIndexMessage implements IndexationMessageInterface
     }
 
     /**
-     * Set the value of courseReference
-     *
-     * @param int|null $courseReference
-     * @return self
+     * Set the value of courseReference.
      */
     public function setCourseReference(?int $courseReference): self
     {
         $this->courseReference = $courseReference;
+
         return $this;
     }
 }

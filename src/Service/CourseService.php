@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Service;
 
 use App\Entity\Author;
 use App\Entity\Course;
-use App\Repository\AuthorRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 
@@ -13,7 +14,7 @@ class CourseService
     private $entityManager;
     private $security;
 
-    public function __construct(EntityManagerInterface $entityManager,Security $security)
+    public function __construct(EntityManagerInterface $entityManager, Security $security)
     {
         $this->entityManager = $entityManager;
         $this->security = $security;
@@ -35,9 +36,3 @@ class CourseService
         $this->entityManager->flush();
     }
 }
-
-
-
-
-
-

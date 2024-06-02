@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Service\Indexation;
 
 use App\Entity\Course;
@@ -8,7 +10,8 @@ use FOS\ElasticaBundle\Elastica\Index;
 
 class CourseIndexer implements CourseIndexerInterface
 {
-    public function __construct(private readonly Index $courseIndex){
+    public function __construct(private readonly Index $courseIndex)
+    {
     }
 
     public function createNewIndex(Course $course): void
