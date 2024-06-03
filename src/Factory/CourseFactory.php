@@ -45,12 +45,11 @@ final class CourseFactory extends ModelFactory
         return [
             'description' => self::faker()->paragraph(),
             'label' => self::faker()->name(),
-            'paid' => self::faker()->boolean(),
-            'videoPath' => self::faker()->filePath(),
+            'type' => self::faker()->randomElement(['udemy', 'simple']),
         ];
     }
 
-    protected function initialize()
+    protected function initialize(): self
     {
     }
 

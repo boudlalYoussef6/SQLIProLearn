@@ -9,9 +9,12 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Serializer\Attribute\SerializedName;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[ORM\Entity(repositoryClass: CourseRepository::class)]
+// #[Vich\Uploadable]
 class Course
 {
     #[ORM\Id]
@@ -44,18 +47,27 @@ class Course
     #[ORM\OneToMany(targetEntity: Section::class, mappedBy: 'course', cascade: ['persist'], orphanRemoval: true)]
     private Collection $sections;
 
-    #[ORM\Column(length: 50)]
     private ?string $type = null;
 
     #[ORM\ManyToOne(inversedBy: 'cours')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
     private ?Author $author = null;
+
+    #[Vich\UploadableField(mapping: 'video', fileNameProperty: 'videoPathName')]
+    private ?File $videoPath = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $videoPathName = null;
+
+    #[ORM\OneToMany(targetEntity: Media::class, mappedBy: 'course')]
+    private Collection $medias;
 
     public function __construct()
     {
         $this->visits = new ArrayCollection();
         $this->applications = new ArrayCollection();
         $this->sections = new ArrayCollection();
+        $this->medias = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -221,6 +233,60 @@ class Course
     public function setAuthor(?Author $author): static
     {
         $this->author = $author;
+
+        return $this;
+    }
+
+    public function getVideoPath(): ?File
+    {
+        return $this->videoPath;
+    }
+
+    public function setVideoPath(?File $videoPath): self
+    {
+        $this->videoPath = $videoPath;
+
+        return $this;
+    }
+
+    public function getVideoPathName(): ?string
+    {
+        return $this->videoPathName;
+    }
+
+    public function setVideoPathName(?string $videoPathName): self
+    {
+        $this->videoPathName = $videoPathName;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Media>
+     */
+    public function getMedias(): Collection
+    {
+        return $this->medias;
+    }
+
+    public function addMedia(Media $media): static
+    {
+        if (!$this->medias->contains($media)) {
+            $this->medias->add($media);
+            $media->setCourse($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMedia(Media $media): static
+    {
+        if ($this->medias->removeElement($media)) {
+            // set the owning side to null (unless already changed)
+            if ($media->getCourse() === $this) {
+                $media->setCourse(null);
+            }
+        }
 
         return $this;
     }

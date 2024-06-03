@@ -9,13 +9,11 @@
             <div class="row">
                 <!-- Main course card -->
                 <div class="col-md-9">
-                    <div class="card">
-                        <img class="card-img-top"
-                             src="{{ asset(random(['images/php_Elephant.jpg',
-                                 'images/php_Elephant_V2.jpg',
-                                 'images/php_Elephant_V3.jpg'])) }}"
-                             alt="image of the course"
-                             style="height: 20vh; object-fit: cover;">
+                    <div class="card d-flex align-items-center justify-content-start">
+                        <video width="95%" height="400" controls>
+                            <source src="{{ video_url }}" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
                         <div class="card-body">
                             <h3 class="card-title font-weight-bold">{{ course.label }}</h3>
                             <p class="card-text">{{ course.description|raw }}</p>

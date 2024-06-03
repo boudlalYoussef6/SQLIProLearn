@@ -16,6 +16,7 @@ class DetailsCourseType extends AbstractType
     {
         $builder
         ->add('sections', CollectionType::class, [
+            'label' => false,
             'entry_type' => SectionType::class,
             'allow_add' => true,
             'allow_delete' => true,
