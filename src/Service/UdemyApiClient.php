@@ -9,7 +9,9 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class UdemyApiClient implements UdemyApiClientInterface
 {
-    public function __construct(#[Target('udemy_client')] private readonly HttpClientInterface $client)
+    private HttpClientInterface $client;
+
+    public function __construct(#[Target('udemy_client')] HttpClientInterface $client)
     {
     }
 

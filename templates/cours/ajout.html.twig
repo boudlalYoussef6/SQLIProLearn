@@ -11,30 +11,27 @@
                 </div>
                 <div class="row">
                     {{ form_start(form) }}
-                        <div class="card-body">
-                            <div class="form-group">
-                                <label for="exampleInputEmail1">Label</label>
-                                {{ form_widget(form.label, {'attr': {'class': 'form-control', 'placeholder': 'Label'}}) }}
-                            </div>
-                            <div class="form-group">
-                                <label>Description</label>
-                                {{ form_widget(form.description, {'attr': {'id': 'editor'}}) }}
-                            </div>
-                            <div class="form-group">
-                                <label>categories</label>
-                                {{ form_widget(form.category, {'attr': {'class': 'form-control', 'placeholder': 'categories'}}) }}
-                            </div>
-                        
-                            <div class="form-check">
-                                <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                                <label class="form-check-label" for="exampleCheck1">
-                                    Ready to unlock a new jutsu, honing both mind and body through course enrollment.
-                                </label>
-                            </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Label</label>
+                            {{ form_widget(form.label, {'attr': {'class': 'form-control', 'placeholder': 'Label'}}) }}
                         </div>
-                        <div class="card-footer">
-                            <button type="submit" class="btn btn-primary">Submit</button>
+                        <div class="form-group">
+                            <label>Description</label>
+                            {{ form_widget(form.description, {'attr': {'id': 'editor'}}) }}
                         </div>
+                        <div class="form-group">
+                            <label>categories</label>
+                            {{ form_widget(form.category, {'attr': {'class': 'form-control', 'placeholder': 'categories'}}) }}
+                        </div>
+                        <div class="form-group">
+                            <label>Vidéo</label>
+                            {{ form_widget(form.videoPath, {'attr': {'class': 'form-control'}}) }}
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
                     {{ form_end(form) }}
                 </div>
             </div>

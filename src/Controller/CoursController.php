@@ -8,6 +8,7 @@ use App\Doctrine\AddCourseCommand;
 use App\Doctrine\DeleteCourseCommand;
 use App\Doctrine\UpdateCourseCommand;
 use App\Entity\Course;
+use App\File\Uploader\FileProcessor;
 use App\Form\CoursType;
 use App\Form\DetailsCourseType;
 use App\Repository\CourseRepository;
@@ -17,6 +18,7 @@ use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Attribute\Route;
 
 class CoursController extends AbstractController
@@ -49,7 +51,7 @@ class CoursController extends AbstractController
     }
 
     #[Route('/cours/add', name: 'app_cours_add')]
-    public function CoursAdd(Request $request, CourseService $courseService): Response
+    public function CoursAdd(Request $request, CourseService $courseService, FileProcessor $processor, MessageBusInterface $messageBus): Response
     {
         $course = new Course();
         $form = $this->createForm(CoursType::class, $course);
@@ -57,6 +59,17 @@ class CoursController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $this->addCourseCommand->run($course);
+            $file = $form->get('videoPath')->getData();
+            $originalFilename = $file->getClientOriginalName();
+            $course->setVideoPathName($originalFilename);
+            $processor->processFile($file);
+            $courseService->createCourse($course);
+            $this->addCourseCommand->run($course);
+            $file = $form->get('videoPath')->getData();
+            $originalFilename = $file->getClientOriginalName();
+            $course->setVideoPathName($originalFilename);
+            $processor->processFile($file);
             $courseService->createCourse($course);
             $this->addCourseCommand->run($course);
 
@@ -74,12 +87,15 @@ class CoursController extends AbstractController
         $sections = $course->getSections();
         $author = $course->getAuthor();
         $category = $course->getCategory();
+        $videoFileName = $course->getVideoPathName();
+        $videoUrl = 'http://localhost:9000/videos/'.$videoFileName;
 
         return $this->render('cours/details.html.twig', [
             'course' => $course,
             'sections' => $sections,
             'author' => $author,
             'category' => $category,
+            'video_url' => $videoUrl,
         ]);
     }
 

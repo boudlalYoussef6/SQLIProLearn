@@ -8,6 +8,7 @@ use App\Entity\Category;
 use App\Entity\Course;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -23,8 +24,11 @@ class CoursType extends AbstractType
                 'class' => Category::class,
                 'choice_label' => 'label',
                 'placeholder' => 'Sélectionnez une catégorie',
-                'label' => 'Catégorie', // Label du champ de sélection
-                // Vous pouvez ajouter plus d'options selon vos besoins
+                'label' => 'Catégorie',
+            ])
+            ->add('videoPath', FileType::class, [
+                'label' => 'Vidéo',
+                'mapped' => false,
             ]);
     }
 
