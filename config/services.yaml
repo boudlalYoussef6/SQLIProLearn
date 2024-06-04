@@ -6,22 +6,6 @@
 parameters:
 
 services:
-
-    Symfony\Component\Ldap\Ldap:
-        arguments: ['@Symfony\Component\Ldap\Adapter\ExtLdap\Adapter']
-        tags: ['ldap']
-
-    Symfony\Component\Ldap\Adapter\ExtLdap\Adapter:
-        arguments:
-            - host: '%env(LDAP_URL)%'
-              port: '%env(int:LDAP_PORT)%'
-              options:
-                  protocol_version: 3
-                  referrals: false
-
-
-    # ...
-
     # default configuration for services in *this* file
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
@@ -49,9 +33,21 @@ services:
                 endpoint: 'http://minio:9000'
                 use_path_style_endpoint: true
                 credentials:
-                    key: '9D5on6OvGozif2fvk4sN'
-                    secret: 'hbunrMezFOExhtWiv8EQKzTRBXJed276HBu9RHLV'
+                    key: 'DMvAimp4sWuhyKVUZ2VN'
+                    secret: 'u64W7bMDniKkpdqpwLOAkou14OFJRBgwIfNjCOvw'
 
     App\Service\UdemyApiClientInterface: '@App\Service\UdemyApiClient'
     
-    
+    Symfony\Component\Ldap\Ldap:
+        arguments: [ '@Symfony\Component\Ldap\Adapter\ExtLdap\Adapter' ]
+        tags: [ 'ldap' ]
+
+    Symfony\Component\Ldap\Adapter\ExtLdap\Adapter:
+        arguments:
+            -   host: '%env(LDAP_URL)%'
+                port: '%env(int:LDAP_PORT)%'
+                options:
+                    protocol_version: 3
+                    referrals: false
+
+    Symfony\Component\Dotenv\Command\DotenvDumpCommand: ~

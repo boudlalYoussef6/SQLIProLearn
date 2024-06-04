@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\MessageService;
+namespace App\Indexation\Invoker;
 
+use App\Message\IndexationMessageInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 
 class DefaultIndexationCommand implements IndexationCommandInterface

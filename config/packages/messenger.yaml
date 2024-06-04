@@ -11,7 +11,7 @@ framework:
 
         routing:
             # Route your messages to the transports
-            'App\MessageService\CreatedIndexMessage': async
+            'App\Message\CreatedIndexMessage': async
 
 # when@test:
 #    framework:

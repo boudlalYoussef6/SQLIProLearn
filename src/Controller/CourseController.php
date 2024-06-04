@@ -4,29 +4,30 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Doctrine\AddCourseCommand;
-use App\Doctrine\DeleteCourseCommand;
-use App\Doctrine\UpdateCourseCommand;
+use App\Author\Factory\DefaultAuthorFactory;
+use App\Course\Handler\CourseHandlerInterface;
+use App\Course\Persister\Command\Doctrine\AddCourseCommand;
+use App\Course\Persister\Command\Doctrine\DeleteCourseCommand;
+use App\Course\Persister\Command\Doctrine\UpdateCourseCommand;
 use App\Entity\Course;
 use App\File\Uploader\FileProcessor;
 use App\Form\CoursType;
 use App\Form\DetailsCourseType;
 use App\Repository\CourseRepository;
-use App\Service\CourseService;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Attribute\Route;
 
-class CoursController extends AbstractController
+class CourseController extends AbstractController
 {
     public function __construct(
         private readonly AddCourseCommand $addCourseCommand,
         private readonly DeleteCourseCommand $deleteCourseCommand,
         private readonly UpdateCourseCommand $updateCourseCommand,
+        private readonly CourseHandlerInterface $courseHandler,
     ) {
     }
 
@@ -50,28 +51,24 @@ class CoursController extends AbstractController
         ]);
     }
 
-    #[Route('/cours/add', name: 'app_cours_add')]
-    public function CoursAdd(Request $request, CourseService $courseService, FileProcessor $processor, MessageBusInterface $messageBus): Response
-    {
+    #[Route('/course/add', name: 'app_cours_add')]
+    public function addCourse(
+        Request $request,
+        FileProcessor $processor,
+        DefaultAuthorFactory $authorFactory,
+    ): Response {
         $course = new Course();
         $form = $this->createForm(CoursType::class, $course);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->addCourseCommand->run($course);
-            $file = $form->get('videoPath')->getData();
-            $originalFilename = $file->getClientOriginalName();
-            $course->setVideoPathName($originalFilename);
-            $processor->processFile($file);
-            $courseService->createCourse($course);
-            $this->addCourseCommand->run($course);
-            $file = $form->get('videoPath')->getData();
-            $originalFilename = $file->getClientOriginalName();
-            $course->setVideoPathName($originalFilename);
-            $processor->processFile($file);
-            $courseService->createCourse($course);
-            $this->addCourseCommand->run($course);
+            $processor->process($course, $form->get('videoPath')->getData());
+
+            $userIdentifier = $this->getUser()->getUserIdentifier();
+            $authorFactory->affectAuthorToCourse($userIdentifier, $course);
+
+            $this->courseHandler->add($course);
 
             return $this->redirectToRoute('app_cours');
         }
@@ -100,8 +97,11 @@ class CoursController extends AbstractController
     }
 
     #[Route('/cours/ajout/{id}', name: 'app_cours_ajout_section')]
-    public function courseAjoutSection(CourseRepository $courseRepository, Course $course, Request $request, EntityManagerInterface $entityManager): Response
-    {
+    public function courseAjoutSection(
+        Course $course,
+        Request $request,
+        EntityManagerInterface $entityManager
+    ): Response {
         $form = $this->createForm(DetailsCourseType::class, $course);
         $form->handleRequest($request);
 
