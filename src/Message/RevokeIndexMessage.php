@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\MessageService;
+namespace App\Message;
 
 class RevokeIndexMessage implements IndexationMessageInterface
 {

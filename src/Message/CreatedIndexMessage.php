@@ -2,26 +2,22 @@
 
 declare(strict_types=1);
 
-namespace App\MessageService;
+namespace App\Message;
 
 class CreatedIndexMessage implements IndexationMessageInterface
 {
-    /**
-     * @var int|null
-     */
-    private $courseReference;
+    private int $courseReference;
 
-    /**
-     * Get the value of courseReference.
-     */
+    public function __construct(int $courseReference)
+    {
+        $this->courseReference = $courseReference;
+    }
+
     public function getCourseReference(): ?int
     {
         return $this->courseReference;
     }
 
-    /**
-     * Set the value of courseReference.
-     */
     public function setCourseReference(?int $courseReference): self
     {
         $this->courseReference = $courseReference;

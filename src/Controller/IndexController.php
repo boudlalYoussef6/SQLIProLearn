@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\MessageService\CreatedIndexMessage;
-use App\MessageService\DefaultIndexationCommand;
+use App\Indexation\Invoker\DefaultIndexationCommand;
+use App\Message\CreatedIndexMessage;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
