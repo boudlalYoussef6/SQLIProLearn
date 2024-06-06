@@ -8,11 +8,9 @@ framework:
                 base_uri: 'https://www.udemy.com/'
                 auth_basic: '%env(UD_CLIENT_ID)%:%env(UD_CLIENT_SECRET)%'
 
-
-
-
     # Note that the session will be started ONLY if you read or write from it.
-    session: true
+    session:
+        handler_id: Symfony\Component\HttpFoundation\Session\Storage\Handler\RedisSessionHandler
 
     #esi: true
     #fragments: true

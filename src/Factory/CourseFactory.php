@@ -49,8 +49,9 @@ final class CourseFactory extends ModelFactory
         ];
     }
 
-    protected function initialize(): self
+    protected function initialize()
     {
+        return $this;
     }
 
     protected static function getClass(): string

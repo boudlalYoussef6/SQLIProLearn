@@ -202,7 +202,24 @@ services:
         command: server /data --console-address ":9001"
         networks:
             - inner_net
+    
+    redis:
+        container_name: "sqli__learn-pro__redis"
+        image: redis:latest
+        ports:
+            - "6379:6379"
+        networks:
+            - inner_net
 
+    redis-commander:
+        container_name: "sqli__learn-pro__redis-commander"
+        image: rediscommander/redis-commander:latest
+        environment:
+            - REDIS_HOSTS=local:redis:6379
+        ports:
+            - "8083:8081"
+        networks:
+            - inner_net  
 volumes:
     db_data:
     db_admin_data:

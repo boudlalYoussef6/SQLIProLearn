@@ -3,6 +3,8 @@
 {% block title %}Courses{% endblock %}
 
 {% block content %}
+
+{% if pagination  is defined and pagination is not empty %}
     <section class="content">
         <div class="container-fluid">
             <h2>List of Courses</h2>
@@ -30,4 +32,9 @@
             </div>
         </div>
     </section>
+    {% else %}
+    <div class="alert alert-warning" role="alert">
+  Pas de cours dispoinible
+    </div>
+    {% endif %}
 {% endblock %}

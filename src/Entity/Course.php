@@ -11,10 +11,8 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Serializer\Attribute\SerializedName;
-use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[ORM\Entity(repositoryClass: CourseRepository::class)]
-// #[Vich\Uploadable]
 class Course
 {
     #[ORM\Id]
@@ -53,13 +51,12 @@ class Course
     #[ORM\JoinColumn(nullable: true)]
     private ?Author $author = null;
 
-    #[Vich\UploadableField(mapping: 'video', fileNameProperty: 'videoPathName')]
     private ?File $videoPath = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $videoPathName = null;
 
-    #[ORM\OneToMany(targetEntity: Media::class, mappedBy: 'course')]
+    #[ORM\OneToMany(targetEntity: Media::class, mappedBy: 'course', cascade: ['persist', 'remove'])]
     private Collection $medias;
 
     public function __construct()

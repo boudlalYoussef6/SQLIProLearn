@@ -10,6 +10,7 @@ use App\Course\Persister\Command\Doctrine\AddCourseCommand;
 use App\Course\Persister\Command\Doctrine\DeleteCourseCommand;
 use App\Course\Persister\Command\Doctrine\UpdateCourseCommand;
 use App\Entity\Course;
+use App\Entity\Media;
 use App\File\Uploader\FileProcessor;
 use App\Form\CoursType;
 use App\Form\DetailsCourseType;
@@ -68,6 +69,15 @@ class CourseController extends AbstractController
             $userIdentifier = $this->getUser()->getUserIdentifier();
             $authorFactory->affectAuthorToCourse($userIdentifier, $course);
 
+            $mediaFiles = $form->get('medias')->getData();
+
+            foreach ($mediaFiles as $mediaFile) {
+                $media = new Media();
+                $originalMediaFilename = $mediaFile->getFileName();
+                $media->setFileName($originalMediaFilename);
+                $course->addMedia($media);
+            }
+
             $this->courseHandler->add($course);
 
             return $this->redirectToRoute('app_cours');
@@ -79,7 +89,7 @@ class CourseController extends AbstractController
     }
 
     #[Route('/cours/{id}', name: 'app_cours_details')]
-    public function coursDetails(CourseRepository $courseRepository, Course $course): Response
+    public function coursDetails(Course $course): Response
     {
         $sections = $course->getSections();
         $author = $course->getAuthor();
@@ -92,7 +102,7 @@ class CourseController extends AbstractController
             'sections' => $sections,
             'author' => $author,
             'category' => $category,
-            'video_url' => $videoUrl,
+            'video_url' => $videoFileName ? 'http://localhost:9000/videos/'.$videoFileName : null,
         ]);
     }
 

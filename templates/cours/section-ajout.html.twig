@@ -6,7 +6,7 @@
     {{ form_start(form) }}
     <div class="card">
         <div class="card-body">
-            <h3>Sections</h3>
+            <h3>Ajouter Votre Section</h3>
             <ul class="sections list-group" data-index="{{ form.sections|length > 0 ? form.sections|last.vars.name + 1 : 0 }}"
                 data-prototype="{{ form_widget(form.sections.vars.prototype)|e('html_attr') }}">
                 {% for section in form.sections %}
