@@ -21,7 +21,9 @@
                                 {{ cours.description|striptags|length > 50 ? cours.description|striptags|slice(0, 50) ~ '...' : cours.description|striptags }}
                             </p>
 
-                            <a href="{{ url('app_cours_details', {'id': cours.id}) }}" class="btn btn-primary">More info</a>
+                            <a href="{{ url('app_course_details', {'id': cours.id}) }}" class="btn btn-primary">
+                                <i class="fa-solid fa-eye"></i>  Voir le cours
+                            </a>
                         </div>
                     </div>
                 {% endfor %}

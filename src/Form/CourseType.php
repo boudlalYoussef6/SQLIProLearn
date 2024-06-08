@@ -14,7 +14,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class CoursType extends AbstractType
+class CourseType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -29,7 +29,6 @@ class CoursType extends AbstractType
             ])
             ->add('videoPath', FileType::class, [
                 'label' => 'Vidéo',
-                'mapped' => false,
             ])
             ->add('medias', CollectionType::class, [
                 'entry_type' => MediaType::class,
@@ -37,8 +36,8 @@ class CoursType extends AbstractType
                 'allow_delete' => true,
                 'by_reference' => false,
                 'label' => false,
+                'entry_options' => ['label' => false],
                 'required' => false,
-                'attr' => ['multiple' => true],
             ]);
     }
 

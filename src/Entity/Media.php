@@ -6,6 +6,7 @@ namespace App\Entity;
 
 use App\Repository\MediaRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
 
 #[ORM\Entity(repositoryClass: MediaRepository::class)]
 class Media
@@ -20,6 +21,8 @@ class Media
 
     #[ORM\ManyToOne(inversedBy: 'medias')]
     private ?Course $course = null;
+
+    private ?File $attachmentFile;
 
     public function getId(): ?int
     {
@@ -46,6 +49,18 @@ class Media
     public function setCourse(?Course $course): static
     {
         $this->course = $course;
+
+        return $this;
+    }
+
+    public function getAttachmentFile(): ?File
+    {
+        return $this->attachmentFile;
+    }
+
+    public function setAttachmentFile(?File $attachmentFile): self
+    {
+        $this->attachmentFile = $attachmentFile;
 
         return $this;
     }

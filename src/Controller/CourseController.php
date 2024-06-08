@@ -5,14 +5,13 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Author\Factory\DefaultAuthorFactory;
+use App\Course\Attachment\DefaultAttachmentManager;
 use App\Course\Handler\CourseHandlerInterface;
 use App\Course\Persister\Command\Doctrine\AddCourseCommand;
 use App\Course\Persister\Command\Doctrine\DeleteCourseCommand;
 use App\Course\Persister\Command\Doctrine\UpdateCourseCommand;
 use App\Entity\Course;
-use App\Entity\Media;
-use App\File\Uploader\FileProcessor;
-use App\Form\CoursType;
+use App\Form\CourseType;
 use App\Form\DetailsCourseType;
 use App\Repository\CourseRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -44,52 +43,43 @@ class CourseController extends AbstractController
         );
 
         $course = new Course();
-        $form = $this->createForm(CoursType::class, $course);
+        $form = $this->createForm(CourseType::class, $course);
 
-        return $this->render('cours/index.html.twig', [
+        return $this->render('course/index.html.twig', [
             'pagination' => $pagination,
             'form' => $form->createView(),
         ]);
     }
 
-    #[Route('/course/add', name: 'app_cours_add')]
+    #[Route('/course/add', name: 'app_course_add')]
     public function addCourse(
         Request $request,
-        FileProcessor $processor,
         DefaultAuthorFactory $authorFactory,
+        DefaultAttachmentManager $attachmentManager,
     ): Response {
         $course = new Course();
-        $form = $this->createForm(CoursType::class, $course);
+        $form = $this->createForm(CourseType::class, $course);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $processor->process($course, $form->get('videoPath')->getData());
-
             $userIdentifier = $this->getUser()->getUserIdentifier();
             $authorFactory->affectAuthorToCourse($userIdentifier, $course);
 
-            $mediaFiles = $form->get('medias')->getData();
-
-            foreach ($mediaFiles as $mediaFile) {
-                $media = new Media();
-                $originalMediaFilename = $mediaFile->getFileName();
-                $media->setFileName($originalMediaFilename);
-                $course->addMedia($media);
-            }
+            $course = $attachmentManager->save($course);
 
             $this->courseHandler->add($course);
 
             return $this->redirectToRoute('app_cours');
         }
 
-        return $this->render('cours/ajout.html.twig', [
+        return $this->render('course/add.html.twig', [
             'form' => $form->createView(),
         ]);
     }
 
-    #[Route('/cours/{id}', name: 'app_cours_details')]
-    public function coursDetails(Course $course): Response
+    #[Route('/cours/{id}', name: 'app_course_details')]
+    public function courseDetails(Course $course): Response
     {
         $sections = $course->getSections();
         $author = $course->getAuthor();
@@ -97,7 +87,7 @@ class CourseController extends AbstractController
         $videoFileName = $course->getVideoPathName();
         $videoUrl = 'http://localhost:9000/videos/'.$videoFileName;
 
-        return $this->render('cours/details.html.twig', [
+        return $this->render('course/details.html.twig', [
             'course' => $course,
             'sections' => $sections,
             'author' => $author,
@@ -119,10 +109,10 @@ class CourseController extends AbstractController
             $entityManager->persist($course);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_cours_details', ['id' => $course->getId()]);
+            return $this->redirectToRoute('app_course_details', ['id' => $course->getId()]);
         }
 
-        return $this->render('cours/section-ajout.html.twig', [
+        return $this->render('course/section-ajout.html.twig', [
             'course' => $course,
             'form' => $form,
         ]);

@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace App\File\Uploader;
 
-use App\Entity\Course;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
-final class FileProcessor
+final class FileUploader
 {
     public function __construct(
         private readonly FileHandlerInterface $handler,
@@ -16,13 +15,13 @@ final class FileProcessor
     ) {
     }
 
-    public function process(Course $course, UploadedFile $attachment): void
+    public function upload(UploadedFile $attachment): string
     {
         $newFilename = $this->generateUniqueNameForAttachment($attachment);
 
-        $course->setVideoPathName($newFilename);
-
         $this->sendContent($attachment, $newFilename);
+
+        return $newFilename;
     }
 
     public function sendContent(UploadedFile $attachment, string $targetPath): void
