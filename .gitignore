@@ -32,3 +32,5 @@
 /.php-cs-fixer.cache
 ###< friendsofphp/php-cs-fixer ###
 /minio_data/
+/graylog_journal/
+/graylog_data/
