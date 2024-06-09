@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Author\Factory\DefaultAuthorFactory;
+use App\Course\Attachment\AttachmentManagerInterface;
 use App\Course\Attachment\DefaultAttachmentManager;
 use App\Course\Handler\CourseHandlerInterface;
 use App\Course\Persister\Command\Doctrine\AddCourseCommand;
@@ -55,7 +56,7 @@ class CourseController extends AbstractController
     public function addCourse(
         Request $request,
         DefaultAuthorFactory $authorFactory,
-        DefaultAttachmentManager $attachmentManager,
+        AttachmentManagerInterface $attachmentManager,
     ): Response {
         $course = new Course();
         $form = $this->createForm(CourseType::class, $course);
