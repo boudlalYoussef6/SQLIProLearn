@@ -192,8 +192,8 @@ services:
         image: minio/minio
         container_name: minio
         ports:
-            - "9002:9000"
-            - "9004:9001"
+            - "9090:9000"
+            - "9091:9001"
         environment:
             MINIO_ROOT_USER: your-access-key
             MINIO_ROOT_PASSWORD: your-secret-key
@@ -219,7 +219,7 @@ services:
         ports:
             - "8083:8081"
         networks:
-            - inner_net  
+            - inner_net
 volumes:
     db_data:
     db_admin_data:
