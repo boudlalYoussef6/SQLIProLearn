@@ -1,6 +1,23 @@
-# Read the documentation: https://github.com/FriendsOfSymfony/FOSElasticaBundle/blob/master/doc/setup.md
 fos_elastica:
     clients:
         default: { url: '%env(ELASTICSEARCH_URL)%' }
     indexes:
-        app: null
+        course:
+            index_name: "course"  # Name of the Elasticsearch index
+            properties:
+                label:
+                    type: text
+                description:
+                    type: text
+                category:
+                    type: object
+                    properties:
+                        id:
+                            type: integer
+                        label:
+                            type: text
+            persistence:
+                driver: orm
+                model: App\Entity\Course
+                listener: false
+            
