@@ -17,13 +17,16 @@ use App\Form\DetailsCourseType;
 use App\Repository\CourseRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Annotation\Route;
 
 class CourseController extends AbstractController
 {
+    private LoggerInterface $logger;
+
     public function __construct(
         private readonly AddCourseCommand $addCourseCommand,
         private readonly DeleteCourseCommand $deleteCourseCommand,
