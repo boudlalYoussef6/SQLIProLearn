@@ -25,7 +25,7 @@ class IndexationMessageHandler
     {
         $course = $this->courseRepository->find($message->getCourseReference());
 
-        if ($course) {
+        if (null !== $course) {
             $this->courseIndexer->createNewIndex($course);
         }
     }
