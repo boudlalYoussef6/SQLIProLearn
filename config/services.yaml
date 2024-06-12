@@ -36,8 +36,6 @@ services:
                     key: '%env(AWS_S3_ACCESS_KEY)%'
                     secret: '%env(AWS_S3_SECRET_KEY)%'
 
-    App\Service\UdemyApiClientInterface: '@App\Service\UdemyApiClient'
-    
     Symfony\Component\Ldap\Ldap:
         arguments: [ '@Symfony\Component\Ldap\Adapter\ExtLdap\Adapter' ]
         tags: [ 'ldap' ]
@@ -66,4 +64,8 @@ services:
             # you can optionally pass an array of options. The only options are 'prefix' and 'ttl',
             # which define the prefix to use for the keys to avoid collision on the Redis server
             # and the expiration time for any given entry (in seconds), defaults are 'sf_s' and null:
-            # - { 'prefix': 'my_prefix', 'ttl': 600 }   
+            # - { 'prefix': 'my_prefix', 'ttl': 600 }
+
+    App\Course\Query\Decorator\FindCourseByReferenceQueryIndexDecorator:
+        arguments:
+            $index: "@fos_elastica.index.course"

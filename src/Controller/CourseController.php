@@ -6,18 +6,17 @@ namespace App\Controller;
 
 use App\Author\Factory\DefaultAuthorFactory;
 use App\Course\Attachment\AttachmentManagerInterface;
-use App\Course\Attachment\DefaultAttachmentManager;
 use App\Course\Handler\CourseHandlerInterface;
 use App\Course\Persister\Command\Doctrine\AddCourseCommand;
 use App\Course\Persister\Command\Doctrine\DeleteCourseCommand;
 use App\Course\Persister\Command\Doctrine\UpdateCourseCommand;
+use App\Course\Query\ItemQueryInterface;
 use App\Entity\Course;
 use App\Form\CourseType;
 use App\Form\DetailsCourseType;
 use App\Repository\CourseRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
-use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,8 +24,6 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class CourseController extends AbstractController
 {
-    private LoggerInterface $logger;
-
     public function __construct(
         private readonly AddCourseCommand $addCourseCommand,
         private readonly DeleteCourseCommand $deleteCourseCommand,
@@ -83,8 +80,13 @@ class CourseController extends AbstractController
     }
 
     #[Route('/cours/{id}', name: 'app_course_details')]
-    public function courseDetails(Course $course): Response
+    public function courseDetails(/* Course $course */ int $id, ItemQueryInterface $query): Response
     {
+        $course = $query->findItem((string) $id);
+        if (null === $course) {
+            throw $this->createNotFoundException();
+        }
+
         $sections = $course->getSections();
         $author = $course->getAuthor();
         $category = $course->getCategory();

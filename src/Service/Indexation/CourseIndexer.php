@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Service\Indexation;
 
-use App\Transformer\CourseAdapterInterface;
 use App\Entity\Course;
+use App\Transformer\CourseAdapterInterface;
 use Elastica\Index;
 use FOS\ElasticaBundle\Index\IndexManager;
+
 class CourseIndexer implements CourseIndexerInterface
 {
-   
     private Index $courseIndex;
     private CourseAdapterInterface $adapter;
 
