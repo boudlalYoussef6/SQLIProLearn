@@ -1,11 +1,11 @@
 {% extends 'site.html.twig' %}
 
-{% block title %}{{ course.label }}{% endblock %}
+{% block title %}{{ course.title }}{% endblock %}
 
 {% block content %}
     <section class="content">
         <div class="container-fluid">
-            <h2>{{ course.label }}</h2>
+            <h2>{{ course.title }}</h2>
             <div class="row">
                 <!-- Main course card -->
                 <div class="col-md-9">
@@ -16,14 +16,35 @@
                                 Your browser does not support the video tag.
                             </video>
                         {% else %}
-                            <img class="card-img-top"
-                                 src="{{ asset(random(['images/php_Elephant.jpg', 'images/php_Elephant_V2.jpg', 'images/php_Elephant_V3.jpg'])) }}"
-                                 alt="image of the course"
-                                 style="height: 20vh; object-fit: cover;">
+                            {% set cover = (course.image_480x270 is defined and course.image_480x270 is not empty) ? course.image_480x270 : asset(random(['images/php_Elephant.jpg', 'images/php_Elephant_V2.jpg', 'images/php_Elephant_V3.jpg'])) %}
+                            <img class="card-img-top" src="{{ cover }}" alt="image of the course" style="height: 270px; object-fit: cover;">
                         {% endif %}
                         <div class="card-body">
-                            <p class="card-text">{{ course.description|raw }}</p>
-                            <a href="{{ path('app_cours_ajout_section', {'id': course.id}) }}" class="btn btn-primary">Ajouter section</a>
+                            {% if course.description %}
+                                <p class="card-text">{{ course.description|raw }}</p>
+                            {% endif %}
+                            {% if course.sections %}
+                                <div class="accordion" id="accordionExample" style="margin-top: 1rem;">
+                                    {% for section in course.sections %}
+                                        <div class="accordion-item">
+                                            <h2 class="accordion-header" id="heading{{ loop.index }}">
+                                                <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                                        data-bs-target="#collapse{{ loop.index }}" aria-expanded="true"
+                                                        aria-controls="collapse{{ loop.index }}">
+                                                    <strong>{{ section.title }}</strong>
+                                                </button>
+                                            </h2>
+                                            <div id="collapse{{ loop.index }}" class="accordion-collapse collapse"
+                                                 aria-labelledby="heading{{ loop.index }}"
+                                                 data-bs-parent="#accordionExample">
+                                                <div class="accordion-body">
+                                                    {{ section.description|raw }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -42,7 +63,8 @@
                                 <li class="nav-item">
                                     <a class="nav-link" id="custom-tabs-three-profile-tab" data-toggle="pill"
                                        href="#course_attachments_tab_content" role="tab"
-                                       aria-controls="custom-tabs-three-profile" aria-selected="false">Pièces jointes</a>
+                                       aria-controls="custom-tabs-three-profile" aria-selected="false">Pièces
+                                        jointes ({{ course.medias | length }})</a>
                                 </li>
                             </ul>
                         </div>
@@ -50,20 +72,25 @@
                             <div class="tab-content" id="custom-tabs-three-tabContent">
                                 <div class="tab-pane fade show active" id="course_details_tab_content" role="tabpanel"
                                      aria-labelledby="custom-tabs-three-home-tab">
-                                    {% if author is defined and author is not null %}
-                                        <p class="card-text"><strong>Auteur:</strong> {{ author.name }}</p>
+                                    {% if course.author is defined and course.author is not null %}
+                                        <p class="card-text"><strong>Auteur:</strong> {{ course.author.name }}</p>
                                     {% else %}
                                         <p class="card-text"><strong>Auteur:</strong> Not available</p>
                                     {% endif %}
-                                    {% if category is defined and category is not null %}
-                                        <p class="card-text"><strong>Categorie:</strong> {{ category.label }}</p>
+                                    {% if course.category is defined and course.category is not null %}
+                                        <p class="card-text"><strong>Categorie:</strong> {{ course.category.label }}</p>
                                     {% else %}
                                         <p class="card-text"><strong>Categorie:</strong> Not available</p>
+                                    {% endif %}
+                                    {% if course.url is defined and course.url is not null %}
+                                        <a href="https://www.udemy.com/{{ course.url }}" target="_blank">
+                                            Read in UDEMY
+                                        </a>
                                     {% endif %}
                                 </div>
                                 <div class="tab-pane fade" id="course_attachments_tab_content" role="tabpanel"
                                      aria-labelledby="custom-tabs-three-profile-tab">
-                                    {% if course.medias and course.medias | length > 0 %}
+                                     {% if course.medias and course.medias | length > 0 %}
                                         <ul class="list-group">
                                             {% for media in course.medias %}
                                                 <li class="list-group-item d-flex justify-content-between align-items-center">
@@ -85,24 +112,4 @@
         </div>
     </section>
 
-    <div class="accordion" id="accordionExample" style="margin-top: 1rem;">
-        {% for section in sections %}
-            <div class="accordion-item">
-                <h2 class="accordion-header" id="heading{{ loop.index }}">
-                    <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#collapse{{ loop.index }}" aria-expanded="true"
-                            aria-controls="collapse{{ loop.index }}">
-                        <strong>{{ section.title }}</strong>
-                    </button>
-                </h2>
-                <div id="collapse{{ loop.index }}" class="accordion-collapse collapse"
-                     aria-labelledby="heading{{ loop.index }}"
-                     data-bs-parent="#accordionExample">
-                    <div class="accordion-body">
-                        {{ section.description|raw }}
-                    </div>
-                </div>
-            </div>
-        {% endfor %}
-    </div>
 {% endblock %}

@@ -12,9 +12,7 @@ use App\Course\Persister\Command\Doctrine\DeleteCourseCommand;
 use App\Course\Persister\Command\Doctrine\UpdateCourseCommand;
 use App\Course\Query\ItemQueryInterface;
 use App\Entity\Course;
-use App\Entity\ViewHistory;
 use App\Event\NewCourseEvent;
-use DateTime;
 use App\Form\CourseType;
 use App\Form\DetailsCourseType;
 use App\Repository\CourseRepository;
@@ -37,9 +35,13 @@ class CourseController extends AbstractController
     }
 
     #[Route('/course', name: 'app_course')]
-    public function index(CourseRepository $courseRepository, Request $request, PaginatorInterface $paginator): Response
-    {
-        $queryBuilder = $courseRepository->createQueryBuilder('c');
+    public function index(
+        CourseRepository $courseRepository,
+        Request $request,
+        PaginatorInterface $paginator,
+    ): Response {
+        $queryBuilder = $courseRepository->createQueryBuilder('c')
+        ->orderBy('c.id', 'DESC');
 
         $pagination = $paginator->paginate(
             $queryBuilder,
@@ -84,32 +86,22 @@ class CourseController extends AbstractController
     }
 
     #[Route('/cours/{id}', name: 'app_course_details')]
-    public function courseDetails(/* Course $course */ int $id, ItemQueryInterface $query, EntityManagerInterface $entityManager, EventDispatcherInterface $dispatcher): Response
-    {
+    public function courseDetails(
+        /* Course $course */ int $id,
+        ItemQueryInterface $query,
+        EventDispatcherInterface $dispatcher,
+    ): Response {
         $course = $query->findItem((string) $id);
         if (null === $course) {
             throw $this->createNotFoundException();
         }
 
-        $course->incrementViews();
         $userIdentifier = $this->getUser()->getUserIdentifier();
-        
-        $dispatcher->dispatch(new NewCourseEvent($id, $userIdentifier));
 
-        $sections = $course->getSections();
-        $author = $course->getAuthor();
-        $category = $course->getCategory();
-        $videoFileName = $course->getVideoPathName();
-        $videoUrl = 'http://localhost:9000/videos/'.$videoFileName;
-        $mediaItems = $course->getMedias();
+        $dispatcher->dispatch(new NewCourseEvent($id, $userIdentifier));
 
         return $this->render('course/details.html.twig', [
             'course' => $course,
-            'sections' => $sections,
-            'author' => $author,
-            'category' => $category,
-            'video_url' => $videoFileName ? $videoUrl : null,
-            'other_media_urls' =>  $mediaItems,
         ]);
     }
 

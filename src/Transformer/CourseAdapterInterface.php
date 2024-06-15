@@ -8,5 +8,5 @@ use App\Entity\Course;
 
 interface CourseAdapterInterface
 {
-    public function convert(Course $course): object;
+    public function convert(Course $course): array;
 }

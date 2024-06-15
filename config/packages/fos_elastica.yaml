@@ -5,6 +5,12 @@ fos_elastica:
         course:
             index_name: "course"  # Name of the Elasticsearch index
             properties:
+                id:
+                    type: integer
+                cover:
+                    type: text
+                url:
+                    type: text
                 label:
                     type: text
                 description:
@@ -15,6 +21,20 @@ fos_elastica:
                         id:
                             type: integer
                         label:
+                            type: text
+                sections:
+                    type: nested
+                    properties:
+                        id:
+                            type: integer
+                        title:
+                            type: text
+                        description:
+                            type: text
+                medias:
+                    type: nested
+                    properties:
+                        fileName:
                             type: text
             persistence:
                 driver: orm

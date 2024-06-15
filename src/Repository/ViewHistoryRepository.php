@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repository;
 
 use App\Entity\ViewHistory;
@@ -21,30 +23,6 @@ class ViewHistoryRepository extends ServiceEntityRepository
         parent::__construct($registry, ViewHistory::class);
     }
 
-//    /**
-//     * @return ViewHistory[] Returns an array of ViewHistory objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('v')
-//            ->andWhere('v.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('v.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
-
-//    public function findOneBySomeField($value): ?ViewHistory
-//    {
-//        return $this->createQueryBuilder('v')
-//            ->andWhere('v.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
     public function findLastVisitedCoursesForUser(string $systemUsername, int $limit = 4): array
     {
         // Sélectionner les 4 derniers enregistrements pour l'utilisateur spécifié
