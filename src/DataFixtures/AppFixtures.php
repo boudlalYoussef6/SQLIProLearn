@@ -20,10 +20,10 @@ class AppFixtures extends Fixture
 
     public function load(ObjectManager $manager): void
     {
-        UserFactory::createMany(self::NBR_USER);
-        CourseFactory::createMany(self::NBR_COURS);
+       
+        
         CategoryFactory::createMany(self::NBR_CATEGORY);
-        SectionFactory::createMany(self::NBR_SECTION);
+      
 
         $manager->flush();
     }

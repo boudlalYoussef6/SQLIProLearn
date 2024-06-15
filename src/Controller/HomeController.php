@@ -4,22 +4,23 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use Psr\Log\LoggerInterface;
+use App\Repository\ViewHistoryRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 class HomeController extends AbstractController
 {
-    public function __construct(private readonly LoggerInterface $logger)
-    {
-    }
-
     #[Route('/', name: 'app_home')]
-    public function index(): Response
+    public function index(ViewHistoryRepository $viewHistoryRepository): Response
     {
-        $this->logger->info('MESSAGE_FROM_SYMFONY', ['username' => 'user Clone', 'who_is' => 'e-challenger']);
+        $systemUsername = $this->getUser()->getUserIdentifier();
 
-        return $this->render('home/index.html.twig');
+        // Appeler la méthode du repository pour récupérer les 4 derniers cours consultés par cet utilisateur
+        $lastFourCourses = $viewHistoryRepository->findLastVisitedCoursesForUser($systemUsername);
+
+        return $this->render('course/last_four_courses.html.twig', [
+            'lastFourCourses' => $lastFourCourses,
+        ]);
     }
 }

@@ -47,7 +47,7 @@ class Course
 
     private ?string $type = null;
 
-    #[ORM\ManyToOne(inversedBy: 'cours')]
+    #[ORM\ManyToOne(inversedBy: 'cours', cascade: ['persist'])]
     #[ORM\JoinColumn(nullable: true)]
     private ?Author $author = null;
 
@@ -59,12 +59,22 @@ class Course
     #[ORM\OneToMany(targetEntity: Media::class, mappedBy: 'course', cascade: ['persist', 'remove'])]
     private Collection $medias;
 
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $addedAt = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $views = null;
+
+    #[ORM\OneToMany(targetEntity: ViewHistory::class, mappedBy: 'course')]
+    private Collection $viewHistories;
+
     public function __construct()
     {
         $this->visits = new ArrayCollection();
         $this->applications = new ArrayCollection();
         $this->sections = new ArrayCollection();
         $this->medias = new ArrayCollection();
+        $this->viewHistories = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -132,28 +142,6 @@ class Course
     public function getVisits(): Collection
     {
         return $this->visits;
-    }
-
-    public function addVisit(Visit $visit): static
-    {
-        if (!$this->visits->contains($visit)) {
-            $this->visits->add($visit);
-            $visit->setCourse($this);
-        }
-
-        return $this;
-    }
-
-    public function removeVisit(Visit $visit): static
-    {
-        if ($this->visits->removeElement($visit)) {
-            // set the owning side to null (unless already changed)
-            if ($visit->getCourse() === $this) {
-                $visit->setCourse(null);
-            }
-        }
-
-        return $this;
     }
 
     public function getCategory(): ?Category
@@ -284,6 +272,67 @@ class Course
                 $media->setCourse(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getViews(): ?int
+    {
+        return $this->views;
+    }
+
+    public function setViews(int $views): static
+    {
+        $this->views = $views;
+
+        return $this;
+    }
+
+    public function incrementViews(): self
+    {
+        ++$this->views;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ViewHistory>
+     */
+    public function getViewHistories(): Collection
+    {
+        return $this->viewHistories;
+    }
+
+    public function addViewHistory(ViewHistory $viewHistory): static
+    {
+        if (!$this->viewHistories->contains($viewHistory)) {
+            $this->viewHistories->add($viewHistory);
+            $viewHistory->setCourse($this);
+        }
+
+        return $this;
+    }
+
+    public function removeViewHistory(ViewHistory $viewHistory): static
+    {
+        if ($this->viewHistories->removeElement($viewHistory)) {
+            // set the owning side to null (unless already changed)
+            if ($viewHistory->getCourse() === $this) {
+                $viewHistory->setCourse(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getAddedAt(): ?\DateTimeInterface
+    {
+        return $this->addedAt;
+    }
+
+    public function setAddedAt(?\DateTimeInterface $addedAt): self
+    {
+        $this->addedAt = $addedAt;
 
         return $this;
     }

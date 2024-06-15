@@ -12,12 +12,16 @@ use App\Course\Persister\Command\Doctrine\DeleteCourseCommand;
 use App\Course\Persister\Command\Doctrine\UpdateCourseCommand;
 use App\Course\Query\ItemQueryInterface;
 use App\Entity\Course;
+use App\Entity\ViewHistory;
+use App\Event\NewCourseEvent;
+use DateTime;
 use App\Form\CourseType;
 use App\Form\DetailsCourseType;
 use App\Repository\CourseRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -32,7 +36,7 @@ class CourseController extends AbstractController
     ) {
     }
 
-    #[Route('/', name: 'app_cours')]
+    #[Route('/course', name: 'app_course')]
     public function index(CourseRepository $courseRepository, Request $request, PaginatorInterface $paginator): Response
     {
         $queryBuilder = $courseRepository->createQueryBuilder('c');
@@ -71,7 +75,7 @@ class CourseController extends AbstractController
 
             $this->courseHandler->add($course);
 
-            return $this->redirectToRoute('app_cours');
+            return $this->redirectToRoute('app_course');
         }
 
         return $this->render('course/add.html.twig', [
@@ -80,25 +84,32 @@ class CourseController extends AbstractController
     }
 
     #[Route('/cours/{id}', name: 'app_course_details')]
-    public function courseDetails(/* Course $course */ int $id, ItemQueryInterface $query): Response
+    public function courseDetails(/* Course $course */ int $id, ItemQueryInterface $query, EntityManagerInterface $entityManager, EventDispatcherInterface $dispatcher): Response
     {
         $course = $query->findItem((string) $id);
         if (null === $course) {
             throw $this->createNotFoundException();
         }
 
+        $course->incrementViews();
+        $userIdentifier = $this->getUser()->getUserIdentifier();
+        
+        $dispatcher->dispatch(new NewCourseEvent($id, $userIdentifier));
+
         $sections = $course->getSections();
         $author = $course->getAuthor();
         $category = $course->getCategory();
         $videoFileName = $course->getVideoPathName();
         $videoUrl = 'http://localhost:9000/videos/'.$videoFileName;
+        $mediaItems = $course->getMedias();
 
         return $this->render('course/details.html.twig', [
             'course' => $course,
             'sections' => $sections,
             'author' => $author,
             'category' => $category,
-            'video_url' => $videoFileName ? 'http://localhost:9000/videos/'.$videoFileName : null,
+            'video_url' => $videoFileName ? $videoUrl : null,
+            'other_media_urls' =>  $mediaItems,
         ]);
     }
 

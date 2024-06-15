@@ -15,70 +15,26 @@ class Visit
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column]
-    private ?int $nbrVisit = null;
 
-    #[ORM\Column]
-    private ?\DateTimeImmutable $lastTimeVisit = null;
-
-    #[ORM\ManyToOne(inversedBy: 'visits')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?User $user = null;
-
-    #[ORM\ManyToOne(inversedBy: 'visits')]
-    #[ORM\JoinColumn(nullable: true)]
-    private ?Course $course = null;
+    #[ORM\Column(type: "datetime")]
+    private ?\DateTime $timeVisit = null;
+    
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getNbrVisit(): ?int
+    public function getTimeVisit(): ?\DateTimeInterface
     {
-        return $this->nbrVisit;
+        return $this->timeVisit;
     }
 
-    public function setNbrVisit(int $nbrVisit): static
+    public function setTimeVisit(\DateTimeInterface $timeVisit): self
     {
-        $this->nbrVisit = $nbrVisit;
+        $this->timeVisit = $timeVisit;
 
         return $this;
     }
 
-    public function getLastTimeVisit(): ?\DateTimeImmutable
-    {
-        return $this->lastTimeVisit;
-    }
-
-    public function setLastTimeVisit(\DateTimeImmutable $lastTimeVisit): static
-    {
-        $this->lastTimeVisit = $lastTimeVisit;
-
-        return $this;
-    }
-
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
-
-    public function setUser(?User $user): static
-    {
-        $this->user = $user;
-
-        return $this;
-    }
-
-    public function getCourse(): ?Course
-    {
-        return $this->course;
-    }
-
-    public function setCourse(?Course $course): static
-    {
-        $this->course = $course;
-
-        return $this;
-    }
 }
