@@ -7,6 +7,7 @@ namespace App\Entity;
 use App\Repository\MediaRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: MediaRepository::class)]
 class Media
@@ -17,6 +18,7 @@ class Media
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['course:read'])]
     private ?string $fileName = null;
 
     #[ORM\ManyToOne(inversedBy: 'medias')]

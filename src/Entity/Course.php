@@ -10,6 +10,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Serializer\Attribute\SerializedName;
 
 #[ORM\Entity(repositoryClass: CourseRepository::class)]
@@ -18,14 +19,17 @@ class Course
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['course:read'])]
     private ?int $id = null;
 
-    #[ORM\Column(length: 200)]
+    #[ORM\Column(type: Types::TEXT)]
     #[SerializedName('title')]
+    #[Groups(['course:read', 'course:write'])]
     private ?string $label = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     #[SerializedName('description')]
+    #[Groups(['course:read'])]
     private ?string $description = null;
 
     #[ORM\OneToMany(targetEntity: Visit::class, mappedBy: 'course', orphanRemoval: true)]
@@ -34,8 +38,9 @@ class Course
     #[ORM\OneToMany(targetEntity: Application::class, mappedBy: 'course', orphanRemoval: true)]
     private Collection $applications;
 
-    #[ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'courses')]
+    #[ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'courses', fetch: 'EAGER')]
     #[ORM\JoinColumn(name: 'category_id', referencedColumnName: 'id')]
+    #[Groups(['course:read'])]
     private ?Category $category = null;
 
     #[ORM\Column(nullable: true)]
@@ -43,12 +48,14 @@ class Course
     private ?int $idReference = null;
 
     #[ORM\OneToMany(targetEntity: Section::class, mappedBy: 'course', cascade: ['persist'], orphanRemoval: true)]
+    #[Groups(['course:read'])]
     private Collection $sections;
 
     private ?string $type = null;
 
-    #[ORM\ManyToOne(inversedBy: 'cours', cascade: ['persist'])]
+    #[ORM\ManyToOne(inversedBy: 'cours', cascade: ['persist'], fetch: 'EAGER')]
     #[ORM\JoinColumn(nullable: true)]
+    #[Groups(['course:read'])]
     private ?Author $author = null;
 
     private ?File $videoPath = null;
@@ -57,6 +64,7 @@ class Course
     private ?string $videoPathName = null;
 
     #[ORM\OneToMany(targetEntity: Media::class, mappedBy: 'course', cascade: ['persist', 'remove'])]
+    #[Groups(['course:read'])]
     private Collection $medias;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
@@ -67,6 +75,16 @@ class Course
 
     #[ORM\OneToMany(targetEntity: ViewHistory::class, mappedBy: 'course')]
     private Collection $viewHistories;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[SerializedName('image_480x270')]
+    #[Groups(['course:read', 'course:write'])]
+    private ?string $cover = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[SerializedName('url')]
+    #[Groups(['course:read', 'course:write'])]
+    private ?string $url = null;
 
     public function __construct()
     {
@@ -333,6 +351,30 @@ class Course
     public function setAddedAt(?\DateTimeInterface $addedAt): self
     {
         $this->addedAt = $addedAt;
+
+        return $this;
+    }
+
+    public function getCover(): ?string
+    {
+        return $this->cover;
+    }
+
+    public function setCover(?string $cover): static
+    {
+        $this->cover = $cover;
+
+        return $this;
+    }
+
+    public function getUrl(): ?string
+    {
+        return $this->url;
+    }
+
+    public function setUrl(?string $url): static
+    {
+        $this->url = $url;
 
         return $this;
     }

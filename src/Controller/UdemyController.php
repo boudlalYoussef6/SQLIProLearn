@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Course\Fetcher\CourseFetcherInterface;
+use App\Course\Handler\CourseHandlerInterface;
+use App\Factory\Course\UdemyCourseFactory;
 use App\Form\UdemyType;
-use App\Service\HandlerDataBase;
-use App\Service\UdemyApiClient;
-use App\Service\UdemyDeserializationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,11 +15,14 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class UdemyController extends AbstractController
 {
+    public function __construct(
+        private readonly CourseFetcherInterface $fetcher,
+        private readonly UdemyCourseFactory $factory,
+    ) {
+    }
+
     #[Route('/udemy/add', name: 'app_add_cours')]
-    public function addCourse(Request $request,
-        UdemyApiClient $udemyApiClient,
-        HandlerDataBase $handlerDataBase,
-        UdemyDeserializationService $deserializationService): Response
+    public function addCourse(Request $request, CourseHandlerInterface $handler): Response
     {
         $form = $this->createForm(UdemyType::class);
         $form->handleRequest($request);
@@ -27,15 +30,11 @@ class UdemyController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
             $id = $data['id'];
-            $categoryId = $data['category'];
+            $category = $data['category'];
 
-            $courseData = $udemyApiClient->getCourseById($id);
+            $content = $this->fetcher->fetch($id);
 
-            $course = $deserializationService->deserializeCourse($courseData);
-            $course->setCategory($categoryId);
-            $course->setType('udemy');
-
-            $handlerDataBase->storeCourse($course);
+            $this->factory->addCourse($content, $category, $handler);
 
             return $this->redirectToRoute('app_home');
         }

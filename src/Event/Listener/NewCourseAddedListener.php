@@ -31,6 +31,7 @@ class NewCourseAddedListener implements EventSubscriberInterface
             return;
         }
 
+        $course->incrementViews();
         $this->factory->saveNewViewHistory($course);
     }
 

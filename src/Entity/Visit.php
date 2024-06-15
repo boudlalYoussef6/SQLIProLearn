@@ -15,10 +15,8 @@ class Visit
     #[ORM\Column]
     private ?int $id = null;
 
-
-    #[ORM\Column(type: "datetime")]
+    #[ORM\Column(type: 'datetime')]
     private ?\DateTime $timeVisit = null;
-    
 
     public function getId(): ?int
     {
@@ -36,5 +34,4 @@ class Visit
 
         return $this;
     }
-
 }
