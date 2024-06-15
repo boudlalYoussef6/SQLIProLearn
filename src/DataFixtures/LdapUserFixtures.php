@@ -9,34 +9,67 @@ use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\Ldap\Entry;
 use Symfony\Component\Ldap\Ldap;
 
-class LdapUserFixtures extends Fixture
+class LdapUserFixtures extends Fixture // Déclare la classe LdapUserFixtures qui hérite de Fixture
 {
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager) // La méthode load est appelée pour charger les fixtures
     {
-        $ldap = Ldap::create('ext_ldap', ['connection_string' => 'ldap://openldap:389']);
-        $ldap->bind('cn=admin,dc=ramhlocal,dc=com', 'admin_pass');
+        // Création de la connexion LDAP
+        // $ldap = Ldap::create('ext_ldap', ['connection_string' => 'ldap://openldap:389']);
+        // $ldap->bind('cn=admin,dc=ramhlocal,dc=com', 'admin_pass'); // Authentifie l'utilisateur admin sur le serveur LDAP
 
-        $entryManager = $ldap->getEntryManager();
-        $entries = [
-            new Entry(
-                'cn=newuser,ou=people,dc=ramhlocal,dc=com',
-                [
-                    'objectClass' => ['inetOrgPerson', 'posixAccount'],
-                    'sn' => ['Newuser'],
-                    'givenName' => ['New'],
-                    'cn' => ['newuser'],
-                    'mail' => ['newuser@sf4app.org'],
-                    'uidNumber' => ['1001'],
-                    'gidNumber' => ['1001'],
-                    'homeDirectory' => ['/home/newuser'],
-                    'uid' => ['newuser'],
-                    'userPassword' => ['password123'],
-                ]
-            ),
-        ];
+        // Obtention du gestionnaire d'entrées LDAP
+        // $entryManager = $ldap->getEntryManager();
+        // $entries = [
+        //     new Entry(
+        //         'cn=johndoe,ou=people,dc=ramhlocal,dc=com', // DN de l'entrée LDAP
+        //         [
+        //             'objectClass' => ['inetOrgPerson', 'posixAccount'], // Classes d'objet pour cette entrée
+        //             'sn' => ['Doe'], // Nom de famille
+        //             'givenName' => ['John'], // Prénom
+        //             'cn' => ['johndoe'], // Nom commun
+        //             'mail' => ['johndoe@sf4app.org'], // Adresse e-mail
+        //             'uidNumber' => ['1002'], // Numéro UID
+        //             'gidNumber' => ['1002'], // Numéro GID
+        //             'homeDirectory' => ['/home/johndoe'], // Répertoire personnel
+        //             'uid' => ['johndoe'], // UID
+        //             'userPassword' => ['password123'], // Mot de passe utilisateur
+        //         ]
+        //     ),
+        //     new Entry(
+        //         'cn=alexsmith,ou=people,dc=ramhlocal,dc=com',
+        //         [
+        //             'objectClass' => ['inetOrgPerson', 'posixAccount'],
+        //             'sn' => ['Smith'],
+        //             'givenName' => ['Alex'],
+        //             'cn' => ['alexsmith'],
+        //             'mail' => ['alexsmith@sf4app.org'],
+        //             'uidNumber' => ['1004'],
+        //             'gidNumber' => ['1004'],
+        //             'homeDirectory' => ['/home/alexsmith'],
+        //             'uid' => ['alexsmith'],
+        //             'userPassword' => ['password123'],
+        //         ]
+        //     ),
+        //     new Entry(
+        //         'cn=maryjohnson,ou=people,dc=ramhlocal,dc=com',
+        //         [
+        //             'objectClass' => ['inetOrgPerson', 'posixAccount'],
+        //             'sn' => ['Johnson'],
+        //             'givenName' => ['Mary'],
+        //             'cn' => ['maryjohnson'],
+        //             'mail' => ['maryjohnson@sf4app.org'],
+        //             'uidNumber' => ['1005'],
+        //             'gidNumber' => ['1005'],
+        //             'homeDirectory' => ['/home/maryjohnson'],
+        //             'uid' => ['maryjohnson'],
+        //             'userPassword' => ['password123'],
+        //         ]
+        //     ),
+        // ];
 
-        foreach ($entries as $entry) {
-            $entryManager->add($entry);
-        }
+        // Ajout des entrées au serveur LDAP
+        // foreach ($entries as $entry) {
+        //     $entryManager->add($entry);
+        // }
     }
 }
