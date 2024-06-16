@@ -15,8 +15,22 @@ class Visit
     #[ORM\Column]
     private ?int $id = null;
 
+    #[ORM\Column]
+    private ?int $nbrVisit = null;
+
+    #[ORM\Column]
+    private ?\DateTimeImmutable $lastTimeVisit = null;
+
+    #[ORM\ManyToOne(inversedBy: 'visits')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $user = null;
+
+    #[ORM\ManyToOne(inversedBy: 'visits')]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?Course $course = null;
+
     #[ORM\Column(type: 'datetime')]
-    private ?\DateTime $timeVisit = null;
+    private ?\DateTimeInterface $timeVisit = null;
 
     public function getId(): ?int
     {

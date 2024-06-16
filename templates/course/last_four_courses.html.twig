@@ -4,42 +4,46 @@
 
 {% block title %}Derniers cours{% endblock %}
 {% block custum_css %}
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-<style>
-    .small-box {
-        margin-bottom: 20px; /* Ajouter une marge en bas */
-    }
-</style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        .small-box {
+            margin-bottom: 20px; /* Ajouter une marge en bas */
+        }
+    </style>
 {% endblock %}
 
 {% block content %}
-   {% if lastFourCourses is not empty %}
-   <div class="card-body">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>Accueil</h1>
+            </div>
+        </div>
         <div class="row">
-            {% for viewHistory in lastFourCourses %}
-                <div class="col-lg-3 col-md-4 col-sm-6">
-                    <div class="small-box bg-light">
-                        <div class="inner">
-                            <h3>{{ viewHistory.getUser() }} </h3>
-                            <p> <i class="fa-solid fa-calendar-days"></i>: "{{ viewHistory.getDateView()|date('Y-m-d H:i:s') }}"</p>
-                             <p><i class="fa-solid fa-user"></i>: "{{ viewHistory.getCourse().getAuthor().getName() }}"</p>
-                            <p><i class="fa-solid fa-book-open"></i>: "{{ viewHistory.getCourse().getLabel() }}"</p>
-                             <p><i class="fa-solid fa-eye"></i>: "{{ viewHistory.getCourse().getViews() }}"</p>
+            {% if lastFourCourses is not empty %}
+                {% for viewHistory in lastFourCourses %}
+                    <div class="col-lg-3 col-md-4 col-sm-6">
+                        <div class="card-body">
+                            <div class="small-box bg-light">
+                                <div class="inner">
+                                    <label class="h3">{{ viewHistory.course.label }}</label>
+                                    <p>
+                                        <i class="fa-solid fa-calendar-days"></i> {{ viewHistory.dateView | date('Y-m-d H:i:s') }}
+                                        <i class="fa-solid fa-eye"></i> {{ viewHistory.course.views }}
+                                    </p>
+                                </div>
+                                <a href="{{ url('app_course_details', {id: viewHistory.course.id}) }}" class="small-box-footer">
+                                    Reprendre le cours <i class="fas fa-arrow-circle-right"></i>
+                                </a>
+                            </div>
                         </div>
-                        <div class="icon">
-                            <i class="ion ion-stats-bars"></i>
-                        </div>
-                        <a href="#" class="small-box-footer">
-                            More info <i class="fas fa-arrow-circle-right"></i>
-                        </a>
                     </div>
+                {% endfor %}
+            {% else %}
+                <div class="alert alert-warning" role="alert">
+                    Aucun cours disponible pour le moment.
                 </div>
-            {% endfor %}
+            {% endif %}
         </div>
-        </div>
-    {% else %}
-        <div class="alert alert-warning" role="alert">
-            Aucun cours disponible pour le moment.
-        </div>
-    {% endif %}
+    </div>
 {% endblock %}

@@ -40,13 +40,14 @@ class CourseController extends AbstractController
         Request $request,
         PaginatorInterface $paginator,
     ): Response {
-        $queryBuilder = $courseRepository->createQueryBuilder('c')
-        ->orderBy('c.id', 'DESC');
+        $queryBuilder = $courseRepository
+            ->createQueryBuilder('c')
+            ->orderBy('c.id', 'DESC');
 
         $pagination = $paginator->paginate(
             $queryBuilder,
             $request->query->getInt('page', 1),
-            6
+            8
         );
 
         $course = new Course();
