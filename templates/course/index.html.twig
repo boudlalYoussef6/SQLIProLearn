@@ -9,22 +9,29 @@
             <div class="container-fluid">
                 <h2>List of Courses</h2>
                 <div class="row">
-                    {% for cours in pagination %}
+                    {% for course in pagination %}
                         <div class="col-3">
                             <div class="card">
                                 <img class="card-img-top"
                                      src="{{ asset(random(['images/php_Elephant.jpg', 'images/php_Elephant_V2.jpg', 'images/php_Elephant_V3.jpg'])) }}"
                                      alt="image of the course"
                                      style="height: 20vh; object-fit: cover;">
-                                <div class="card-body">
-                                    <h3 class="card-title font-weight-bold">{{ cours.label }}</h3>
+                                <div class="card-body" style="height: 120px">
+                                    <h3 class="card-title font-weight-bold">{{ course.label }}</h3>
                                     <p class="card-text">
-                                        {{ cours.description|striptags|length > 50 ? cours.description|striptags|slice(0, 50) ~ '...' : cours.description|striptags }}
+                                        {{ course.description|striptags|length > 50 ? course.description|striptags|slice(0, 50) ~ '...' : course.description|striptags }}
                                     </p>
-
-                                    <a href="{{ url('app_course_details', {'id': cours.id}) }}" class="btn btn-primary">
+                                </div>
+                                <div class="card-footer">
+                                    <a href="{{ url('app_course_details', {'id': course.id}) }}" class="btn btn-primary">
                                         <i class="fa-solid fa-eye"></i> Voir le cours
                                     </a>
+                                    {% if is_granted('edit', course) %}
+                                        <a href="{{ url('app_course_edit', {'id': course.id}) }}" class="btn btn-warning">Edit</a>
+                                    {% endif %}
+                                    {% if is_granted('delete', course) %}
+                                        <a href="{{ url('app_course_delete', {'id': course.id}) }}" class="btn btn-danger">Delete</a>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>

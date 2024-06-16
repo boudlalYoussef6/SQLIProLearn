@@ -58,12 +58,6 @@ class CustomLdapAuthenticator extends AbstractLoginFormAuthenticator
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
-        $visit = new Visit();
-        $visit->setTimeVisit(new \DateTime());
-        $entityManager = $this->entityManager;
-        $entityManager->persist($visit);
-        $entityManager->flush();
-
         if ($targetPath = $this->getTargetPath($request->getSession(), $firewallName)) {
             return new RedirectResponse($targetPath);
         }
