@@ -1,13 +1,13 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types=1); // Force l'utilisation des types stricts dans ce fichier PHP
 
-namespace App\DataFixtures;
+namespace App\DataFixtures; // Déclare l'espace de noms de la classe
 
-use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Persistence\ObjectManager;
-use Symfony\Component\Ldap\Entry;
-use Symfony\Component\Ldap\Ldap;
+use Doctrine\Bundle\FixturesBundle\Fixture; // Importe la classe Fixture de Doctrine
+use Doctrine\Persistence\ObjectManager; // Importe l'interface ObjectManager de Doctrine
+use Symfony\Component\Ldap\Entry; // Importe la classe Entry de Symfony LDAP
+use Symfony\Component\Ldap\Ldap; // Importe la classe Ldap de Symfony LDAP
 
 class LdapUserFixtures extends Fixture // Déclare la classe LdapUserFixtures qui hérite de Fixture
 {

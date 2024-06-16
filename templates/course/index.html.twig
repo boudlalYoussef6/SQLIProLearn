@@ -4,39 +4,41 @@
 
 {% block content %}
 
-{% if pagination  is defined and pagination is not empty %}
-    <section class="content">
-        <div class="container-fluid">
-            <h2>List of Courses</h2>
-            <div class="row" style="gap: 0.8rem;">
-                {% for cours in pagination %}
-                    <div class="card" style="width: 25vw;">
-                        <img class="card-img-top"
-                             src="{{ asset(random(['images/php_Elephant.jpg', 'images/php_Elephant_V2.jpg', 'images/php_Elephant_V3.jpg'])) }}"
-                             alt="image of the course"
-                             style="height: 20vh; object-fit: cover;">
-                        <div class="card-body">
-                            <h3 class="card-title font-weight-bold">{{ cours.label }}</h3>
-                            <p class="card-text">
-                                {{ cours.description|striptags|length > 50 ? cours.description|striptags|slice(0, 50) ~ '...' : cours.description|striptags }}
-                            </p>
+    {% if pagination  is defined and pagination is not empty %}
+        <section class="content">
+            <div class="container-fluid">
+                <h2>List of Courses</h2>
+                <div class="row">
+                    {% for cours in pagination %}
+                        <div class="col-3">
+                            <div class="card">
+                                <img class="card-img-top"
+                                     src="{{ asset(random(['images/php_Elephant.jpg', 'images/php_Elephant_V2.jpg', 'images/php_Elephant_V3.jpg'])) }}"
+                                     alt="image of the course"
+                                     style="height: 20vh; object-fit: cover;">
+                                <div class="card-body">
+                                    <h3 class="card-title font-weight-bold">{{ cours.label }}</h3>
+                                    <p class="card-text">
+                                        {{ cours.description|striptags|length > 50 ? cours.description|striptags|slice(0, 50) ~ '...' : cours.description|striptags }}
+                                    </p>
 
-                            <a href="{{ url('app_course_details', {'id': cours.id}) }}" class="btn btn-primary">
-                                <i class="fa-solid fa-eye"></i>  Voir le cours
-                            </a>
+                                    <a href="{{ url('app_course_details', {'id': cours.id}) }}" class="btn btn-primary">
+                                        <i class="fa-solid fa-eye"></i> Voir le cours
+                                    </a>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                {% endfor %}
-            </div>
+                    {% endfor %}
+                </div>
 
-            <div class="pagination">
-                {{ knp_pagination_render(pagination) }}
+                <div class="pagination">
+                    {{ knp_pagination_render(pagination) }}
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
     {% else %}
-    <div class="alert alert-warning" role="alert">
-  Pas de cours dispoinible
-    </div>
+        <div class="alert alert-warning" role="alert">
+            Pas de cours dispoinible
+        </div>
     {% endif %}
 {% endblock %}
