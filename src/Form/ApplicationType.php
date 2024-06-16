@@ -16,7 +16,7 @@ class ApplicationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('cours', EntityType::class, [
+            ->add('course', EntityType::class, [
                 'class' => Course::class,
                 'choice_label' => 'label',
             ])

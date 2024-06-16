@@ -18,7 +18,7 @@ class Visit
     #[ORM\Column]
     private ?int $nbrVisit = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $lastTimeVisit = null;
 
     #[ORM\ManyToOne(inversedBy: 'visits')]

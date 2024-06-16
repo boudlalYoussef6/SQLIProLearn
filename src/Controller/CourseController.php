@@ -10,6 +10,7 @@ use App\Course\Handler\CourseHandlerInterface;
 use App\Course\Persister\Command\Doctrine\AddCourseCommand;
 use App\Course\Persister\Command\Doctrine\DeleteCourseCommand;
 use App\Course\Persister\Command\Doctrine\UpdateCourseCommand;
+use App\Course\Persister\CoursePersisterInterface;
 use App\Course\Query\ItemQueryInterface;
 use App\Entity\Course;
 use App\Event\NewCourseEvent;
@@ -22,7 +23,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class CourseController extends AbstractController
 {
@@ -31,6 +33,7 @@ class CourseController extends AbstractController
         private readonly DeleteCourseCommand $deleteCourseCommand,
         private readonly UpdateCourseCommand $updateCourseCommand,
         private readonly CourseHandlerInterface $courseHandler,
+        private readonly CoursePersisterInterface $coursePersister,
     ) {
     }
 
@@ -86,7 +89,7 @@ class CourseController extends AbstractController
         ]);
     }
 
-    #[Route('/cours/{id}', name: 'app_course_details')]
+    #[Route('/course/{id}', name: 'app_course_details')]
     public function courseDetails(
         /* Course $course */ int $id,
         ItemQueryInterface $query,
@@ -106,8 +109,8 @@ class CourseController extends AbstractController
         ]);
     }
 
-    #[Route('/cours/ajout/{id}', name: 'app_cours_ajout_section')]
-    public function courseAjoutSection(
+    #[Route('/course/add/{id}', name: 'app_course_add_section')]
+    public function courseAddSection(
         Course $course,
         Request $request,
         EntityManagerInterface $entityManager
@@ -126,5 +129,35 @@ class CourseController extends AbstractController
             'course' => $course,
             'form' => $form,
         ]);
+    }
+
+    #[Route('/course/edit/{id}', name: 'app_course_edit')]
+    #[IsGranted('edit', 'course')]
+    public function editCourse(
+        Course $course,
+        Request $request,
+    ): Response {
+        $form = $this->createForm(CourseType::class, $course);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->courseHandler->edit($course);
+
+            return $this->redirectToRoute('app_course_details', ['id' => $course->getId()]);
+        }
+
+        return $this->render('course/edit.html.twig', [
+            'course' => $course,
+            'form' => $form,
+        ]);
+    }
+
+    #[Route('/course/delete/{id}', name: 'app_course_delete')]
+    #[IsGranted('delete', 'course')]
+    public function deleteCourse(Course $course): Response
+    {
+        $this->courseHandler->delete($course);
+
+        return $this->redirectToRoute('app_course');
     }
 }
