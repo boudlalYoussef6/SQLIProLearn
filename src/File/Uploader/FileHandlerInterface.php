@@ -20,4 +20,9 @@ interface FileHandlerInterface
      * Download the content of the given file.
      */
     public function download(string $filePath): string;
+
+    /**
+     * @return string[]
+     */
+    public function listContent(string $path = '/'): array;
 }
