@@ -17,9 +17,12 @@ use App\Event\NewCourseEvent;
 use App\Form\CourseType;
 use App\Form\DetailsCourseType;
 use App\Repository\CourseRepository;
+use App\Repository\FavoryRepository;
+use App\Security\Voters\CourseVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -42,6 +45,7 @@ class CourseController extends AbstractController
         CourseRepository $courseRepository,
         Request $request,
         PaginatorInterface $paginator,
+        FavoryRepository $favoryRepository,
     ): Response {
         $queryBuilder = $courseRepository
             ->createQueryBuilder('c')
@@ -53,12 +57,15 @@ class CourseController extends AbstractController
             8
         );
 
-        $course = new Course();
-        $form = $this->createForm(CourseType::class, $course);
+        // Retourne l'identifiant de l'utilisateur actuellement connecté
+        $userIdentifier = $this->getUser()->getUserIdentifier();
+
+        // Chargement des cours favoris de l'utilisateur
+        $favoriteCourses = $favoryRepository->findFavoriteCourses($userIdentifier);
 
         return $this->render('course/index.html.twig', [
             'pagination' => $pagination,
-            'form' => $form->createView(),
+            'favoriteCourses' => $favoriteCourses,
         ]);
     }
 
@@ -90,22 +97,30 @@ class CourseController extends AbstractController
     }
 
     #[Route('/course/{id}', name: 'app_course_details')]
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function courseDetails(
         /* Course $course */ int $id,
         ItemQueryInterface $query,
         EventDispatcherInterface $dispatcher,
+        Security $security,
+        FavoryRepository $favoryRepository,
     ): Response {
         $course = $query->findItem((string) $id);
         if (null === $course) {
             throw $this->createNotFoundException();
         }
 
+        $user = $security->getUser()->getUserIdentifier();
+
         $userIdentifier = $this->getUser()->getUserIdentifier();
 
         $dispatcher->dispatch(new NewCourseEvent($id, $userIdentifier));
 
+        $isFavorite = $favoryRepository->isFavorite($user, $course['id']);
+
         return $this->render('course/details.html.twig', [
             'course' => $course,
+            'isFavorite' => $isFavorite,
         ]);
     }
 
@@ -132,7 +147,7 @@ class CourseController extends AbstractController
     }
 
     #[Route('/course/edit/{id}', name: 'app_course_edit')]
-    #[IsGranted('edit', 'course')]
+    #[IsGranted(CourseVoter::EDIT, 'course')]
     public function editCourse(
         Course $course,
         Request $request,
@@ -153,7 +168,7 @@ class CourseController extends AbstractController
     }
 
     #[Route('/course/delete/{id}', name: 'app_course_delete')]
-    #[IsGranted('delete', 'course')]
+    #[IsGranted(CourseVoter::DELETE, 'course')]
     public function deleteCourse(Course $course): Response
     {
         $this->courseHandler->delete($course);

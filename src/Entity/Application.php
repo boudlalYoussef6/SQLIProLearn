@@ -28,10 +28,6 @@ class Application
     #[ORM\JoinColumn(nullable: false)]
     private ?Course $course = null;
 
-    #[ORM\ManyToOne(inversedBy: 'applications')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?User $user = null;
-
     public function getId(): ?int
     {
         return $this->id;
@@ -81,18 +77,6 @@ class Application
     public function setCourse(?Course $course): static
     {
         $this->course = $course;
-
-        return $this;
-    }
-
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
-
-    public function setUser(?User $user): static
-    {
-        $this->user = $user;
 
         return $this;
     }

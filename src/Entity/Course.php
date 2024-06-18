@@ -22,7 +22,7 @@ class Course
     #[Groups(['course:read'])]
     private ?int $id = null;
 
-    #[ORM\Column(type: Types::TEXT)]
+    #[ORM\Column(length: 200, type: Types::TEXT)]
     #[SerializedName('title')]
     #[Groups(['course:read', 'course:write'])]
     private ?string $label = null;
@@ -31,9 +31,6 @@ class Course
     #[SerializedName('description')]
     #[Groups(['course:read'])]
     private ?string $description = null;
-
-    #[ORM\OneToMany(targetEntity: Visit::class, mappedBy: 'course', orphanRemoval: true)]
-    private Collection $visits;
 
     #[ORM\OneToMany(targetEntity: Application::class, mappedBy: 'course', orphanRemoval: true)]
     private Collection $applications;
@@ -86,13 +83,16 @@ class Course
     #[Groups(['course:read', 'course:write'])]
     private ?string $url = null;
 
+    #[ORM\OneToMany(targetEntity: Favory::class, mappedBy: 'Course', orphanRemoval: true)]
+    private Collection $favories;
+
     public function __construct()
     {
-        $this->visits = new ArrayCollection();
         $this->applications = new ArrayCollection();
         $this->sections = new ArrayCollection();
         $this->medias = new ArrayCollection();
         $this->viewHistories = new ArrayCollection();
+        $this->favories = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -152,14 +152,6 @@ class Course
         }
 
         return $this;
-    }
-
-    /**
-     * @return Collection<int, Visit>
-     */
-    public function getVisits(): Collection
-    {
-        return $this->visits;
     }
 
     public function getCategory(): ?Category
@@ -375,6 +367,36 @@ class Course
     public function setUrl(?string $url): static
     {
         $this->url = $url;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Favory>
+     */
+    public function getFavories(): Collection
+    {
+        return $this->favories;
+    }
+
+    public function addFavory(Favory $favory): static
+    {
+        if (!$this->favories->contains($favory)) {
+            $this->favories->add($favory);
+            $favory->setCourse($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFavory(Favory $favory): static
+    {
+        if ($this->favories->removeElement($favory)) {
+            // set the owning side to null (unless already changed)
+            if ($favory->getCourse() === $this) {
+                $favory->setCourse(null);
+            }
+        }
 
         return $this;
     }

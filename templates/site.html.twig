@@ -36,14 +36,7 @@
                             <!-- /.sidebar -->
                             </aside>
 
-                            <footer class="main-footer">
-                                <strong>Copyright &copy; 2014-2021 <a
-                                            href="https://adminlte.io">AdminLTE.io</a>.</strong>
-                                All rights reserved.
-                                <div class="float-right d-none d-sm-inline-block">
-                                    <b>Version</b> 3.2.0
-                                </div>
-                            </footer>
+
                         </form>
                     </div>
                 </li>
@@ -146,7 +139,7 @@
                         <i class="fas fa-th-large"></i>
                     </a>
                 </li>
-            </ul>name
+            </ul>
         </nav>
         <!-- /.navbar -->
 
@@ -195,15 +188,23 @@
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="{{ url('app_add_cours') }}" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>RechercherCours</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
                                     <a href="{{ url('app_course_add') }}" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
-                                        <p>ajouter un cours</p>
+                                        <p>Ajouter un cours</p>
+                                    </a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a href="{{ url('app_add_cours') }}" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Rechercher un cours</p>
+                                    </a>
+                                </li>
+                               
+                                <li class="nav-item">
+                                    <a href="{{ url('app_course_show') }}" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Mes Favories</p>
                                     </a>
                                 </li>
                             </ul>
@@ -239,8 +240,9 @@
             </div>
             <section class="content">
                 <div class="container-fluid">
-            {% block content %}{% endblock %}
-                </div></section>
+                    {% block content %}{% endblock %}
+                </div>
+            </section>
             <footer class="main-footer text-center ml-0">
                 <!-- To the right -->
                 <div class="float-right d-none d-sm-inline">
@@ -249,9 +251,7 @@
                 <!-- Default to the left -->
                 <strong>Copyright &copy; 2024 <a href="https://adminlte.io">SQLIPROLEARNING</a>.</strong>
                 All rights reserved.
-            </footer>
-
-        </div>
+     </footer>
     </div>
 {% endblock body %}
 

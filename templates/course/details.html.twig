@@ -23,6 +23,14 @@
                             {% if course.description %}
                                 <p class="card-text">{{ course.description|raw }}</p>
                             {% endif %}
+                            <a href="{{ path('app_course_add_section', {'id': course.id}) }}" class="btn btn-primary">Ajouter une section</a>
+                            <a href="{{ path('app_favorite_toggle', {'id': course.id}) }}" class="btn btn-secondary">Ajouter aux Favoris</a>
+                            <button id="favorite-toggle" class="btn btn-secondary">
+                                <i class="fas fa-star {% if isFavorite %}favorite{% else %}not-favorite{% endif %}"></i>
+                                {% if isFavorite %}
+                                {% else %}
+                                {% endif %}
+                            </button>
                             {% if course.sections %}
                                 <div class="accordion" id="accordionExample" style="margin-top: 1rem;">
                                     {% for section in course.sections %}
@@ -114,3 +122,81 @@
     {#<a href="{{ path('app_cours_ajout_section', {'id': course.id}) }}" class="btn btn-primary">Ajouter section</a>#}
 
 {% endblock %}
+
+{% block custum_css %}
+    <style>
+        .favorite {
+            color: yellow;
+        }
+        .not-favorite {
+            color: grey;
+        }
+    </style>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        document.getElementById('favorite-toggle').addEventListener('click', function (e) {
+            e.preventDefault();
+
+            const isFavorite = document.querySelector('#favorite-toggle i').classList.contains('favorite');
+            const url = isFavorite ? '{{ path('app_favorite_remove', {'id': course.id}) }}' : '{{ path('app_favorite_toggle', {'id': course.id}) }}';
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Content-Type': 'application/json'
+                },
+                // You may add body data if required
+                // body: JSON.stringify({ courseId: {{ course.id }} })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    const icon = document.querySelector('#favorite-toggle i');
+                    const button = document.getElementById('favorite-toggle');
+                    if (isFavorite) {
+                        icon.classList.remove('favorite');
+                        icon.classList.add('not-favorite');
+                        button.innerHTML = '<i class="fas fa-star not-favorite"></i>';
+                        // Trigger success toast
+                        $(document).Toasts('create', {
+                            class: 'bg-danger',
+                            title: 'Favoris mis à jour',
+                            body: 'Ce cours a été retiré des favoris avec succès!'
+                        });
+                    } else {
+                        icon.classList.remove('not-favorite');
+                        icon.classList.add('favorite');
+                        button.innerHTML = '<i class="fas fa-star favorite"></i>';
+                        // Trigger success toast
+                        $(document).Toasts('create', {
+                            class: 'bg-success',
+                            title: 'Favoris mis à jour',
+                            body: 'Ce cours a été ajouté aux favoris avec succès!'
+                        });
+                    }
+                } else {
+                    // Handle error case
+                    $(document).Toasts('create', {
+                        class: 'bg-danger',
+                        title: 'Erreur',
+                        body: 'Une erreur est survenue lors de la mise à jour des favoris. Veuillez réessayer.'
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                // Handle fetch error
+                $(document).Toasts('create', {
+                    class: 'bg-danger',
+                    title: 'Erreur',
+                    body: 'Une erreur réseau est survenue. Veuillez vérifier votre connexion Internet.'
+                });
+            });
+        });
+    </script>
+{% endblock %}
+
