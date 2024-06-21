@@ -19,7 +19,7 @@ class HomeController extends AbstractController
         // Appeler la méthode du repository pour récupérer les 4 derniers cours consultés par cet utilisateur
         $lastFourCourses = $viewHistoryRepository->findLastVisitedCoursesForUser($systemUsername);
 
-        return $this->render('course/last_four_courses.html.twig', [
+        return $this->render('home/index.html.twig', [
             'lastFourCourses' => $lastFourCourses,
         ]);
     }

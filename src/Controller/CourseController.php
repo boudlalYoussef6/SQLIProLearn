@@ -54,7 +54,7 @@ class CourseController extends AbstractController
         $pagination = $paginator->paginate(
             $queryBuilder,
             $request->query->getInt('page', 1),
-            8
+            4
         );
 
         // Retourne l'identifiant de l'utilisateur actuellement connecté

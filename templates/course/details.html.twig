@@ -1,38 +1,42 @@
 {% extends 'site.html.twig' %}
 
-{% block title %}{{ course.title }}{% endblock %}
+{% block title %}
+    {{ course.title is defined ? course.title : course.label }}
+{% endblock %}
 
 {% block content %}
     <section class="content">
         <div class="container-fluid">
-            <h2>{{ course.title }}</h2>
+            <div class="d-flex align-items-center justify-content-start gap-3">
+                <h1>{{ course.title is defined ? course.title : course.label }}</h1>
+                <i class="menu-icon tf-icons bx {{ isFavorite ? 'bxs-star' : 'bx-star' }}"
+                   style="transform: translateY(-5px);"></i>
+            </div>
             <div class="row">
                 <!-- Main course card -->
                 <div class="col-md-9">
-                    <div class="card d-flex">
-                        {% if video_url is defined and video_url is not empty %}
-                            <video width="100%" height="400" controls>
-                                <source src="{{ video_url }}" type="video/mp4">
+                    <div class="card">
+                        {% if course.videoPathName is defined and  course.videoPathName is not empty %}
+                            <video class="card-img-top" controls>
+                                <source src="{{ generate_cloud_url(course.videoPathName) }}" type="video/mp4">
                                 Your browser does not support the video tag.
                             </video>
                         {% else %}
-                            {% set cover = (course.image_480x270 is defined and course.image_480x270 is not empty) ? course.image_480x270 : asset(random(['images/php_Elephant.jpg', 'images/php_Elephant_V2.jpg', 'images/php_Elephant_V3.jpg'])) %}
-                            <img class="card-img-top" src="{{ cover }}" alt="image of the course" style="height: 270px; object-fit: cover;">
+                            {% set cover = course.image_480x270 is defined and course.image_480x270 is not empty ? course.image_480x270 : asset(random(['images/php_Elephant.jpg', 'images/php_Elephant_V2.jpg', 'images/php_Elephant_V3.jpg'])) %}
+                            <img class="card-img-top" src="{{ cover }}" alt="image of the course"
+                                 style="height: 270px; object-fit: cover;">
                         {% endif %}
                         <div class="card-body">
                             {% if course.description %}
                                 <p class="card-text">{{ course.description|raw }}</p>
                             {% endif %}
-                            <a href="{{ path('app_course_add_section', {'id': course.id}) }}" class="btn btn-primary">Ajouter une section</a>
-                            <a href="{{ path('app_favorite_toggle', {'id': course.id}) }}" class="btn btn-secondary">Ajouter aux Favoris</a>
-                            <button id="favorite-toggle" class="btn btn-secondary">
-                                <i class="fas fa-star {% if isFavorite %}favorite{% else %}not-favorite{% endif %}"></i>
-                                {% if isFavorite %}
-                                {% else %}
-                                {% endif %}
-                            </button>
+                            <a href="{{ path('app_course_add_section', {'id': course.id}) }}" class="btn btn-primary"><i
+                                        class="menu-icon tf-icons bx bx-plus"></i> section</a>
+                            <a href="{{ path('app_favorite_toggle', {'id': course.id}) }}"
+                               class="btn btn-outline-warning"><i class="menu-icon tf-icons bx bx-minus"></i><i
+                                        class="menu-icon tf-icons bx bx-plus"></i> Favoris</a>
                             {% if course.sections %}
-                                <div class="accordion" id="accordionExample" style="margin-top: 1rem;">
+                                <div class="accordion mt-3" id="accordionExample">
                                     {% for section in course.sections %}
                                         <div class="accordion-item">
                                             <h2 class="accordion-header" id="heading{{ loop.index }}">
@@ -59,68 +63,45 @@
 
                 <!-- Author and Category card -->
                 <div class="col-md-3">
-                    <div class="card card-primary card-outline card-tabs">
-                        <div class="card-header p-0 pt-1 border-bottom-0">
-                            <ul class="nav nav-tabs" id="custom-tabs-three-tab" role="tablist">
-                                <li class="nav-item">
-                                    <a class="nav-link active"
-                                       id="custom-tabs-three-home-tab"
-                                       data-toggle="pill" href="#course_details_tab_content" role="tab"
-                                       aria-controls="custom-tabs-three-home" aria-selected="true">Details</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" id="custom-tabs-three-profile-tab" data-toggle="pill"
-                                       href="#course_attachments_tab_content" role="tab"
-                                       aria-controls="custom-tabs-three-profile" aria-selected="false">Pièces
-                                        jointes ({{ course.medias | length }})</a>
-                                </li>
-                            </ul>
+                    <div class="card card-outline">
+                        <div class="card-header">
+                            <h5 class="card-title">Details</h5>
                         </div>
                         <div class="card-body">
-                            <div class="tab-content" id="custom-tabs-three-tabContent">
-                                <div class="tab-pane fade show active" id="course_details_tab_content" role="tabpanel"
-                                     aria-labelledby="custom-tabs-three-home-tab">
-                                    {% if course.author is defined and course.author is not null %}
-                                        <p class="card-text"><strong>Auteur:</strong> {{ course.author.name }}</p>
-                                    {% else %}
-                                        <p class="card-text"><strong>Auteur:</strong> Not available</p>
-                                    {% endif %}
-                                    {% if course.category is defined and course.category is not null %}
-                                        <p class="card-text"><strong>Categorie:</strong> {{ course.category.label }}</p>
-                                    {% else %}
-                                        <p class="card-text"><strong>Categorie:</strong> Not available</p>
-                                    {% endif %}
-                                    {% if course.url is defined and course.url is not null %}
-                                        <a href="https://www.udemy.com/{{ course.url }}" target="_blank">
-                                            Read in UDEMY
-                                        </a>
-                                    {% endif %}
-                                </div>
-                                <div class="tab-pane fade" id="course_attachments_tab_content" role="tabpanel"
-                                     aria-labelledby="custom-tabs-three-profile-tab">
-                                     {% if course.medias and course.medias | length > 0 %}
-                                        <ul class="list-group">
-                                            {% for media in course.medias %}
-                                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                                    <a href="{{ generate_cloud_url(media.fileName) }}" download="{{ media.fileName }}">
-                                                        <i class="fas fa-file-download"></i> {{ media.fileName }}
-                                                    </a>
-                                                </li>
-                                            {% endfor %}
-                                        </ul>
-                                    {% else %}
-                                        <p>Aucune pièce jointe disponible.</p>
-                                    {% endif %}
-                                </div>
-                            </div>
+                            <p class="card-text">
+                                <strong>Auteur:</strong> {{ course.author is defined and course.author is not null ? course.author.name : 'Not available' }}
+                            </p>
+                            <p class="card-text">
+                                <strong>Categorie:</strong> {{ course.category is defined and course.category is not null ? course.category.label : 'Not available' }}
+                            </p>
+                            {% if course.url is defined and course.url is not null %}
+                                <a href="https://www.udemy.com/{{ course.url }}" target="_blank">Read in UDEMY</a>
+                            {% endif %}
+                        </div>
+                        <div class="card-header">
+                            <h5 class="card-title">Pièces jointes ({{ course.medias|length }})</h5>
+                        </div>
+                        <div class="card-body">
+                            {% if course.medias and course.medias|length > 0 %}
+                                <ul class="list-group">
+                                    {% for media in course.medias %}
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <a href="{{ generate_cloud_url(media.fileName) }}"
+                                               download="{{ media.fileName }}">
+                                                <i class="fas fa-file-download"></i> {{ media.fileName }}
+                                            </a>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                <p>Aucune pièce jointe disponible.</p>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
-    {#<a href="{{ path('app_cours_ajout_section', {'id': course.id}) }}" class="btn btn-primary">Ajouter section</a>#}
-
 {% endblock %}
 
 {% block custum_css %}
@@ -128,6 +109,7 @@
         .favorite {
             color: yellow;
         }
+
         .not-favorite {
             color: grey;
         }
@@ -148,55 +130,45 @@
                 headers: {
                     'X-Requested-With': 'XMLHttpRequest',
                     'Content-Type': 'application/json'
-                },
-                // You may add body data if required
-                // body: JSON.stringify({ courseId: {{ course.id }} })
+                }
             })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    const icon = document.querySelector('#favorite-toggle i');
-                    const button = document.getElementById('favorite-toggle');
-                    if (isFavorite) {
-                        icon.classList.remove('favorite');
-                        icon.classList.add('not-favorite');
-                        button.innerHTML = '<i class="fas fa-star not-favorite"></i>';
-                        // Trigger success toast
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        const icon = document.querySelector('#favorite-toggle i');
+                        if (isFavorite) {
+                            icon.classList.remove('favorite');
+                            icon.classList.add('not-favorite');
+                            $(document).Toasts('create', {
+                                class: 'bg-danger',
+                                title: 'Favoris mis à jour',
+                                body: 'Ce cours a été retiré des favoris avec succès!'
+                            });
+                        } else {
+                            icon.classList.remove('not-favorite');
+                            icon.classList.add('favorite');
+                            $(document).Toasts('create', {
+                                class: 'bg-success',
+                                title: 'Favoris mis à jour',
+                                body: 'Ce cours a été ajouté aux favoris avec succès!'
+                            });
+                        }
+                    } else {
                         $(document).Toasts('create', {
                             class: 'bg-danger',
-                            title: 'Favoris mis à jour',
-                            body: 'Ce cours a été retiré des favoris avec succès!'
-                        });
-                    } else {
-                        icon.classList.remove('not-favorite');
-                        icon.classList.add('favorite');
-                        button.innerHTML = '<i class="fas fa-star favorite"></i>';
-                        // Trigger success toast
-                        $(document).Toasts('create', {
-                            class: 'bg-success',
-                            title: 'Favoris mis à jour',
-                            body: 'Ce cours a été ajouté aux favoris avec succès!'
+                            title: 'Erreur',
+                            body: 'Une erreur est survenue lors de la mise à jour des favoris. Veuillez réessayer.'
                         });
                     }
-                } else {
-                    // Handle error case
+                })
+                .catch(error => {
+                    console.error('Error:', error);
                     $(document).Toasts('create', {
                         class: 'bg-danger',
                         title: 'Erreur',
-                        body: 'Une erreur est survenue lors de la mise à jour des favoris. Veuillez réessayer.'
+                        body: 'Une erreur réseau est survenue. Veuillez vérifier votre connexion Internet.'
                     });
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                // Handle fetch error
-                $(document).Toasts('create', {
-                    class: 'bg-danger',
-                    title: 'Erreur',
-                    body: 'Une erreur réseau est survenue. Veuillez vérifier votre connexion Internet.'
                 });
-            });
         });
     </script>
 {% endblock %}
-

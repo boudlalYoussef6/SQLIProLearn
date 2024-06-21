@@ -6,7 +6,6 @@ namespace App\Factory;
 
 use App\Entity\Category;
 use App\Repository\CategoryRepository;
-use App\Repository\CourseRepository;
 use Zenstruck\Foundry\ModelFactory;
 use Zenstruck\Foundry\Proxy;
 use Zenstruck\Foundry\RepositoryProxy;
@@ -32,47 +31,50 @@ use Zenstruck\Foundry\RepositoryProxy;
  */
 final class CategoryFactory extends ModelFactory
 {
-    /**
-     * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#factories-as-services
-     *
-     * @todo inject services if required
-     */
-    public function __construct(private readonly CourseRepository $categoryRepository)
+    private static array $topCategories = [
+        'PHP',
+        'Java',
+        'JS',
+    ];
+
+    private static array $subCategories = [
+        'PHP' => ['Symfony', 'Magento', 'Drupal'],
+        'Java' => ['Spark', 'Hibernate', 'Struts'],
+        'JS' => ['React', 'Angular', 'Vue'],
+    ];
+
+    public function __construct(private readonly CategoryRepository $categoryRepository)
     {
         parent::__construct();
     }
 
-    /**
-     * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#model-factories
-     *
-     * @todo add your default values here
-     */
     protected function getDefaults(): array
     {
+        $topCategory = self::faker()->randomElement(self::$topCategories);
+        $subCategory = self::faker()->optional()->randomElement(self::$subCategories[$topCategory] ?? []);
+        $label = $subCategory ?: $topCategory;
+
         return [
-            'label' => self::faker()->text(30),
+            'label' => self::faker()->unique()->regexify($label),
         ];
     }
 
-    /**
-     * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#initialization
-     */
     protected function initialize(): self
     {
         return $this
-        ->afterInstantiate(function (Category $category): void {
-            $categories = $this->categoryRepository->findAll();
+            ->afterInstantiate(function (Category $category): void {
+                $categories = $this->categoryRepository->findAll();
 
-            if (!empty($categories)) {
-                $randomCategory = self::faker()->randomElement($categories);
-            } else {
-                $randomCategory = null;
-            }
+                if (!empty($categories)) {
+                    $randomCategory = self::faker()->randomElement($categories);
+                } else {
+                    $randomCategory = null;
+                }
 
-            if ($randomCategory instanceof Category) {
-                $category->setParentId($randomCategory);
-            }
-        });
+                if ($randomCategory instanceof Category && !in_array($category->getLabel(), self::$topCategories)) {
+                    $category->setParentId($randomCategory);
+                }
+            });
     }
 
     protected static function getClass(): string
