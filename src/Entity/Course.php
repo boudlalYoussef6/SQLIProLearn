@@ -58,7 +58,6 @@ class Course
     private ?File $videoPath = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['course:read'])]
     private ?string $videoPathName = null;
 
     #[ORM\OneToMany(targetEntity: Media::class, mappedBy: 'course', cascade: ['persist', 'remove'])]

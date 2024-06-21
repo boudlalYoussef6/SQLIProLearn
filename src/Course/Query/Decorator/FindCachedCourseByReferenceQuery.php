@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Course\Query\Decorator;
 
 use App\Course\Query\ItemQueryInterface;
-use Psr\Cache\InvalidArgumentException;
 use Symfony\Component\DependencyInjection\Attribute\AsDecorator;
 use Symfony\Component\DependencyInjection\Attribute\AutowireDecorated;
 use Symfony\Contracts\Cache\CacheInterface;
@@ -23,9 +22,6 @@ class FindCachedCourseByReferenceQuery implements ItemQueryInterface
         $this->query = $query;
     }
 
-    /**
-     * @throws InvalidArgumentException
-     */
     public function findItem(string $identifier): mixed
     {
         return $this->cache->get($identifier, function () use ($identifier) {

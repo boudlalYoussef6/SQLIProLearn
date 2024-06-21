@@ -3,114 +3,78 @@
 {% block title %}Log in!{% endblock %}
 
 {% block body %}
-    <div class="container-xxl">
-        <div class="authentication-wrapper authentication-basic container-p-y">
-            <div class="authentication-inner">
-                <!-- Login -->
-                <div class="card">
-                    <div class="card-body">
-                        <!-- Logo -->
-                        <div class="app-brand justify-content-center">
-                            <a href="" class="app-brand-link gap-2">
-                            <span class="app-brand-logo demo">
-                                <img src="{{ asset('images/logo.ico') }}" alt="SQLI - Pro Learn" width="25" />
-                            </span>
-                                <span class="app-brand-text demo text-body fw-bolder">SQLI - Pro Learn</span>
-                            </a>
+    <div class="login-box" style="position: absolute;left: 40%;top: 20%">
+        <!-- /.login-logo -->
+        <div class="card card-outline card-primary">
+            <div class="card-header text-center">
+                <a href="" class="h1"><b>SQLI - </b>Pro Learn</a>
+                <img src="{{ asset('images/logo.ico') }}" />
+            </div>
+            <div class="card-body">
+                <p class="login-box-msg">Sign in to start your session</p>
+                <form  method="post">
+                    {% if error %}
+                        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                    {% endif %}
+
+                    {% if app.user %}
+                        <div class="mb-3">
+                            You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Logout</a>
                         </div>
-                        <!-- /Logo -->
-                        <p class="mb-4">Sign in to start your session</p>
+                    {% endif %}
 
-                        <form id="formAuthentication" class="mb-3" method="post">
-                            {% if error %}
-                                <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-                            {% endif %}
-
-                            {% if app.user %}
-                                <div class="mb-3">
-                                    You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Logout</a>
-                                </div>
-                            {% endif %}
-
-                            <div class="mb-3">
-                                <label for="inputEmail" class="form-label">Email or Username</label>
-                                <input type="text" value="{{ last_username }}" name="username" id="inputEmail" class="form-control" autocomplete="email" required autofocus />
+                    <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+                    <div class="input-group mb-3">
+                        <input type="text" value="{{ last_username }}" name="username" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-envelope"></span>
                             </div>
-                            <div class="mb-3 form-password-toggle">
-                                <div class="d-flex justify-content-between">
-                                    <label class="form-label" for="inputPassword">Password</label>
-                                </div>
-                                <div class="input-group input-group-merge">
-                                    <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required />
-                                    <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
-                                </div>
-                            </div>
-                            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}" />
-                            <div class="mb-3">
-                                <button class="btn btn-primary d-grid w-100" type="submit">Sign in</button>
-                            </div>
-                        </form>
+                        </div>
                     </div>
-                </div>
-                <!-- /Login -->
+                    <div class="input-group mb-3">
+                        <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-lock"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <input type="hidden" name="_csrf_token"
+                           value="{{ csrf_token('authenticate') }}"
+                    >
+
+                    <div class="row">
+                        <div class="col-8">
+                            <div class="icheck-primary">
+                                <input type="checkbox" id="remember">
+                                <label for="remember">
+                                    Remember Me
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 {% endblock %}
 
+
+
 {% block stylesheets %}
-    <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="{{ asset('supplements/assets/img/favicon/favicon.ico') }}" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback" />
+    <link rel="stylesheet" href="{{ asset('plugins/fontawesome-free/css/all.min.css') }}" />
+    <link rel="stylesheet" href="{{ asset('dist/css/adminlte.min.css') }}" />
 
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-            href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
-            rel="stylesheet"
-    />
+    <style>
+        body {
+            background-color: #ebdde8;
+        }
+    </style>
+{% endblock stylesheets %}
 
-    <!-- Icons. Uncomment required icon fonts -->
-    <link rel="stylesheet" href="{{ asset('supplements/assets/vendor/fonts/boxicons.css') }}" />
-
-    <!-- Core CSS -->
-    <link rel="stylesheet" href="{{ asset('supplements/assets/vendor/css/core.css') }}" class="template-customizer-core-css" />
-    <link rel="stylesheet" href="{{ asset('supplements/assets/vendor/css/theme-default.css') }}" class="template-customizer-theme-css" />
-    <link rel="stylesheet" href="{{ asset('supplements/assets/css/demo.css') }}" />
-
-    <!-- Vendors CSS -->
-    <link rel="stylesheet" href="{{ asset('supplements/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css') }}" />
-
-    <!-- Page CSS -->
-    <!-- Page -->
-    <link rel="stylesheet" href="{{ asset('supplements/assets/vendor/css/pages/page-auth.css') }}" />
-{% endblock %}
-
-{% block javascripts %}
-    <!-- Helpers -->
-    <script src="{{ asset('supplements/assets/vendor/js/helpers.js') }}"></script>
-
-    <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
-    <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
-    <script src="{{ asset('supplements/assets/js/config.js') }}"></script>
-
-    <!-- Core JS -->
-    <!-- build:js assets/vendor/js/core.js -->
-    <script src="{{ asset('supplements/assets/vendor/libs/jquery/jquery.js') }}"></script>
-    <script src="{{ asset('supplements/assets/vendor/libs/popper/popper.js') }}"></script>
-    <script src="{{ asset('supplements/assets/vendor/js/bootstrap.js') }}"></script>
-    <script src="{{ asset('supplements/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js') }}"></script>
-
-    <script src="{{ asset('supplements/assets/vendor/js/menu.js') }}"></script>
-    <!-- end build -->
-
-    <!-- Vendors JS -->
-
-    <!-- Main JS -->
-    <script src="{{ asset('supplements/assets/js/main.js') }}"></script>
-
-    <!-- Page JS -->
-
-    <!-- Place this tag in your head or just before your close body tag. -->
-    <script async defer src="https://buttons.github.io/buttons.js"></script>
-{% endblock %}

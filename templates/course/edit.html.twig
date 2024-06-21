@@ -4,47 +4,61 @@
 
 {% block content %}
     <section class="content">
-        <h1 class="card-title">Edit Course</h1>
-        <div class="card">
-            <div class="row">
-                {{ form_start(form) }}
-                <div class="card-body">
-                    <div class="mb-3">
-                        {{ form_row(form.label, {'attr': {'class': 'form-control', 'placeholder': 'Label', 'id': 'label'}}) }}
-                    </div>
-                    <div class="mb-3">
-                        {{ form_row(form.description, {'attr': {'class': 'form-control', 'id': 'editor'}}) }}
-                    </div>
-                    <div class="mb-3">
-                        {{ form_row(form.category, {'attr': {'class': 'form-control', 'placeholder': 'Category', 'id': 'category'}}) }}
-                    </div>
-                    <div class="mb-3">
-                        {{ form_row(form.videoPath, {'attr': {'class': 'form-control', 'id': 'videoPath'}}) }}
-                    </div>
+        <div class="container-fluid">
+            <div class="card card-primary">
+                <div class="card-header">
+                    <h3 class="card-title">Edit Course</h3>
                 </div>
-                <div class="card-footer">
-                    <button type="submit" class="btn btn-primary">Update</button>
-                    <a href="{{ url('app_course_add_section', {id: course.id}) }}" class="btn btn-secondary">Add
-                        section</a>
+                <div class="row">
+                    {{ form_start(form) }}
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Label</label>
+                            {{ form_widget(form.label, {'attr': {'class': 'form-control', 'placeholder': 'Label'}}) }}
+                        </div>
+                        <div class="form-group">
+                            <label>Description</label>
+                            {{ form_widget(form.description, {'attr': {'id': 'editor'}}) }}
+                        </div>
+                        <div class="form-group">
+                            <label>Category</label>
+                            {{ form_widget(form.category, {'attr': {'class': 'form-control', 'placeholder': 'Category'}}) }}
+                        </div>
+                        <div class="form-group">
+                            <label>Video</label>
+                            {{ form_widget(form.videoPath, {'attr': {'class': 'form-control'}}) }}
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <button type="submit" class="btn btn-primary">Update</button>
+                    </div>
+                    {{ form_end(form) }}
+                    <a href="{{ url('app_course_add_section', {id: course.id}) }}">
+                        Add section
+                    </a>
                 </div>
-                {{ form_end(form) }}
             </div>
         </div>
     </section>
 {% endblock %}
 
 {% block custum_js %}
+    <!-- Place the first <script> tag in your HTML's <head> -->
     <script src="https://cdn.tiny.cloud/1/{{ key }}/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
 
+    <!-- Place the following <script> and <textarea> tags your HTML's <body> -->
     <script>
         tinymce.init({
-            selector: '#editor',
+            selector: 'textarea',
             plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount linkchecker',
             toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
             tinycomments_mode: 'embedded',
             tinycomments_author: 'Author name',
-            menubar: false,
-            statusbar: false,
+            mergetags_list: [
+                {value: 'First.Name', title: 'First Name'},
+                {value: 'Email', title: 'Email'},
+            ],
+            ai_request: (request, respondWith) => respondWith.string(() => Promise.reject("See docs to implement AI Assistant")),
         });
     </script>
 {% endblock %}

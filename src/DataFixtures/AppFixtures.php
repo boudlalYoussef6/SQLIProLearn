@@ -10,7 +10,7 @@ use Doctrine\Persistence\ObjectManager;
 
 class AppFixtures extends Fixture
 {
-    public const NBR_CATEGORY = 5;
+    public const NBR_CATEGORY = 30;
 
     public function load(ObjectManager $manager): void
     {

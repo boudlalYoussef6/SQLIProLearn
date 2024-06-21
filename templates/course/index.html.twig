@@ -7,50 +7,62 @@
     {% if pagination  is defined and pagination is not empty %}
         <section class="content">
             <div class="container-fluid">
-                <h1>List des cours</h1>
+                <h2>List of Courses</h2>
                 <div class="row">
                     {% for course in pagination %}
-                        <div class="col-md-6 mb-4">
-                            <div class="card flex-row">
-                                <div class="row g-0">
-                                    <img class="card-img card-img-left"
-                                         src="{{ asset(random(['images/php_Elephant.jpg', 'images/php_Elephant_V2.jpg', 'images/php_Elephant_V3.jpg'])) }}"
-                                         alt="Card image"
-                                    />
+                        <div class="col-3">
+                            <div class="card">
+                                <img class="card-img-top"
+                                     src="{{ asset(random(['images/php_Elephant.jpg', 'images/php_Elephant_V2.jpg', 'images/php_Elephant_V3.jpg'])) }}"
+                                     alt="image of the course"
+                                     style="height: 20vh; object-fit: cover;">
+                                <div class="card-body" style="height: 120px">
+                                    <h3 class="card-title font-weight-bold">{{ course.label }}</h3>
+                                    <p class="card-text">
+                                        {{ course.description|striptags|length > 50 ? course.description|striptags|slice(0, 50) ~ '...' : course.description|striptags }}
+                                    </p>
                                 </div>
-                                <div class="col-md-9">
-                                    <div class="card-body">
-                                        <h4 class="card-title">{{ course.label }}</h4>
-                                        <p class="card-text">
-                                            {{ course.description|striptags|length > 50 ? course.description|striptags|slice(0, 50) ~ '...' : course.description|striptags }}
-                                        </p>
-                                        <div class="card-footer d-flex gap-2 flex-wrap">
-                                            <a href="{{ url('app_course_details', {'id': course.id}) }}"
-                                               class="btn btn-primary">
-                                                <i class="menu-icon tf-icons bx bx-book-open"></i> Consulter
-                                            </a>
-                                            {% if is_granted('edit', course) %}
-                                                <a href="{{ url('app_course_edit', {'id': course.id}) }}"
-                                                   class="btn btn-outline-warning">
-                                                    <i class="menu-icon tf-icons bx bx-edit"></i>
-                                                </a>
+                                <div class="card-footer">
+                                    <a href="{{ url('app_course_details', {'id': course.id}) }}" class="btn btn-primary">
+                                        <i class="fa-solid fa-eye"></i> Voir le cours
+                                    </a>
+                                    {% if is_granted('edit', course) %}
+                                        <a href="{{ url('app_course_edit', {'id': course.id}) }}" class="btn btn-warning">Edit</a>
+                                    {% endif %}
+                                    {% if is_granted('delete', course) %}
+                                        <a href="{{ url('app_course_delete', {'id': course.id}) }}" class="btn btn-danger">Delete</a>
+                                    {% endif %}
+
+                                    {% if app.user %}
+                                        {% set isFavorite = false %}
+                                        {% for favory in favoriteCourses %}
+                                            {% if favory.course.id == course.id %}
+                                                {% set isFavorite = true %}
                                             {% endif %}
-                                            {% if is_granted('delete', course) %}
-                                                <a href="{{ url('app_course_delete', {'id': course.id}) }}"
-                                                   class="btn btn-outline-danger">
-                                                    <i class="menu-icon tf-icons bx bx-eraser"></i>
-                                                </a>
+                                        {% endfor %}
+
+                                        <button class="btn btn-outline-secondary btn-toggle-favorite"
+                                                data-course-id="{{ course.id }}"
+                                                data-toggle-url="{{ path('app_favorite_toggle', {'id': course.id}) }}"
+                                                data-remove-url="{{ path('app_favorite_remove', {'id': course.id}) }}"
+                                                {% if isFavorite %}data-is-favorite="true"{% endif %}
+                                        >
+                                            {% if isFavorite %}
+                                                <i class="fas fa-star favorite"></i>
+                                            {% else %}
+                                                <i class="fas fa-star not-favorite"></i>
                                             {% endif %}
-                                        </div>
-                                    </div>
+                                        </button>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
                     {% endfor %}
                 </div>
-            </div>
-            <div class="pagination">
-                {{ knp_pagination_render(pagination) }}
+
+                <div class="pagination">
+                    {{ knp_pagination_render(pagination) }}
+                </div>
             </div>
         </section>
     {% else %}
