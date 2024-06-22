@@ -5,10 +5,9 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\Course;
-use App\Favorite\Command\Doctrine\AddToFavoriteCommand;
-use App\Favorite\Command\Doctrine\RevokeFavoriteCommand;
 use App\Favorite\Command\FavoriteCommandRunner;
 use App\Favorite\Query\CollectionFavoritesInterface;
+use App\Service\Locator\Favorite\Command\FavoriteCommandLocator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,23 +18,23 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class FavoriteController extends AbstractController
 {
     public function __construct(
-        private readonly AddToFavoriteCommand $addToFavoriteCommand,
-        private readonly RevokeFavoriteCommand $revokeFavoriteCommand,
+        private readonly FavoriteCommandLocator $locator,
+        private readonly FavoriteCommandRunner $commandRunner,
     ) {
     }
 
     #[Route('/favorite/toggle/{id}', name: 'app_favorite_toggle', condition: "service('post_ajax_checker').isAjaxPostRequest(request)")]
-    public function toggleFavorite(Course $course, FavoriteCommandRunner $commandRunner): Response
+    public function toggleFavorite(Course $course): Response
     {
-        $commandRunner->run($this->addToFavoriteCommand, $course);
+        $this->doInvokeCommand($course, 'add_course_to_favorite_command');
 
         return new JsonResponse(['status' => 'success', 'message' => 'Cours ajouté aux favoris']);
     }
 
     #[Route('/favorite/remove/{id}', name: 'app_favorite_remove', condition: "service('post_ajax_checker').isAjaxPostRequest(request)")]
-    public function removeFavorite(Course $course, FavoriteCommandRunner $commandRunner): Response
+    public function removeFavorite(Course $course): Response
     {
-        $commandRunner->run($this->revokeFavoriteCommand, $course);
+        $this->doInvokeCommand($course, 'revoke_course_from_favorite_command');
 
         return new JsonResponse(['status' => 'success', 'message' => 'Cours retiré de la liste des favoris']);
     }
@@ -48,5 +47,12 @@ class FavoriteController extends AbstractController
         return $this->render('favorite/index.html.twig', [
             'favoriteCollection' => $userFavorites,
         ]);
+    }
+
+    private function doInvokeCommand(Course $course, string $commandServiceId)
+    {
+        $command = $this->locator->summon($commandServiceId);
+
+        $this->commandRunner->run($command, $course);
     }
 }
