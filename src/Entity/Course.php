@@ -42,6 +42,7 @@ class Course
 
     #[ORM\Column(nullable: true)]
     #[SerializedName('id')]
+    #[Groups(['course:read'])]
     private ?int $idReference = null;
 
     #[ORM\OneToMany(targetEntity: Section::class, mappedBy: 'course', cascade: ['persist'], orphanRemoval: true)]

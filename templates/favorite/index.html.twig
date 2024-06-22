@@ -1,39 +1,30 @@
-{# templates/favorite/favorites.html.twig #}
 {% extends 'site.html.twig' %}
-
 {% block title %}Mes Cours Favoris{% endblock %}
-
+{% import 'macros/header.html.twig' as header %}
+{% block page_header %}
+    {{ header.main_page_header('Mes favoris') }}
+{% endblock page_header %}
 {% block content %}
-    <section class="content">
-        <div class="container-fluid">
-            <h2>Mes Cours Favoris</h2>
-            <div class="row">
-                {% for favorite in favoriteCollection %}
-                    <div class="col-md-4">
-                        <div class="card mb-4">
-                            <div class="card-body">
-                                <h5 class="card-title">{{ favorite.course.label }}</h5>
-                                <a href="{{ path('app_course_details', {'id': favorite.course.id}) }}" class="btn btn-primary">
-                                    <i class="fas fa-eye"></i> Voir le cours
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                {% else %}
-                    <div class="col-12">
-                        <div class="alert alert-warning" role="alert">
-                            Aucun cours favori trouvé.
-                        </div>
-                    </div>
-                {% endfor %}
+    <div class="row mb-2">
+        {% for favorite in favoriteCollection %}
+            <div class="col-md-4">
+                {{ component('CourseItem', {course: favorite.course, favoriteCourses: []}) }}
             </div>
-        </div>
-    </section>
+        {% else %}
+            <div class="col-12">
+                <div class="alert alert-warning" role="alert">
+                    Aucun cours favori trouvé.
+                </div>
+            </div>
+        {% endfor %}
+    </div>
 {% endblock %}
+{% block custom_js %}
+    {{ parent() }}
+    <script src="{{ asset('plugins/toastr/toastr.min.js') }}"></script>
+    <script src="{{ asset('controllers/favorite.manager.js') }}">
+{% endblock custom_js %}
 
-{% block javascripts %}
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
-{% endblock %}
+{% block custom_css %}
+    <link rel="stylesheet" href="{{ asset('plugins/toastr/toastr.min.css') }}" />
+{% endblock custom_css %}

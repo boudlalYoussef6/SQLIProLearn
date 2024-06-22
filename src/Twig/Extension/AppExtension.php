@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Twig;
+namespace App\Twig\Extension;
 
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Twig\Extension\AbstractExtension;
