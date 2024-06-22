@@ -15,6 +15,13 @@ fos_elastica:
                     type: text
                 description:
                     type: text
+                videoPathName:
+                    type: text
+                author:
+                    type: object
+                    properties:
+                        name:
+                            type: text
                 category:
                     type: object
                     properties:

@@ -19,7 +19,6 @@ class Course
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['course:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 200, type: Types::TEXT)]
@@ -71,7 +70,7 @@ class Course
     #[ORM\Column(nullable: true)]
     private ?int $views = null;
 
-    #[ORM\OneToMany(targetEntity: ViewHistory::class, mappedBy: 'course')]
+    #[ORM\OneToMany(targetEntity: ViewHistory::class, mappedBy: 'course', cascade: ['remove'])]
     private Collection $viewHistories;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
@@ -84,7 +83,7 @@ class Course
     #[Groups(['course:read', 'course:write'])]
     private ?string $url = null;
 
-    #[ORM\OneToMany(targetEntity: Favory::class, mappedBy: 'Course', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Favory::class, mappedBy: 'course', orphanRemoval: true)]
     private Collection $favories;
 
     public function __construct()
@@ -400,5 +399,12 @@ class Course
         }
 
         return $this;
+    }
+
+    #[Groups(['course:read'])]
+    #[SerializedName('id')]
+    public function getIdentifier(): ?int
+    {
+        return $this->id;
     }
 }
