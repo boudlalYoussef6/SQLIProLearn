@@ -12,7 +12,7 @@ class RevokeFavoriteCommand extends AbstractFavoriteDoctrineCommand
     {
         $user = $this->security->getUser();
 
-        if ($this->isFavorite($course, $user)) {
+        if (!$this->isFavorite($course, $user)) {
             return;
         }
 

@@ -1,0 +1,73 @@
+<div class="card">
+    <div class="card-header d-flex p-0">
+        {% if course.reference is defined  and course.reference is not same as(null) %}
+            <div class="ribbon-wrapper ribbon-lg">
+                <div class="ribbon bg-info">
+                    UDEMY
+                </div>
+            </div>
+        {% endif %}
+
+        <h3 class="card-title font-weight-bold p-3">{{ course.label | length > 40 ? course.label | slice(0, 40) ~ '...' : course.label }}</h3>
+        <ul class="nav nav-pills ml-auto p-2">
+            <li class="nav-item dropdown dropleft">
+                <a class="nav-link btn-default" data-toggle="dropdown" href="#">
+                    <i class="fa-solid fa-ellipsis-vertical"></i>
+                </a>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="{{ url('app_course_details', {'id': course.id}) }}">
+                        <i class="fa-solid fa-eye"></i> Voir le cours
+                    </a>
+                    {% set isFavorite = is_favorite(course.id, app.user.userIdentifier) %}
+                    <a class="dropdown-item btn-toggle-favorite" href="#"
+                       data-favorite-on="Retirer du favoris"
+                       data-favorite-off="Ajouter au favoris"
+                       data-course-id="{{ course.id }}"
+                       data-toggle-url="{{ path('app_favorite_toggle', {'id': course.id}) }}"
+                       data-remove-url="{{ path('app_favorite_remove', {'id': course.id}) }}"
+                       {% if isFavorite %}data-is-favorite="true"{% endif %}>
+                        {% if isFavorite is same as(true) %}
+                            <i class="fa-solid fa-star favorite"></i> Retirer du favoris
+                        {% else %}
+                            <i class="fa-regular fa-star not-favorite"></i> Ajouter au favoris
+                        {% endif %}
+                    </a>
+
+                    {% if is_granted('edit', course) %}
+                        <a class="dropdown-item" href="{{ url('app_course_edit', {'id': course.id}) }}">
+                            <i class="fa-solid fa-pencil"></i> Modifier
+                        </a>
+                    {% endif %}
+
+                    {% if is_granted('delete', course) %}
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{{ url('app_course_delete', {'id': course.id}) }}">
+                            <i class="fa-solid fa-trash"></i> Supprimer
+                        </a>
+                    {% endif %}
+                </div>
+
+            </li>
+        </ul>
+    </div>
+
+    {% set cover = (course.cover is defined and course.cover is not null) ? course.cover : asset(random(['images/php_Elephant.jpg', 'images/php_Elephant_V2.jpg', 'images/php_Elephant_V3.jpg'])) %}
+    <img class="card-img-top" src="{{ cover }}" alt="image of the course" style="height: 20vh; object-fit: cover;">
+
+    <div class="card-body" style="height: 100px">
+        <p class="card-text">
+            <span title="3 New Messages" class="badge bg-primary">{{ course.category.label }}</span>
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                {% if course.addedAt is defined %}
+                    <i class="fa-solid fa-calendar-days"></i> {{ course.addedAt | date('d/m/Y') }}
+                {% endif %}
+
+                {% if course.idReference is defined and course.idReference is not null  %}
+                    <span class="ml-2 mr-2"><img src="https://www.udemy.com/staticx/udemy/images/v8/favicon-16x16.png"/></span>
+                {% endif %}
+            </li>
+        </ul>
+        </p>
+    </div>
+</div>

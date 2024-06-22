@@ -6,8 +6,16 @@
         <link rel="icon" href="{{ asset('imgs/favicon.ico') }}">
         {% block stylesheets %}
         {% endblock %}
+        <style>
+            .sidebar a {
+                text-decoration: none;
+            }
+            #logout-top-menu {
+                padding-right: 10px;
+            }
+        </style>
     </head>
-    <body>
+    <body class="hold-transition sidebar-mini">
         {% block body %}{% endblock %}
         {% block javascripts %}
             {% block importmap %}{{ importmap('app') }}{% endblock %}

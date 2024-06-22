@@ -36,6 +36,8 @@ fos_elastica:
                     properties:
                         fileName:
                             type: text
+                idReference:
+                    type: text
             persistence:
                 driver: orm
                 model: App\Entity\Course

@@ -1,38 +1,48 @@
 {% extends 'site.html.twig' %}
-
 {% block title %}Cours{% endblock %}
-
+{% import 'macros/header.html.twig' as header %}
+{% block page_header %}
+    {{ header.main_page_header('Importer un cours depuis UDEMY') }}
+{% endblock page_header %}
 {% block content %}
-    <section class="content">
-        <div class="container-fluid">
-            <div class="card card-primary">
-                <div class="card-header">
-                    <h3 class="card-title">Create New Course</h3>
-                </div>
+
+    <div class="card card-default">
+        <div class="card-header">
+            <h3 class="card-title">Chercher un cours dans Udemy</h3>
+        </div>
+        <div class="row">
+            {{ form_start(form) }}
+            <div class="card-body">
                 <div class="row">
-                    <div class="col-md-12">
-                        {{ form_start(form) }}
-                            <div class="card-body">
-                                <div class="form-group">
-                                    <label for="id">Identifiant</label>
-                                    {{ form_widget(form.id, {'attr': {'class': 'form-control', 'placeholder': 'Identifiant'}}) }}
-                                </div>
-                                <div class="form-group">
-                                    <label for="category">Catégorie</label>
-                                    {{ form_widget(form.category, {'attr': {'class': 'form-control', 'placeholder': 'Sélectionnez une catégorie'}}) }}
-                                </div>
-                            </div>
-                            <div class="card-footer">
-                                {{ form_widget(form.rechercher, {'attr': {'class': 'btn btn-primary'}}) }}
-                            </div>
-                        {{ form_end(form) }}
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="id">Identifiant</label>
+                            {{ form_row(form.id, {'attr': {'class': 'form-control', 'placeholder': 'Identifiant'}}) }}
+                        </div>
+                        <div class="form-group">
+                            <label for="category">Catégorie</label>
+                            {{ form_row(form.category, {'attr': {'class': 'form-control', 'placeholder': 'Sélectionnez une catégorie'}}) }}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <p>Pour récupérer l'identifiant du cours depuis Udemy, il faut inspecter la page du cours et récupérer
+                            la valeuur de l'attribut
+                            <code>data-clp-cours-id</code>
+                            <img src="{{ asset('images/HowTo.png')}}" width="100%" style="width: 100%"/>
+                        </p>
                     </div>
                 </div>
             </div>
+            <div class="card-footer">
+                <button class="btn btn-default">
+                    <i class="fa-solid fa-magnifying-glass"></i> Chercher
+                </button>
+            </div>
+            {{ form_end(form) }}
         </div>
-    </section>
+    </div>
 {% endblock %}
-{% block custum_js %}
+{% block custom_js %}
     <script src="https://cdn.tiny.cloud/1/{{ key }}/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
     <script>
         tinymce.init({
@@ -42,8 +52,8 @@
             tinycomments_mode: 'embedded',
             tinycomments_author: 'Author name',
             mergetags_list: [
-                { value: 'First.Name', title: 'First Name' },
-                { value: 'Email', title: 'Email' },
+                {value: 'First.Name', title: 'First Name'},
+                {value: 'Email', title: 'Email'},
             ],
             ai_request: (request, respondWith) => respondWith.string(() => Promise.reject("See docs to implement AI Assistant")),
         });

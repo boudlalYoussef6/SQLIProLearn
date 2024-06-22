@@ -21,7 +21,7 @@ class UdemyController extends AbstractController
     ) {
     }
 
-    #[Route('/udemy/add', name: 'app_add_cours')]
+    #[Route('/udemy/add', name: 'app_add_course_from_udemy')]
     public function addCourse(Request $request, CourseHandlerInterface $handler): Response
     {
         $form = $this->createForm(UdemyType::class);
