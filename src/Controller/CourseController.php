@@ -7,9 +7,6 @@ namespace App\Controller;
 use App\Author\Factory\DefaultAuthorFactory;
 use App\Course\Attachment\AttachmentManagerInterface;
 use App\Course\Handler\CourseHandlerInterface;
-use App\Course\Persister\Command\Doctrine\AddCourseCommand;
-use App\Course\Persister\Command\Doctrine\DeleteCourseCommand;
-use App\Course\Persister\Command\Doctrine\UpdateCourseCommand;
 use App\Course\Persister\CoursePersisterInterface;
 use App\Course\Query\ItemQueryInterface;
 use App\Entity\Course;
@@ -32,9 +29,6 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class CourseController extends AbstractController
 {
     public function __construct(
-        private readonly AddCourseCommand $addCourseCommand,
-        private readonly DeleteCourseCommand $deleteCourseCommand,
-        private readonly UpdateCourseCommand $updateCourseCommand,
         private readonly CourseHandlerInterface $courseHandler,
         private readonly CoursePersisterInterface $coursePersister,
     ) {
