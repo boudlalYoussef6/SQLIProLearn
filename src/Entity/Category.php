@@ -9,6 +9,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Attribute\Groups;
+use Symfony\Component\Serializer\Attribute\MaxDepth;
 
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
 class Category
@@ -30,6 +31,7 @@ class Category
     private ?self $category = null;
 
     #[ORM\OneToMany(targetEntity: Course::class, mappedBy: 'category', orphanRemoval: true)]
+    #[MaxDepth(2)]
     private Collection $courses;
 
     public function __construct()

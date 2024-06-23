@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use App\Author\Factory\DefaultAuthorFactory;
 use App\Course\Attachment\AttachmentManagerInterface;
+use App\Course\Catalog\CatalogManagerInterface;
 use App\Course\Handler\CourseHandlerInterface;
 use App\Course\Persister\CoursePersisterInterface;
 use App\Course\Query\ItemQueryInterface;
@@ -13,11 +14,9 @@ use App\Entity\Course;
 use App\Event\NewCourseEvent;
 use App\Form\CourseType;
 use App\Form\DetailsCourseType;
-use App\Repository\CourseRepository;
 use App\Repository\FavoryRepository;
 use App\Security\Voters\CourseVoter;
 use Doctrine\ORM\EntityManagerInterface;
-use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -36,30 +35,22 @@ class CourseController extends AbstractController
 
     #[Route('/course', name: 'app_course')]
     public function index(
-        CourseRepository $courseRepository,
         Request $request,
-        PaginatorInterface $paginator,
         FavoryRepository $favoryRepository,
+        CatalogManagerInterface $manager,
     ): Response {
-        $queryBuilder = $courseRepository
-            ->createQueryBuilder('c')
-            ->orderBy('c.id', 'DESC');
-
-        $pagination = $paginator->paginate(
-            $queryBuilder,
-            $request->query->getInt('page', 1),
-            8
-        );
-
         // Retourne l'identifiant de l'utilisateur actuellement connecté
         $userIdentifier = $this->getUser()->getUserIdentifier();
 
         // Chargement des cours favoris de l'utilisateur
         $favoriteCourses = $favoryRepository->findFavoriteCourses($userIdentifier);
 
+        $paginableCourses = $manager->populate($currentPage = $request->query->getInt('page', 1));
+
         return $this->render('course/index.html.twig', [
-            'pagination' => $pagination,
             'favoriteCourses' => $favoriteCourses,
+            'courses' => $paginableCourses,
+            'currentPage' => $currentPage,
         ]);
     }
 
@@ -81,6 +72,8 @@ class CourseController extends AbstractController
             $course = $attachmentManager->save($course);
 
             $this->courseHandler->add($course);
+
+            $this->addFlash('success', 'Le nouveau cours sera publié prochainement.');
 
             return $this->redirectToRoute('app_course');
         }

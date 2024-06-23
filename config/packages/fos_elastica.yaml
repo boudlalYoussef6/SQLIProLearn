@@ -3,8 +3,11 @@ fos_elastica:
         default: { url: '%env(ELASTICSEARCH_URL)%' }
     indexes:
         course:
+            finder: ~
             index_name: "course"  # Name of the Elasticsearch index
             properties:
+                addedAt:
+                    type: date
                 id:
                     type: integer
                 cover:
@@ -49,4 +52,3 @@ fos_elastica:
                 driver: orm
                 model: App\Entity\Course
                 listener: false
-            

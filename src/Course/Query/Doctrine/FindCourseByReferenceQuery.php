@@ -34,10 +34,6 @@ final class FindCourseByReferenceQuery extends AbstractDatabaseQuery implements 
             ->getRepository(Course::class)
             ->find($identifier);
 
-        $normalizedCourse = $this->adapter->convert($course);
-
-        $this->indexer->createNewIndex($identifier, $normalizedCourse);
-
-        return $normalizedCourse;
+        return $this->adapter->convert($course);
     }
 }

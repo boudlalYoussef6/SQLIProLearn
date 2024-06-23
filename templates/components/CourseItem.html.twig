@@ -1,14 +1,8 @@
 <div class="card">
     <div class="card-header d-flex p-0">
-        {% if course.reference is defined  and course.reference is not same as(null) %}
-            <div class="ribbon-wrapper ribbon-lg">
-                <div class="ribbon bg-info">
-                    UDEMY
-                </div>
-            </div>
-        {% endif %}
-
-        <h3 class="card-title font-weight-bold p-3">{{ course.label | length > 40 ? course.label | slice(0, 40) ~ '...' : course.label }}</h3>
+        <h3 class="card-title font-weight-bold p-3">
+           #{{ course.id }} {{ course.label | length > 28 ? course.label | slice(0, 28) ~ '...' : course.label }}
+        </h3>
         <ul class="nav nav-pills ml-auto p-2">
             <li class="nav-item dropdown dropleft">
                 <a class="nav-link btn-default" data-toggle="dropdown" href="#">
@@ -46,28 +40,24 @@
                         </a>
                     {% endif %}
                 </div>
-
             </li>
         </ul>
     </div>
 
     {% set cover = (course.cover is defined and course.cover is not null) ? course.cover : asset(random(['images/php_Elephant.jpg', 'images/php_Elephant_V2.jpg', 'images/php_Elephant_V3.jpg'])) %}
-    <img class="card-img-top" src="{{ cover }}" alt="image of the course" style="height: 20vh; object-fit: cover;">
+    <img class="card-img-top" src="{{ cover }}" alt="image of the course" style="height: 20vh; object-fit: cover;" />
 
-    <div class="card-body" style="height: 100px">
+    <div class="card-body" style="height: 80px">
         <p class="card-text">
             <span title="3 New Messages" class="badge bg-primary">{{ course.category.label }}</span>
-        <ul class="nav flex-column">
-            <li class="nav-item">
-                {% if course.addedAt is defined %}
+            {% if course.addedAt is defined and course.addedAt is not null %}
+                <span class="badge bg-danger">
                     <i class="fa-solid fa-calendar-days"></i> {{ course.addedAt | date('d/m/Y') }}
-                {% endif %}
-
-                {% if course.idReference is defined and course.idReference is not null  %}
-                    <span class="ml-2 mr-2"><img src="https://www.udemy.com/staticx/udemy/images/v8/favicon-16x16.png"/></span>
-                {% endif %}
-            </li>
-        </ul>
+                </span>
+            {% endif %}
+            {% if course.idReference is defined and course.idReference is not null  %}
+                <span class="badge badge-info">Udemy</span>
+            {% endif %}
         </p>
     </div>
 </div>
