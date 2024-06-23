@@ -1,0 +1,23 @@
+<div class="row">
+    {% if result is defined and result is not empty %}
+        {% for course in result %}
+            <div class="col-6">
+                {{ component('CourseItem', {course: course, favoriteCourses: favoriteCourses}) }}
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="alert alert-warning">Aucun cours</div>
+    {% endif %}
+</div>
+
+{% if totalPages > 1 %}
+    <div class="pagination mt-2 mb-2">
+        <ul class="pagination pagination-sm m-0 float-right">
+            {% for page in 1..totalPages %}
+                <li class="page-item {% if page == currentPage %}active{% endif %}">
+                    <a class="page-link" href="?page={{ page }}">{{ page }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endif %}

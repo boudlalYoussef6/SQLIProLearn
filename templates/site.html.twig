@@ -54,6 +54,14 @@
             {% block page_header %}{% endblock page_header %}
             <section class="content">
                 <div class="container-fluid">
+                    {% for key,messages in app.flashes %}
+                        <div class="alert alert-{{ key }}">
+                        {% for message in messages %}
+                            <p>{{ message }}</p>
+                        {% endfor %}
+                        </div>
+                    {% endfor %}
+
                     {% block content %}{% endblock %}
                 </div>
             </section>

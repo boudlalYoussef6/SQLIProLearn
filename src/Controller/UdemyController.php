@@ -36,7 +36,9 @@ class UdemyController extends AbstractController
 
             $this->factory->addCourse($content, $category, $handler);
 
-            return $this->redirectToRoute('app_home');
+            $this->addFlash('success', 'Le nouveau cours sera publié prochainement.');
+
+            return $this->redirectToRoute('app_course');
         }
 
         return $this->render('udemy/add_cours.html.twig', [

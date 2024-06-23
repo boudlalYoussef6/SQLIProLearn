@@ -51,24 +51,12 @@
             </div>
         </div>
         <div class="col-9">
-            <div class="row">
-                {% if pagination  is defined and pagination is not empty %}
-                    {% for course in pagination %}
-                        <div class="col-6">
-                            {{ component('CourseItem', {course: course, favoriteCourses: favoriteCourses}) }}
-                        </div>
-                    {% endfor %}
-                    {% if pagination | length > 8 %}
-                        <div class="pagination">
-                            {{ knp_pagination_render(pagination) }}
-                        </div>
-                    {% endif %}
-                {% else %}
-                    <div class="alert alert-warning" role="alert">
-                        Pas de cours dispoinible
-                    </div>
-                {% endif %}
-            </div>
+            {{ component('CoursesResult', {
+                result: courses.result,
+                favoriteCourses: favoriteCourses,
+                totalPages: courses.totalPages,
+                currentPage: currentPage,
+            }) }}
         </div>
     </div>
 {% endblock %}
