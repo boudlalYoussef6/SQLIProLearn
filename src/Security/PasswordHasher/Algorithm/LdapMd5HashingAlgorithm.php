@@ -13,6 +13,6 @@ class LdapMd5HashingAlgorithm implements HashingAlgorithmInterface
 
     public function verify(string $encryptedInputText, #[\SensitiveParameter] string $clearInputText): bool
     {
-        return \strcasecmp($this->encrypt($clearInputText), $encryptedInputText) == 0;
+        return 0 == \strcasecmp($this->encrypt($clearInputText), $encryptedInputText);
     }
 }
