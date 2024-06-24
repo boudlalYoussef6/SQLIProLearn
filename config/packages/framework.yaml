@@ -12,6 +12,8 @@ framework:
     session:
         handler_id: Symfony\Component\HttpFoundation\Session\Storage\Handler\RedisSessionHandler
 
+    serializer: { enabled: true }
+
     #esi: true
     #fragments: true
 when@test:
