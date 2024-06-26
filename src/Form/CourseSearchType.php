@@ -15,16 +15,10 @@ class CourseSearchType extends AbstractType
     {
         $builder
             ->add('search', TextType::class, [
-                'required' => false,
                 'label' => 'Search',
                 'attr' => [
                     'placeholder' => 'Type your keywords here',
                 ],
             ]);
-    }
-
-    public function configureOptions(OptionsResolver $resolver): void
-    {
-        $resolver->setDefaults([]);
     }
 }

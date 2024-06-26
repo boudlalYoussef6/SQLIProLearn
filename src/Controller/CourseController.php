@@ -52,7 +52,7 @@ class CourseController extends AbstractController
         ]);
     }
 
-    #[Route('/course/add', name: 'app_course_add')]
+    #[Route('/course/add', name: 'app_course_add', priority: 1)]
     public function addCourse(
         Request $request,
         DefaultAuthorFactory $authorFactory,
@@ -81,7 +81,7 @@ class CourseController extends AbstractController
         ]);
     }
 
-    #[Route('/course/{id}', name: 'app_course_details', priority: 1)]
+    #[Route('/course/{id}', name: 'app_course_details')]
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function courseDetails(
         int $id,
@@ -91,6 +91,7 @@ class CourseController extends AbstractController
         FavoryRepository $favoryRepository,
     ): Response {
         $course = $query->findItem((string) $id);
+
         if (null === $course) {
             throw $this->createNotFoundException();
         }
@@ -135,17 +136,34 @@ class CourseController extends AbstractController
     public function editCourse(
         Course $course,
         Request $request,
+        ItemQueryInterface $query,
+        DefaultAuthorFactory $authorFactory,
+        AttachmentManagerInterface $attachmentManager
     ): Response {
+        $oldCourse = $query->findItem((string) $course->getId());
+
+        // foreach ($course->getMedias() as $media) {
+        //     $course->removeMedia($media);
+        // }
+
         $form = $this->createForm(CourseType::class, $course);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $userIdentifier = $this->getUser()->getUserIdentifier();
+            $authorFactory->affectAuthorToCourse($userIdentifier, $course);
+
+            $attachmentManager->save($course);
+
             $this->courseHandler->edit($course);
 
-            return $this->redirectToRoute('app_course_details', ['id' => $course->getId()]);
+            $this->addFlash('success', 'Le cours a été mis à jour avec succès. Les modifications seront affichées bientôt.');
+
+            return $this->redirectToRoute('app_course_edit', ['id' => $course->getId()]);
         }
 
         return $this->render('course/edit.html.twig', [
+            'oldCourse' => $oldCourse,
             'course' => $course,
             'form' => $form,
         ]);

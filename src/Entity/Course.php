@@ -65,6 +65,9 @@ class Course
     #[Groups(['course:read'])]
     private Collection $medias;
 
+    #[Groups(['course:read'])]
+    public Collection $attachments;
+
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $addedAt = null;
 
