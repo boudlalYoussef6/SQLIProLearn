@@ -31,8 +31,9 @@ class CourseType extends AbstractType
             ->add('videoPath', FileType::class, [
                 'label' => 'Vidéo',
             ])
-            ->add('medias', CollectionType::class, [
+            ->add('attachments', CollectionType::class, [
                 'entry_type' => MediaType::class,
+                'mapped' => false,
                 'allow_add' => true,
                 'allow_delete' => true,
                 'by_reference' => false,

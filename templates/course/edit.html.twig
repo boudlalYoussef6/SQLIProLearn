@@ -1,17 +1,17 @@
 {% extends 'site.html.twig' %}
 
+{% form_theme form _self %}
+
 {% block title %}Edit Course{% endblock %}
 
 {% block content %}
-    <section class="content">
-        <div class="container-fluid">
-            <div class="card card-primary">
-                <div class="card-header">
-                    <h3 class="card-title">Edit Course</h3>
-                </div>
+    <h1>Edit Course</h1>
+    <div class="card card-default">
+        <div class="row">
+            {{ form_start(form, {'attr': {'enctype': 'multipart/form-data'}}) }}
+            <div class="card-body">
                 <div class="row">
-                    {{ form_start(form) }}
-                    <div class="card-body">
+                    <div class="col-8">
                         <div class="form-group">
                             <label for="exampleInputEmail1">Label</label>
                             {{ form_widget(form.label, {'attr': {'class': 'form-control', 'placeholder': 'Label'}}) }}
@@ -20,6 +20,8 @@
                             <label>Description</label>
                             {{ form_widget(form.description, {'attr': {'id': 'editor'}}) }}
                         </div>
+                    </div>
+                    <div class="col-4">
                         <div class="form-group">
                             <label>Category</label>
                             {{ form_widget(form.category, {'attr': {'class': 'form-control', 'placeholder': 'Category'}}) }}
@@ -28,22 +30,61 @@
                             <label>Video</label>
                             {{ form_widget(form.videoPath, {'attr': {'class': 'form-control'}}) }}
                         </div>
+                        <div class="form-group">
+                            <div class="mt-2 mb-2">
+                                <label class="h3">Add Attachments</label>
+                                <div>
+                                    <button type="button" class="add_media_link btn btn-primary mt-2" id="add_new_attachment">
+                                        <i class="fa-solid fa-plus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div id="course_medias" data-prototype="{{ form_row(form.attachments.vars.prototype)|e('html_attr') }}" data-index="{{ form.attachments|length > 0 ? form.attachments|last.vars.name + 1 : 0 }}">
+                                <div class="media__container">
+                                    {% for child in form.attachments %}
+                                        <div class="form-group">
+                                            {{ form_row(child, {'attr': {'class': 'form-control'}}) }}
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                                <div class="tab-pane" id="course_attachments_tab_content" role="tabpanel"
+                                     aria-labelledby="custom-tabs-three-profile-tab">
+                                     {% if course.medias and course.medias | length > 0 %}
+                                        <ul class="list-group">
+                                            {% for media in course.medias %}
+                                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                    <a href="{{ generate_cloud_url(media.fileName) }}" download="{{ media.fileName }}">
+                                                        <i class="fas fa-file-download"></i> {{ media.fileName }}
+                                                    </a>
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% else %}
+                                        <p>Aucune pièce jointe disponible.</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="card-footer">
-                        <button type="submit" class="btn btn-primary">Update</button>
-                    </div>
-                    {{ form_end(form) }}
-                    <a href="{{ url('app_course_add_section', {id: course.id}) }}">
-                        Add section
-                    </a>
                 </div>
             </div>
+            <div class="card-footer">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fa-solid fa-ed"></i> Update
+                </button>
+                <a href="{{ url('app_course_add_section', {id: course.id}) }}" class="btn btn-secondary">
+                    <i class="fa-solid fa-plus"></i> Add Section
+                </a>
+            </div>
+            {{ form_end(form) }}
         </div>
-    </section>
+    </div>
 {% endblock %}
 
 {% block custom_js %}
-    <script src="https://cdn.tiny.cloud/1/{{ key }}/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+    <script src="https://cdn.tiny.cloud/1/{{ key }}/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{{ asset('controllers/upload_media.js') }}"></script>
     <script>
         tinymce.init({
             selector: 'textarea',
@@ -58,4 +99,21 @@
             ai_request: (request, respondWith) => respondWith.string(() => Promise.reject("See docs to implement AI Assistant")),
         });
     </script>
+{% endblock %}
+
+{% block _course_attachments_entry_row %}
+    <div class="row mt-2 mb-2">
+        <div class="input-group media__item">
+            <div class="input-group-append">
+                <button class="btn btn-danger remove-media">
+                    <i class="fa-solid fa-trash"></i>
+                </button>
+            </div>
+            <div class="custom-file">
+                {{ form_widget(form, {attr: {class: 'form-control'}}) }}
+                {{ form_label(form) }}
+            </div>
+            {{ form_errors(form) }}
+        </div>
+    </div>
 {% endblock %}
