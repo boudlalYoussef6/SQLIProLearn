@@ -1,0 +1,19 @@
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Catégories</h3>
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+            </button>
+        </div>
+    </div>
+    <div class="card-body p-0">
+        <ul class="nav nav-pills flex-column">
+            {% for item in items %}
+                {% if item.item is not empty %}
+                    {{ component('CategoryAggregationItem', {label: item.item.label, count: item.count }) }}
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </div>
+</div>

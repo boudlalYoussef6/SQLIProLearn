@@ -52,3 +52,15 @@ fos_elastica:
                 driver: orm
                 model: App\Entity\Course
                 listener: false
+
+        category:
+            index_name: "category"
+            properties:
+                id:
+                    type: integer
+                label:
+                    type: text
+            persistence:
+                driver: orm
+                model: App\Entity\Category
+                listener: false
