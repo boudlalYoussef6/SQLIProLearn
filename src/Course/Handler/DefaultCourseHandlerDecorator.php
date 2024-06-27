@@ -34,7 +34,6 @@ class DefaultCourseHandlerDecorator implements CourseHandlerInterface
         $user = $this->security->getUser();
         $userIdentifier = $user->getUserIdentifier();
 
-        // Persist the course
         $this->courseHandler->add($course);
 
         $this->logger->info(sprintf(

@@ -14,6 +14,7 @@ use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Serializer\Attribute\SerializedName;
 
 #[ORM\Entity(repositoryClass: CourseRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Course
 {
     #[ORM\Id]
@@ -41,7 +42,7 @@ class Course
 
     #[ORM\Column(nullable: true)]
     #[SerializedName('id')]
-    #[Groups(['course:read'])]
+    #[Groups(['course:read', 'course:write'])]
     private ?int $idReference = null;
 
     #[ORM\OneToMany(targetEntity: Section::class, mappedBy: 'course', cascade: ['persist'], orphanRemoval: true)]
@@ -343,6 +344,12 @@ class Course
     public function getAddedAt(): ?\DateTimeInterface
     {
         return $this->addedAt;
+    }
+
+    #[ORM\PrePersist]
+    public function updateAddedAt(): void
+    {
+        $this->addedAt = new \DateTime();
     }
 
     public function setAddedAt(?\DateTimeInterface $addedAt): self
