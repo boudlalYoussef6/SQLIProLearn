@@ -39,8 +39,8 @@ class CourseController extends AbstractController
         FavoryRepository $favoryRepository,
         CatalogManagerInterface $manager,
     ): Response {
-        // Retourne l'identifiant de l'utilisateur actuellement connecté
         $userIdentifier = $this->getUser()->getUserIdentifier();
+
         $favoriteCourses = $favoryRepository->findFavoriteCourses($userIdentifier);
 
         $paginableCourses = $manager->populate($currentPage = $request->query->getInt('page', 1));
@@ -84,7 +84,7 @@ class CourseController extends AbstractController
     #[Route('/course/{id}', name: 'app_course_details')]
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function courseDetails(
-        int $id,
+        /* Course $course */ int $id,
         ItemQueryInterface $query,
         EventDispatcherInterface $dispatcher,
         Security $security,
@@ -97,6 +97,7 @@ class CourseController extends AbstractController
         }
 
         $user = $security->getUser()->getUserIdentifier();
+
         $userIdentifier = $this->getUser()->getUserIdentifier();
 
         $dispatcher->dispatch(new NewCourseEvent($id, $userIdentifier));
