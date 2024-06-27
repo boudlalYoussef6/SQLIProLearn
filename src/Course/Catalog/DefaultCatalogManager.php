@@ -6,7 +6,9 @@ namespace App\Course\Catalog;
 
 use App\Contracts\PaginableInterface;
 use Elastica\Query;
+use Elastica\Query\BoolQuery;
 use Elastica\Query\MatchAll;
+use Elastica\Query\Term;
 use Elastica\ResultSet;
 use FOS\ElasticaBundle\Index\IndexManager;
 
@@ -34,6 +36,29 @@ class DefaultCatalogManager implements CatalogManagerInterface
             ->getIndex('course')
             ->search($query);
 
+        return $this->doCreatePaginableResult($result, self::ITEMS_PER_PAGE);
+    }
+
+    public function filter(int $page, string $categoryIdentifier): PaginableInterface
+    {
+        $query = new Query();
+
+        $query->setQuery(
+            (new BoolQuery())
+                ->addMust(
+                    new Term(['category.id' => $categoryIdentifier])
+                )
+        );
+
+        $result = $this->manager
+            ->getIndex('course')
+            ->search($query);
+
+        return $this->doCreatePaginableResult($result, self::ITEMS_PER_PAGE);
+    }
+
+    private function doCreatePaginableResult(ResultSet $result, int $itemsPerPage = 0): PaginableInterface
+    {
         return new class($result, self::ITEMS_PER_PAGE) implements PaginableInterface {
             private ResultSet $result;
             private int $totalPages;
