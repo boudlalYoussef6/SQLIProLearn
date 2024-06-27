@@ -34,10 +34,6 @@ class DefaultCatalogManager implements CatalogManagerInterface
             ->getIndex('course')
             ->search($query);
 
-        $arrayQuery = $query->toArray();
-
-        dump($offset, $page, $arrayQuery);
-
         return new class($result, self::ITEMS_PER_PAGE) implements PaginableInterface {
             private ResultSet $result;
             private int $totalPages;
