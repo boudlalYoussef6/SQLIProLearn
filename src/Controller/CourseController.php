@@ -25,11 +25,13 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
+#[IsGranted('IS_AUTHENTICATED_FULLY')]
 class CourseController extends AbstractController
 {
     public function __construct(
         private readonly CourseHandlerInterface $courseHandler,
         private readonly CoursePersisterInterface $coursePersister,
+        private readonly EntityManagerInterface $entityManager,
     ) {
     }
 
@@ -81,8 +83,33 @@ class CourseController extends AbstractController
         ]);
     }
 
+    #[Route(
+        '/filter-course/{categoryId}',
+        name: 'app_filter_course',
+        requirements: ['categoryId' => '\d+'],
+    )]
+    public function filterByCategory(
+        Request $request,
+        FavoryRepository $favoryRepository,
+        int $categoryId,
+        CatalogManagerInterface $manager,
+    ): Response {
+        $userIdentifier = $this->getUser()->getUserIdentifier();
+        $favoriteCourses = $favoryRepository->findFavoriteCourses($userIdentifier);
+
+        $currentPage = $request->query->getInt('page', 1);
+
+        $courses = $manager->filter($currentPage, (string) $categoryId);
+
+        return $this->render('course/index.html.twig', [
+            'favoriteCourses' => $favoriteCourses,
+            'currentCategoryId' => $categoryId,
+            'courses' => $courses,
+            'currentPage' => $currentPage,
+        ]);
+    }
+
     #[Route('/course/{id}', name: 'app_course_details')]
-    #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function courseDetails(
         /* Course $course */ int $id,
         ItemQueryInterface $query,

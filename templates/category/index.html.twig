@@ -11,7 +11,15 @@
         <ul class="nav nav-pills flex-column">
             {% for item in items %}
                 {% if item.item is not empty %}
-                    {{ component('CategoryAggregationItem', {label: item.item.label, count: item.count }) }}
+                    {{ component(
+                        'CategoryAggregationItem',
+                        {
+                            label: item.item.label,
+                            count: item.count,
+                            id: item.id,
+                            selected: selected == item.id,
+                        }
+                    ) }}
                 {% endif %}
             {% endfor %}
         </ul>

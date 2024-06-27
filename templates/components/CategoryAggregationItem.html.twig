@@ -1,5 +1,5 @@
-<li class="nav-item">
-    <a href="#" class="nav-link">
+<li class="nav-item {% if selected is same as(true) %}callout callout-danger{% endif %}">
+    <a href="{{ path('app_filter_course', {'categoryId': id}) }}" class="nav-link">
         {{ label }}
         <span class="badge bg-secondary float-right">{{ count }}</span>
     </a>
