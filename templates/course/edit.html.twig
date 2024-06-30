@@ -1,11 +1,11 @@
 {% extends 'site.html.twig' %}
-
 {% form_theme form _self %}
-
 {% block title %}Edit Course{% endblock %}
-
+{% import 'macros/header.html.twig' as header %}
+{% block page_header %}
+    {{ header.main_page_header('Edit Course') }}
+{% endblock page_header %}
 {% block content %}
-    <h1>Edit Course</h1>
     <div class="card card-default">
         <div class="row">
             {{ form_start(form, {'attr': {'enctype': 'multipart/form-data'}}) }}

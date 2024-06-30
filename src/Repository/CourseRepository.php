@@ -45,4 +45,18 @@ class CourseRepository extends ServiceEntityRepository
 
         $manager->flush();
     }
+
+    /**
+     * @return Course[]
+     */
+    public function findByAuthorName(string $authorName): array
+    {
+        return $this->createQueryBuilder('c')
+            ->innerJoin('c.author', 'a')
+            ->andWhere('a.name = :authorName')
+            ->setParameter('authorName', $authorName)
+            ->orderBy('c.id', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
 }

@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Message\Handler;
 
 use App\Message\CreatedIndexMessage;
+use App\Message\EditIndexMessage;
+use App\Message\RevokeIndexMessage;
 use App\Repository\CourseRepository;
 use App\Service\Indexation\CourseIndexerInterface;
 use App\Transformer\CourseAdapterInterface;
@@ -37,6 +39,29 @@ class IndexationMessageHandler
         if (null !== $course) {
             $normalizedCourse = $this->adapter->convert($course);
             $this->courseIndexer->createNewIndex((string) $course->getId(), $normalizedCourse);
+        }
+    }
+
+    #[AsMessageHandler]
+    public function editIndexForCourse(EditIndexMessage $message): void
+    {
+        $course = $this->courseRepository->find($message->getCourseReference());
+
+        if (null !== $course) {
+            $this->courseIndexer->removeNewIndex((string) $course->getId());
+
+            $normalizedCourse = $this->adapter->convert($course);
+            $this->courseIndexer->createNewIndex((string) $course->getId(), $normalizedCourse);
+        }
+    }
+
+    #[AsMessageHandler]
+    public function deleteIndexForCourse(RevokeIndexMessage $message): void
+    {
+        $course = $this->courseRepository->find($message->getCourseReference());
+
+        if (null !== $course) {
+            $this->courseIndexer->removeNewIndex((string) $course->getId());
         }
     }
 }

@@ -1,12 +1,20 @@
 <nav class="mt-2">
     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
         data-accordion="false">
+        <li class="nav-header">Mon espace</li>
         <li class="nav-item">
             <a href="{{ url('app_course_show') }}" class="nav-link {% if app.current_route in ['app_course_show'] %}active{% endif %}">
                 <i class="fa-solid fa-book-bookmark"></i>
                 <p>Mes Favories</p>
             </a>
         </li>
+        <li class="nav-item">
+            <a href="{{ url('app_my_courses') }}" class="nav-link {% if app.current_route in ['app_my_courses'] %}active{% endif %}">
+                <i class="fa-solid fa-address-card"></i>
+                <p>Mes cours</p>
+            </a>
+        </li>
+        <li class="nav-header">Menu principal</li>
         <li class="nav-item">
             <a href="{{ url('app_course') }}" class="nav-link {% if app.current_route in ['app_course'] %}active{% endif %}">
                 <i class="fa-solid fa-book-open"></i>
