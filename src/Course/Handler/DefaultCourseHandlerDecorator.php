@@ -7,6 +7,8 @@ namespace App\Course\Handler;
 use App\Entity\Course;
 use App\Indexation\Invoker\IndexationCommandInterface;
 use App\Message\CreatedIndexMessage;
+use App\Message\EditIndexMessage;
+use App\Message\RevokeIndexMessage;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\Attribute\AsDecorator;
@@ -43,17 +45,42 @@ class DefaultCourseHandlerDecorator implements CourseHandlerInterface
             $course->getLabel()
         ));
 
-        // Add the course to the indexation queue
         $this->indexer->execute(new CreatedIndexMessage($course->getId()));
     }
 
     public function edit(Course $course): void
     {
+        $user = $this->security->getUser();
+        $userIdentifier = $user->getUserIdentifier();
+
         $this->courseHandler->edit($course);
+        $this->indexer->execute(new EditIndexMessage($course->getId()));
+        $this->logger->info(\sprintf(
+            'Course edited by user %s: Course ID %d, Title %s',
+            $userIdentifier,
+            $course->getId(),
+            $course->getLabel()
+        ));
     }
 
     public function delete(Course $course): void
     {
-        $this->courseHandler->delete($course);
+        $user = $this->security->getUser();
+        $userIdentifier = $user->getUserIdentifier();
+
+        try {
+            $id = $course->getId();
+
+            $this->courseHandler->delete($course);
+            $this->logger->info(\sprintf(
+                'Course deleted by user %s: Course ID %d, Title %s',
+                $userIdentifier,
+                $course->getId(),
+                $course->getLabel()
+            ));
+            $this->indexer->execute(new RevokeIndexMessage($id));
+        } catch (\Exception $error) {
+            $this->logger->error(\sprintf('[ERROR][DELETE COURSE] %s',$error->getMessage()));
+        }
     }
 }

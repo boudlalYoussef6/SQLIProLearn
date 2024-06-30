@@ -1,0 +1,79 @@
+{% extends 'site.html.twig' %}
+{% block title %}Mes Cours{% endblock %}
+{% import 'macros/header.html.twig' as header %}
+{% block page_header %}
+    {{ header.main_page_header('Mes Cours') }}
+{% endblock page_header %}
+{% block content %}
+    <div class="callout callout-warning">
+        <p>La liste des cours que moi-même écrits</p>
+    </div>
+
+    <div class="row">
+        {% if courses|length > 0 %}
+            {% for course in courses %}
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <div class="card-header d-flex p-0">
+                            <h3 class="card-title font-weight-bold p-3">
+                                #{{ course.id }} {{ course.label | length > 28 ? course.label | slice(0, 28) ~ '...' : course.label }}
+                            </h3>
+                            <ul class="nav nav-pills ml-auto p-2">
+                                <li class="nav-item dropdown dropleft">
+                                    <a class="nav-link btn-default" data-toggle="dropdown" href="#">
+                                        <i class="fa-solid fa-ellipsis-vertical"></i>
+                                    </a>
+                                    <div class="dropdown-menu">
+                                        {% if is_granted('edit', course) %}
+                                            <a class="dropdown-item"
+                                               href="{{ url('app_course_edit', {'id': course.id}) }}">
+                                                <i class="fa-solid fa-pencil"></i> Modifier
+                                            </a>
+                                        {% endif %}
+                                        {% if is_granted('delete', course) %}
+                                            <div class="dropdown-divider"></div>
+                                            <a class="dropdown-item"
+                                               href="{{ url('app_course_delete', {'id': course.id}) }}">
+                                                <i class="fa-solid fa-trash"></i> Supprimer
+                                            </a>
+                                        {% endif %}
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        {% set cover = (course.cover is defined and course.cover is not null) ? course.cover : asset(random(['images/php_Elephant.jpg', 'images/php_Elephant_V2.jpg', 'images/php_Elephant_V3.jpg'])) %}
+                        <img class="card-img-top" src="{{ cover }}" alt="image of the course"
+                             style="height: 20vh; object-fit: cover;"/>
+                        <div class="card-body" style="height: 80px">
+                            <p class="card-text">
+                                <span title="3 New Messages" class="badge bg-primary">{{ course.category.label }}</span>
+                                {% if course.addedAt is defined and course.addedAt is not null %}
+                                    <span class="badge bg-danger">
+                                                <i class="fa-solid fa-calendar-days"></i> {{ course.addedAt | date('d/m/Y') }}
+                                            </span>
+                                {% endif %}
+                                {% if course.idReference is defined and course.idReference is not null %}
+                                    <span class="badge badge-info">Udemy</span>
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="alert alert-warning" role="alert">
+                Vous n'avez pas encore de cours.
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block custom_css %}
+    <link rel="stylesheet" href="{{ asset('plugins/toastr/toastr.min.css') }}">
+{% endblock custom_css %}
+
+{% block custom_js %}
+    {{ parent() }}
+    <script src="{{ asset('plugins/toastr/toastr.min.js') }}"></script>
+    <script src="{{ asset('controllers/favorite.manager.js') }}"></script>
+{% endblock custom_js %}

@@ -12,6 +12,8 @@ framework:
         routing:
             # Route your messages to the transports
             'App\Message\CreatedIndexMessage': async
+            'App\Message\EditIndexMessage': async
+            'App\Message\RevokeIndexMessage': async
 
 # when@test:
 #    framework:

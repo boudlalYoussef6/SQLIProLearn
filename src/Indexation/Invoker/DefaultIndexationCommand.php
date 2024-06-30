@@ -21,7 +21,6 @@ class DefaultIndexationCommand implements IndexationCommandInterface
      */
     public function execute(IndexationMessageInterface $message): void
     {
-        // Use the message bus to dispatch the message
         $this->messageBus->dispatch($message);
     }
 }

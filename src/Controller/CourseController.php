@@ -14,6 +14,7 @@ use App\Entity\Course;
 use App\Event\NewCourseEvent;
 use App\Form\CourseType;
 use App\Form\DetailsCourseType;
+use App\Repository\CourseRepository;
 use App\Repository\FavoryRepository;
 use App\Security\Voters\CourseVoter;
 use Doctrine\ORM\EntityManagerInterface;
@@ -75,7 +76,7 @@ class CourseController extends AbstractController
 
             $this->addFlash('success', 'Le nouveau cours sera publié prochainement.');
 
-            return $this->redirectToRoute('app_course');
+            return $this->redirectToRoute('app_my_courses');
         }
 
         return $this->render('course/add.html.twig', [
@@ -168,11 +169,10 @@ class CourseController extends AbstractController
         DefaultAuthorFactory $authorFactory,
         AttachmentManagerInterface $attachmentManager
     ): Response {
-        $oldCourse = $query->findItem((string) $course->getId());
-
         // foreach ($course->getMedias() as $media) {
         //     $course->removeMedia($media);
         // }
+        $oldCourse = clone $course;
 
         $form = $this->createForm(CourseType::class, $course);
         $form->handleRequest($request);
@@ -203,6 +203,19 @@ class CourseController extends AbstractController
     {
         $this->courseHandler->delete($course);
 
-        return $this->redirectToRoute('app_course');
+        return $this->redirectToRoute('app_my_courses');
+    }
+
+    #[Route('/my-courses', name: 'app_my_courses')]
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
+    public function myCourses(CourseRepository $courseRepository, Security $security): Response
+    {
+        $user = $security->getUser()->getUserIdentifier();
+
+        $courses = $courseRepository->findByAuthorName($user);
+
+        return $this->render('course/my_courses.html.twig', [
+            'courses' => $courses,
+        ]);
     }
 }
