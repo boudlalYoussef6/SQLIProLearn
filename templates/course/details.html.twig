@@ -24,7 +24,6 @@
                                 <p class="card-text">{{ course.description|raw }}</p>
                             {% endif %}
                             <a href="{{ path('app_course_add_section', {'id': course.id}) }}" class="btn btn-primary">Ajouter une section</a>
-                            <a href="{{ path('app_favorite_toggle', {'id': course.id}) }}" class="btn btn-secondary">Ajouter aux Favoris</a>
                             <button id="favorite-toggle" class="btn btn-secondary">
                                 <i class="fas fa-star {% if isFavorite %}favorite{% else %}not-favorite{% endif %}"></i>
                                 {% if isFavorite %}

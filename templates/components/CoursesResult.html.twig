@@ -2,7 +2,7 @@
     {% if result is defined and result is not empty %}
         {% for course in result %}
             <div class="col-6">
-                {{ component('CourseItem', {course: course, favoriteCourses: favoriteCourses}) }}
+                {{ component('SearchItem', {course: course, favoriteCourses: favoriteCourses}) }}
             </div>
         {% endfor %}
     {% else %}

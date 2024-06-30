@@ -8,7 +8,7 @@
     <div class="row mb-2">
         {% for favorite in favoriteCollection %}
             <div class="col-md-4">
-                {{ component('CourseItem', {course: favorite.course, favoriteCourses: []}) }}
+                {{ component('SearchItem', {course: favorite.course, favoriteCourses: []}) }}
             </div>
         {% else %}
             <div class="col-12">
