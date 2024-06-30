@@ -27,7 +27,7 @@
         {% if pagination is defined and pagination|length > 0 %}
             {% for course in pagination %}
                 <div class="col-4">
-                    {{ component('CourseItem', {course: course, favoriteCourses: favoriteCourses}) }}
+                    {{ component('SearchItem', {course: course, favoriteCourses: favoriteCourses}) }}
                 </div>
             {% endfor %}
             <div class="pagination d-flex justify-content-end mt-3">
