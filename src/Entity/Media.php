@@ -8,6 +8,7 @@ use App\Repository\MediaRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Serializer\Attribute\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: MediaRepository::class)]
 class Media
@@ -19,12 +20,16 @@ class Media
 
     #[ORM\Column(length: 255)]
     #[Groups(['course:read'])]
+    #[Assert\NotBlank]
+    #[Assert\Length(max: 255)]
     private ?string $fileName = null;
 
     #[ORM\ManyToOne(inversedBy: 'medias')]
     private ?Course $course = null;
 
-    private ?File $attachmentFile;
+    #[Assert\NotBlank]
+    #[Assert\File(mimeTypes: ['image/jpeg', 'image/png', 'application/pdf'], maxSize: '1M')]
+    private ?File $attachmentFile = null;
 
     public function getId(): ?int
     {

@@ -12,12 +12,10 @@
                 {% for section in form.sections %}
                     <li class="list-group-item mb-3">
                         <div class="form-group">
-                            {{ form_label(section.title, 'Title') }}
-                            {{ form_widget(section.title, {'attr': {'class': 'form-control', 'placeholder': 'Title'}}) }}
+                            {{ form_row(section.title, {'attr': {'class': 'form-control', 'placeholder': 'Title'}}) }}
                         </div>
                         <div class="form-group">
-                            {{ form_label(section.description, 'Description') }}
-                            {{ form_widget(section.description, {'attr': {'class': 'form-control', 'placeholder': 'Description'}}) }}
+                            {{ form_row(section.description, {'attr': {'class': 'form-control', 'placeholder': 'Description'}}) }}
                         </div>
                     </li>
                 {% endfor %}

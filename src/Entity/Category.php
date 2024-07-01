@@ -11,6 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Serializer\Attribute\MaxDepth;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
 #[UniqueEntity(fields: ['label'])]
@@ -24,6 +25,8 @@ class Category
 
     #[ORM\Column(length: 50, unique: true)]
     #[Groups(['course:read'])]
+    #[Assert\NotBlank]
+    #[Assert\Length(max: 50)]
     private ?string $label = null;
 
     #[ORM\Column(length: 255, nullable: true)]
