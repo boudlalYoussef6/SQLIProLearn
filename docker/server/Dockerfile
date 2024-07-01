@@ -37,4 +37,4 @@ RUN curl -1sLf 'https://dl.cloudsmith.io/public/symfony/stable/setup.deb.sh' | b
 COPY --from=composer:2.0 /usr/bin/composer /usr/local/bin/composer
 RUN composer self-update
 
-EXPOSE 8585
+RUN apt-get update && apt-get -y install cron
