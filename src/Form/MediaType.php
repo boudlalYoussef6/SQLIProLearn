@@ -9,6 +9,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class MediaType extends AbstractType
 {
@@ -17,6 +18,17 @@ class MediaType extends AbstractType
         $builder
             ->add('attachmentFile', FileType::class, [
                 'label' => false,
+                'constraints' => [
+                    new Assert\File([
+                        'maxSize' => '1M',
+                        'mimeTypes' => [
+                            'image/jpeg',
+                            'image/png',
+                            'application/pdf',
+                        ],
+                        'mimeTypesMessage' => 'Please upload a valid file (JPEG, PNG, PDF).',
+                    ]),
+                ],
             ]);
     }
 

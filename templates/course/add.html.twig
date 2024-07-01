@@ -9,32 +9,27 @@
         <div class="card-header">
             <h3 class="card-title">Create New Course</h3>
         </div>
-        <div class="row">
-            {{ form_start(form,{'attr': {'enctype': 'multipart/form-data'}}) }}
+            {{ form_start(form,{'attr': {'novalidate': 'novalidate'}}) }}
             <div class="card-body">
                 <div class="row">
-                    <div class="col-8">
+                    <div class="col-6">
                         <div class="form-group">
-                            <label for="exampleInputEmail1">Label</label>
-                            {{ form_widget(form.label, {'attr': {'class': 'form-control', 'placeholder': 'Label'}}) }}
+                            {{ form_row(form.label, {'attr': {'class': 'form-control', 'placeholder': 'Label'}}) }}
                         </div>
                         <div class="form-group">
-                            <label>Description</label>
-                            {{ form_widget(form.description, {'attr': {'id': 'editor'}}) }}
+                            {{ form_row(form.description, {'attr': {'id': 'editor'}}) }}
                         </div>
                     </div>
-                    <div class="col-4">
+                    <div class="col-6">
                         <div class="form-group">
-                            <label>categories</label>
-                            {{ form_widget(form.category, {'attr': {'class': 'form-control', 'placeholder': 'categories'}}) }}
+                            {{ form_row(form.category, {'attr': {'class': 'form-control', 'placeholder': 'categories'}}) }}
                         </div>
                         <div class="form-group">
-                            <label>Vidéo</label>
-                            {{ form_widget(form.videoPath, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_row(form.videoPath, {'attr': {'class': 'form-control'}}) }}
                         </div>
                         <div class="form-group">
                             <div class="mt-2 mb-2">
-                                <label class="h3">Ajouter des pièces jointes</label>
+                                <label>Ajouter des pièces jointes</label>
                                 <div>
                                     <button type="button" class="add_media_link btn btn-primary mt-2"
                                             id="add_new_attachment">
@@ -43,10 +38,10 @@
                                 </div>
                             </div>
                             <div id="course_medias"
-                                 data-prototype="{{ form_row(form.medias.vars.prototype)|e('html_attr') }}"
-                                 data-index="{{ form.medias|length > 0 ? form.medias|last.vars.name + 1 : 0 }}">
+                                 data-prototype="{{ form_row(form.attachments.vars.prototype)|e('html_attr') }}"
+                                 data-index="{{ form.attachments|length > 0 ? form.attachments|last.vars.name + 1 : 0 }}">
                                 <div class="media__container">
-                                    {% for child in form.medias %}
+                                    {% for child in form.attachments %}
                                         <div class="form-group">
                                             {{ form_row(child, {'attr': {'class': 'form-control'}}) }}
                                         </div>
@@ -58,12 +53,11 @@
                 </div>
             </div>
             <div class="card-footer">
-                <button type="submit" class="btn btn-success"><i class="fa-solid fa-floppy-disk"></i>
-                    Sauvegarder
+                <button type="submit" class="btn btn-default">
+                    <i class="fa-solid fa-floppy-disk"></i> Sauvegarder
                 </button>
             </div>
             {{ form_end(form) }}
-        </div>
     </div>
 {% endblock %}
 
@@ -86,7 +80,7 @@
         });
     </script>
 {% endblock %}
-{% block _course_medias_entry_row %}
+{% block _course_attachments_entry_row %}
     <div class="row  mt-2 mb-2 ">
         <div class="input-group media__item">
             <div class="input-group-append">

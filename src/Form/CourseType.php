@@ -14,6 +14,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class CourseType extends AbstractType
 {
@@ -21,7 +22,9 @@ class CourseType extends AbstractType
     {
         $builder
             ->add('label', TextType::class)
-            ->add('description', TextareaType::class, ['required' => false])
+            ->add('description', TextareaType::class, [
+                'required' => false,
+            ])
             ->add('category', EntityType::class, [
                 'class' => Category::class,
                 'choice_label' => 'label',
@@ -30,6 +33,14 @@ class CourseType extends AbstractType
             ])
             ->add('videoPath', FileType::class, [
                 'label' => 'Vidéo',
+                'required' => false,
+                'help' => 'Les seuls types de vidés autorisés sont video/mpeg, video/webm et video/mp4. la taille de la vidéo ne doit pas dépasser 5 Mo',
+                'constraints' => [
+                    new Assert\File([
+                        'maxSize' => '5M',
+                        'mimeTypes' => ['video/mp4', 'video/webm', 'video/mpeg'],
+                    ]),
+                ],
             ])
             ->add('attachments', CollectionType::class, [
                 'entry_type' => MediaType::class,
@@ -40,6 +51,9 @@ class CourseType extends AbstractType
                 'label' => false,
                 'entry_options' => ['label' => false],
                 'required' => false,
+                'constraints' => [
+                    new Assert\Valid(),
+                ],
             ]);
     }
 

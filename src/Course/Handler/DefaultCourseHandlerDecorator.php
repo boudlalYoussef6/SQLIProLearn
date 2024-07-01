@@ -80,7 +80,7 @@ class DefaultCourseHandlerDecorator implements CourseHandlerInterface
             ));
             $this->indexer->execute(new RevokeIndexMessage($id));
         } catch (\Exception $error) {
-            $this->logger->error(\sprintf('[ERROR][DELETE COURSE] %s',$error->getMessage()));
+            $this->logger->error(\sprintf('[ERROR][DELETE COURSE] %s', $error->getMessage()));
         }
     }
 }

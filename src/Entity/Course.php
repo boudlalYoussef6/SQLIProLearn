@@ -9,9 +9,11 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Serializer\Attribute\SerializedName;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CourseRepository::class)]
 #[ORM\HasLifecycleCallbacks]
@@ -25,6 +27,7 @@ class Course
     #[ORM\Column(length: 200, type: Types::TEXT)]
     #[SerializedName('title')]
     #[Groups(['course:read', 'course:write'])]
+    #[Assert\NotBlank, Assert\Length(max: 200)]
     private ?string $label = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
@@ -38,6 +41,7 @@ class Course
     #[ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'courses', fetch: 'EAGER')]
     #[ORM\JoinColumn(name: 'category_id', referencedColumnName: 'id')]
     #[Groups(['course:read'])]
+    #[Assert\NotNull]
     private ?Category $category = null;
 
     #[ORM\Column(nullable: true)]
@@ -70,9 +74,11 @@ class Course
     public Collection $attachments;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    #[Assert\Type("\DateTimeInterface")]
     private ?\DateTimeInterface $addedAt = null;
 
     #[ORM\Column(nullable: true)]
+    #[Assert\GreaterThanOrEqual(0)]
     private ?int $views = null;
 
     #[ORM\OneToMany(targetEntity: ViewHistory::class, mappedBy: 'course', cascade: ['remove'])]
@@ -81,11 +87,13 @@ class Course
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     #[SerializedName('image_480x270')]
     #[Groups(['course:read', 'course:write'])]
+    #[Assert\Url]
     private ?string $cover = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     #[SerializedName('url')]
     #[Groups(['course:read', 'course:write'])]
+    #[Assert\Url]
     private ?string $url = null;
 
     #[ORM\OneToMany(targetEntity: Favory::class, mappedBy: 'course', orphanRemoval: true)]
