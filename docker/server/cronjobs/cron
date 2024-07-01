@@ -1,0 +1,5 @@
+# Clear the cache to force regenerate (Each 2 hours) - Limit 5 messages to consume during these 2 hours
+0 0 */2 * *  /usr/local/bin/php /var/www/html/bin/console messenger:consume --limit=5 && /usr/local/bin/php /var/www/html/bin/console cache:pool:clear cache.global_clearer
+
+# Update the Elasticsearch indexes (Each day at midnight) && and clear the cache after full indexation
+0 0 * * * /usr/local/bin/php /var/www/html/bin/console fos:elastica:populate && /usr/local/bin/php /var/www/html/bin/console cache:pool:clear cache.global_clearer
