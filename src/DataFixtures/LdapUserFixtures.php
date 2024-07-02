@@ -13,9 +13,8 @@ class LdapUserFixtures extends Fixture // Déclare la classe LdapUserFixtures qu
 {
     public function load(ObjectManager $manager) // La méthode load est appelée pour charger les fixtures
     {
-        // Création de la connexion LDAP
-        // $ldap = Ldap::create('ext_ldap', ['connection_string' => 'ldap://openldap:389']);
-        // $ldap->bind('cn=admin,dc=ramhlocal,dc=com', 'admin_pass'); // Authentifie l'utilisateur admin sur le serveur LDAP
+        $ldap = Ldap::create('ext_ldap', ['connection_string' => 'ldap://openldap:389']);
+        $ldap->bind('cn=admin,dc=ramhlocal,dc=com', 'admin_pass');
 
         // Obtention du gestionnaire d'entrées LDAP
         // $entryManager = $ldap->getEntryManager();
@@ -67,9 +66,8 @@ class LdapUserFixtures extends Fixture // Déclare la classe LdapUserFixtures qu
         //     ),
         // ];
 
-        // Ajout des entrées au serveur LDAP
-        // foreach ($entries as $entry) {
-        //     $entryManager->add($entry);
-        // }
+        foreach ($entries as $entry) {
+            $entryManager->add($entry);
+        }
     }
 }
