@@ -22,6 +22,7 @@ class Course
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['course:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 200, type: Types::TEXT)]

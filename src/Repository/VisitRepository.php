@@ -46,5 +46,15 @@ class VisitRepository extends ServiceEntityRepository
     //            ->getQuery()
     //            ->getOneOrNullResult()
     //        ;
-    //    }
+    //    }*
+
+    public function countVisitsPerDay()
+    {
+        return $this->createQueryBuilder('v')
+            ->select('DATE(v.dateVisit) as visitDate, COUNT(v.id) as visitCount')
+            ->groupBy('visitDate')
+            ->orderBy('visitDate', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
 }
