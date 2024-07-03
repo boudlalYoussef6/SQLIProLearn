@@ -20,8 +20,6 @@ class Media
 
     #[ORM\Column(length: 255)]
     #[Groups(['course:read'])]
-    #[Assert\NotBlank]
-    #[Assert\Length(max: 255)]
     private ?string $fileName = null;
 
     #[ORM\ManyToOne(inversedBy: 'medias')]

@@ -55,7 +55,7 @@ class CourseController extends AbstractController
         ]);
     }
 
-    #[Route('/course/add', name: 'app_course_add', priority: 1)]
+    #[Route('/course/add', name: 'app_course_add', priority: 2)]
     public function addCourse(
         Request $request,
         DefaultAuthorFactory $authorFactory,
@@ -165,22 +165,14 @@ class CourseController extends AbstractController
     public function editCourse(
         Course $course,
         Request $request,
-        ItemQueryInterface $query,
-        DefaultAuthorFactory $authorFactory,
         AttachmentManagerInterface $attachmentManager
     ): Response {
-        // foreach ($course->getMedias() as $media) {
-        //     $course->removeMedia($media);
-        // }
         $oldCourse = clone $course;
 
         $form = $this->createForm(CourseType::class, $course);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $userIdentifier = $this->getUser()->getUserIdentifier();
-            $authorFactory->affectAuthorToCourse($userIdentifier, $course);
-
             $attachmentManager->save($course);
 
             $this->courseHandler->edit($course);
@@ -207,7 +199,6 @@ class CourseController extends AbstractController
     }
 
     #[Route('/my-courses', name: 'app_my_courses')]
-    #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function myCourses(CourseRepository $courseRepository, Security $security): Response
     {
         $user = $security->getUser()->getUserIdentifier();

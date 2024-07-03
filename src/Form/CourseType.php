@@ -6,6 +6,8 @@ namespace App\Form;
 
 use App\Entity\Category;
 use App\Entity\Course;
+use App\Entity\Media;
+use App\Form\Type\InputTagType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -13,6 +15,8 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -31,6 +35,7 @@ class CourseType extends AbstractType
                 'placeholder' => 'Sélectionnez une catégorie',
                 'label' => 'Catégorie',
             ])
+            ->add('tags', InputTagType::class)
             ->add('videoPath', FileType::class, [
                 'label' => 'Vidéo',
                 'required' => false,
@@ -55,6 +60,30 @@ class CourseType extends AbstractType
                     new Assert\Valid(),
                 ],
             ]);
+
+        $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
+            /** @var Course $course */
+            $course = $event->getForm()->getData();
+
+            $data = $event->getData();
+
+            if (empty($data['attachments'])) {
+                return;
+            }
+
+            foreach ($data['attachments'] as $attachment) {
+                if (empty($attachment['attachmentFile'])) {
+                    continue;
+                }
+
+                $media = new Media();
+                $media->setCourse($course)
+                    ->setAttachmentFile($attachment['attachmentFile']);
+                $course->addMedia($media);
+            }
+
+            $event->getForm()->setData($course);
+        });
     }
 
     public function configureOptions(OptionsResolver $resolver): void
