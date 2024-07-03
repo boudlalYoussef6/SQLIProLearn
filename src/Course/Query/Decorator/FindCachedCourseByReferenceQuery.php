@@ -8,6 +8,7 @@ use App\Course\Query\ItemQueryInterface;
 use Symfony\Component\DependencyInjection\Attribute\AsDecorator;
 use Symfony\Component\DependencyInjection\Attribute\AutowireDecorated;
 use Symfony\Contracts\Cache\CacheInterface;
+use Symfony\Contracts\Cache\ItemInterface;
 
 #[AsDecorator(decorates: ItemQueryInterface::class, priority: 1)]
 class FindCachedCourseByReferenceQuery implements ItemQueryInterface
@@ -24,7 +25,9 @@ class FindCachedCourseByReferenceQuery implements ItemQueryInterface
 
     public function findItem(string $identifier): mixed
     {
-        return $this->cache->get($identifier, function () use ($identifier) {
+        return $this->cache->get($identifier, function (ItemInterface $item) use ($identifier) {
+            $item->expiresAfter(3600); // expires after 1 hour
+
             return $this->query->findItem($identifier);
         });
     }

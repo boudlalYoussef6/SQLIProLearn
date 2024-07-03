@@ -48,6 +48,8 @@ fos_elastica:
                             type: text
                 idReference:
                     type: text
+                tags:
+                    type: text
             persistence:
                 driver: orm
                 model: App\Entity\Course

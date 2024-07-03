@@ -32,6 +32,10 @@ final class DefaultAttachmentManager implements AttachmentManagerInterface
                 /** @var UploadedFile $file */
                 $file = $attachment->getAttachmentFile();
 
+                if (null === $file) {
+                    continue;
+                }
+
                 $this->addCourseAttachment($attachment, $file);
             }
         }

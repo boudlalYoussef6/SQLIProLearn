@@ -9,7 +9,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Serializer\Attribute\SerializedName;
@@ -28,7 +27,7 @@ class Course
     #[ORM\Column(length: 200, type: Types::TEXT)]
     #[SerializedName('title')]
     #[Groups(['course:read', 'course:write'])]
-    #[Assert\NotBlank, Assert\Length(max: 200)]
+    #[Assert\NotBlank, Assert\NotNull, Assert\Length(max: 200)]
     private ?string $label = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
@@ -99,6 +98,10 @@ class Course
 
     #[ORM\OneToMany(targetEntity: Favory::class, mappedBy: 'course', orphanRemoval: true)]
     private Collection $favories;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['course:read'])]
+    private ?string $tags = null;
 
     public function __construct()
     {
@@ -427,5 +430,17 @@ class Course
     public function getIdentifier(): ?int
     {
         return $this->id;
+    }
+
+    public function getTags(): ?string
+    {
+        return $this->tags;
+    }
+
+    public function setTags(?string $tags): static
+    {
+        $this->tags = $tags;
+
+        return $this;
     }
 }
