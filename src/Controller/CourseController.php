@@ -8,8 +8,8 @@ use App\Author\Factory\DefaultAuthorFactory;
 use App\Course\Attachment\AttachmentManagerInterface;
 use App\Course\Catalog\CatalogManagerInterface;
 use App\Course\Handler\CourseHandlerInterface;
-use App\Course\Persister\CoursePersisterInterface;
 use App\Course\Query\ItemQueryInterface;
+use App\Course\Query\ItemsQueryInterface;
 use App\Entity\Course;
 use App\Event\NewCourseEvent;
 use App\Form\CourseType;
@@ -31,26 +31,24 @@ class CourseController extends AbstractController
 {
     public function __construct(
         private readonly CourseHandlerInterface $courseHandler,
-        private readonly CoursePersisterInterface $coursePersister,
-        private readonly EntityManagerInterface $entityManager,
     ) {
     }
 
     #[Route('/course', name: 'app_course')]
     public function index(
         Request $request,
-        FavoryRepository $favoryRepository,
-        CatalogManagerInterface $manager,
+        FavoryRepository $favoriteRepository,
+        ItemsQueryInterface $itemsQuery,
     ): Response {
         $userIdentifier = $this->getUser()->getUserIdentifier();
 
-        $favoriteCourses = $favoryRepository->findFavoriteCourses($userIdentifier);
+        $favoriteCourses = $favoriteRepository->findFavoriteCourses($userIdentifier);
 
-        $paginableCourses = $manager->populate($currentPage = $request->query->getInt('page', 1));
+        $paginatedCourses = $itemsQuery->findItems($currentPage = $request->query->getInt('page', 1));
 
         return $this->render('course/index.html.twig', [
             'favoriteCourses' => $favoriteCourses,
-            'courses' => $paginableCourses,
+            'courses' => $paginatedCourses,
             'currentPage' => $currentPage,
         ]);
     }
@@ -91,16 +89,17 @@ class CourseController extends AbstractController
     )]
     public function filterByCategory(
         Request $request,
-        FavoryRepository $favoryRepository,
+        FavoryRepository $favoriteRepository,
         int $categoryId,
         CatalogManagerInterface $manager,
+        ItemsQueryInterface $itemsQuery,
     ): Response {
         $userIdentifier = $this->getUser()->getUserIdentifier();
-        $favoriteCourses = $favoryRepository->findFavoriteCourses($userIdentifier);
+        $favoriteCourses = $favoriteRepository->findFavoriteCourses($userIdentifier);
 
         $currentPage = $request->query->getInt('page', 1);
 
-        $courses = $manager->filter($currentPage, (string) $categoryId);
+        $courses = $itemsQuery->findItemsByCategory($currentPage, (string) $categoryId);
 
         return $this->render('course/index.html.twig', [
             'favoriteCourses' => $favoriteCourses,

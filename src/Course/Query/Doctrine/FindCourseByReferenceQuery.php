@@ -6,7 +6,6 @@ namespace App\Course\Query\Doctrine;
 
 use App\Course\Query\ItemQueryInterface;
 use App\Entity\Course;
-use App\Service\Indexation\CourseIndexerInterface;
 use App\Transformer\CourseAdapterInterface;
 use App\Transformer\CourseEntityToModelTransformer;
 use Doctrine\ORM\EntityManagerInterface;
@@ -20,7 +19,6 @@ final class FindCourseByReferenceQuery extends AbstractDatabaseQuery implements 
 
     public function __construct(
         EntityManagerInterface $entityManager,
-        private readonly CourseIndexerInterface $indexer,
         #[Autowire(service: CourseEntityToModelTransformer::class)]
         CourseAdapterInterface $adapter,
     ) {

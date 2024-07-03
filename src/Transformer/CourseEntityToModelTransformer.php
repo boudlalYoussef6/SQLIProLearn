@@ -9,7 +9,7 @@ use App\Normalizer\CourseNormalizer;
 
 class CourseEntityToModelTransformer implements CourseAdapterInterface
 {
-    public function __construct(private CourseNormalizer $normalizer)
+    public function __construct(private readonly CourseNormalizer $normalizer)
     {
     }
 

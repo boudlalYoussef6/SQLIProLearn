@@ -7,6 +7,9 @@ framework:
             udemy_client:
                 base_uri: 'https://www.udemy.com/'
                 auth_basic: '%env(UD_CLIENT_ID)%:%env(UD_CLIENT_SECRET)%'
+            ai_together:
+                base_uri: 'https://api.together.xyz'
+                auth_bearer: '%env(TOGETHER_API_KEY)%'
 
     # Note that the session will be started ONLY if you read or write from it.
     session:

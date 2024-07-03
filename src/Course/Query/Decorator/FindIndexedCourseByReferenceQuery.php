@@ -9,10 +9,9 @@ use Elastica\Exception\NotFoundException;
 use Elastica\Index;
 use Symfony\Component\DependencyInjection\Attribute\AsDecorator;
 use Symfony\Component\DependencyInjection\Attribute\AutowireDecorated;
-use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 #[AsDecorator(decorates: ItemQueryInterface::class, priority: 2)]
-class FindCourseByReferenceQueryIndexDecorator implements ItemQueryInterface
+class FindIndexedCourseByReferenceQuery implements ItemQueryInterface
 {
     private readonly ItemQueryInterface $query;
 
@@ -20,7 +19,6 @@ class FindCourseByReferenceQueryIndexDecorator implements ItemQueryInterface
         #[AutowireDecorated]
         ItemQueryInterface $query,
         private readonly Index $index,
-        private readonly DenormalizerInterface $serializer,
     ) {
         $this->query = $query;
     }
