@@ -4,13 +4,23 @@ declare(strict_types=1);
 
 namespace App\Course\Query\Doctrine;
 
+use App\Contracts\PaginableInterface;
+use App\Course\Catalog\CatalogManagerInterface;
 use App\Course\Query\ItemsQueryInterface;
-use App\Entity\Course;
 
-class GetAllCoursesQuery extends AbstractDatabaseQuery implements ItemsQueryInterface
+class GetAllCoursesQuery implements ItemsQueryInterface
 {
-    public function findItems(): array
+    public function __construct(private readonly CatalogManagerInterface $catalogManager)
     {
-        return $this->entityManager->getRepository(Course::class)->findAll();
+    }
+
+    public function findItems(int $page): PaginableInterface
+    {
+        return $this->catalogManager->populate($page);
+    }
+
+    public function findItemsByCategory(int $page, string $categoryIdentifier): PaginableInterface
+    {
+        return $this->catalogManager->filter($page, $categoryIdentifier);
     }
 }

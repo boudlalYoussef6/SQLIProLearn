@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\ViewHistory;
+use App\Repository\ViewHistoryRepository;
 use App\Service\ChartService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Repository\ViewHistoryRepository;
 
 class HomeController extends AbstractController
 {
@@ -40,6 +40,4 @@ class HomeController extends AbstractController
             'chart_data' => $chartData,
         ]);
     }
-
-
 }

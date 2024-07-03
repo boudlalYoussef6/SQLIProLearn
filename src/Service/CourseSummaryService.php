@@ -5,40 +5,43 @@ declare(strict_types=1);
 namespace App\Service;
 
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
-use Symfony\Component\HttpClient\HttpClient;
+use Symfony\Component\DependencyInjection\Attribute\Target;
+use Symfony\Component\Serializer\Encoder\DecoderInterface;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class CourseSummaryService
 {
     private ParameterBagInterface $params;
 
-    public function __construct(ParameterBagInterface $params)
-    {
+    private readonly HttpClientInterface $client;
+
+    public function __construct(
+        ParameterBagInterface $params,
+        #[Target('aiTogether')]
+        HttpClientInterface $client,
+        private readonly DecoderInterface $decoder,
+    ) {
         $this->params = $params;
+        $this->client = $client;
     }
 
-    public function generateSummary(string $description): string
+    public function generateSummary(string $content): string
     {
-        $apiKey = $this->params->get('TOGETHER_API_KEY');
-
-        $apiUrl = 'https://api.together.xyz/v1/chat/completions';
-        $httpClient = HttpClient::create();
-        $response = $httpClient->request('POST', $apiUrl, [
-            'headers' => [
-                'Authorization' => 'Bearer '.$apiKey,
-                'Content-Type' => 'application/json',
-            ],
+        $response = $this->client->request('POST', '/v1/chat/completions', [
             'json' => [
                 'model' => 'Qwen/Qwen2-72B-Instruct',
                 'messages' => [
                     [
                         'role' => 'user',
-                        'content' => $this->generateSummaryContent($description),
+                        'content' => $this->generateSummaryContent($content),
                     ],
                 ],
             ],
         ]);
 
-        $data = json_decode($response->getContent(), true);
+        $content = $response->getContent();
+
+        $data = $this->decoder->decode($content, 'json');
 
         return $data['choices'][0]['message']['content'];
     }

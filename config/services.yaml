@@ -76,6 +76,6 @@ services:
             # and the expiration time for any given entry (in seconds), defaults are 'sf_s' and null:
             # - { 'prefix': 'my_prefix', 'ttl': 600 }
 
-    App\Course\Query\Decorator\FindCourseByReferenceQueryIndexDecorator:
+    App\Course\Query\Decorator\FindIndexedCourseByReferenceQuery:
         arguments:
             $index: "@fos_elastica.index.course"
