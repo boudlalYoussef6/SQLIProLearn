@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Service\search;
+namespace App\Service\Search;
 
 use App\Repository\CourseRepository;
 use App\Repository\FavoryRepository;

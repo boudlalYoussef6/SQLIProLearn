@@ -8,7 +8,7 @@ use Symfony\Component\DependencyInjection\Attribute\Target;
 use Symfony\Component\Serializer\Encoder\DecoderInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
-class CourseSummaryService
+final class CourseSummaryService
 {
     private readonly HttpClientInterface $client;
 
@@ -43,9 +43,9 @@ class CourseSummaryService
 
     private function generateSummaryContent(string $description): string
     {
-        $randomString = bin2hex(random_bytes(5));
+        $randomString = \bin2hex(\random_bytes(5));
 
-        return sprintf(
+        return \sprintf(
             'donner résumé de cette Description: %s. Aléatoire: %s',
             $description,
             $randomString

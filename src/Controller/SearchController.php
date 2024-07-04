@@ -7,7 +7,7 @@ namespace App\Controller;
 use App\Form\CourseSearchType;
 use App\Repository\CourseRepository;
 use App\Repository\FavoryRepository;
-use App\Service\search\CourseSearchServiceInterface;
+use App\Service\Search\CourseSearchServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
