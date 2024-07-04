@@ -9,10 +9,10 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Http\Event\LoginSuccessEvent;
 
-class VisitListener
+final class VisitListener
 {
-    private $entityManager;
-    private $security;
+    private EntityManagerInterface $entityManager;
+    private Security $security;
 
     public function __construct(EntityManagerInterface $entityManager, Security $security)
     {

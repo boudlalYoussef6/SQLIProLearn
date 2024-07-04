@@ -9,7 +9,7 @@ services:
         expose:
             - "9003"
         ports:
-            - "80:80"
+            - "8000:80"
         working_dir: /var/www/html
         volumes:
             - ./:/var/www/html
@@ -219,6 +219,26 @@ services:
             - "8083:8081"
         networks:
             - inner_net
+
+    mercure:
+        container_name: sqli__learn-pro__mercure
+        image: dunglas/mercure
+        restart: unless-stopped
+        environment:
+            SERVER_NAME: ':80'
+            MERCURE_PUBLISHER_JWT_KEY: '!ChangeThisMercureHubJWTSecretKey!'
+            MERCURE_SUBSCRIBER_JWT_KEY: '!ChangeThisMercureHubJWTSecretKey!'
+            MERCURE_EXTRA_DIRECTIVES: 'cors_origins http://localhost:8000'
+        networks:
+            - inner_net
+        command: /usr/bin/caddy run --config /etc/caddy/Caddyfile
+        ports:
+            - "9999:80"
+        volumes:
+            - caddy_data:/data
+            - caddy_config:/config
+            - ./docker/caddy/:/etc/caddy/
+
 volumes:
     db_data:
     db_admin_data:
@@ -228,6 +248,8 @@ volumes:
     graylog_journal:
     esdata:
     minio-data:
+    caddy_data:
+    caddy_config:
 
 networks:
     inner_net:
