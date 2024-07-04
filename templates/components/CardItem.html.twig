@@ -20,7 +20,7 @@
     </div>
 
     {% set cover = (course.cover is defined and course.cover is not null) ? course.cover : asset('imgs/sqli_wall.png') %}
-    <img class="card-img-top" src="{{ cover }}" alt="image of the course" style="height: 350px; object-fit: cover;" />
+    <img class="card-img-top" src="{{ cover }}" alt="image of the course" style="height: 350px;" />
 
     <div class="card-body" style="height: 80px">
         <p class="card-text">

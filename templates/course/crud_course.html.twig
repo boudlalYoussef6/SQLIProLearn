@@ -24,6 +24,7 @@
                     <div class="form-group">
                         {{ form_row(form.category, {'attr': {'class': 'form-control', 'placeholder': 'categories'}}) }}
                     </div>
+                    {% block preview_video_cover  %}{%  endblock  %}
                     <div class="form-group">
                         {{ form_row(form.videoPath, {'attr': {'class': 'form-control'}}) }}
                     </div>

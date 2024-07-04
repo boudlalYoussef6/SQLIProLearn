@@ -1,140 +1,150 @@
 {% extends 'site.html.twig' %}
 
 {% block title %}{{ course.label }}{% endblock %}
-
+{% import 'macros/header.html.twig' as header %}
+{% block page_header %}
+    {{ header.main_page_header(course.label) }}
+{% endblock page_header %}
 {% block content %}
-    <section class="content">
-        <div class="container-fluid">
-            <h2>{{ course.label }}</h2>
-            <div class="row">
-                <!-- Main course card -->
-                <div class="col-md-9">
-                    <div class="card d-flex">
-                        {% if course.videoPathName is defined and course.videoPathName is not empty %}
-                            <video width="100%" height="400" controls>
-                                <source src="{{ generate_cloud_url(course.videoPathName) }}" type="video/mp4">
-                                <source src="{{ generate_cloud_url(course.videoPathName) }}" type="video/webm">
-                                <source src="{{ generate_cloud_url(course.videoPathName) }}" type="video/mpeg">
-                                Your browser does not support the video tag.
-                            </video>
-                        {% else %}
-                            {% set cover = (course.image_480x270 is defined and course.image_480x270 is not empty) ? course.image_480x270 : asset('imgs/sqli_wall.png') %}
-                            <img class="card-img-top" src="{{ cover }}" alt="image of the course" style="height: 270px; object-fit: cover;">
-                        {% endif %}
-                        <div class="card-body">
-                            {% if course.description %}
-                                <p class="card-text">{{ course.description|raw|nl2br }}</p>
-                            {% endif %}
-                            <button id="favorite-toggle" class="btn btn-secondary">
-                                <i class="fas fa-star {% if isFavorite %}favorite{% else %}not-favorite{% endif %}"></i>
-                            </button>
-                            <div id="spinner" class="spinner-border text-primary" role="status" style="display: none;">
-                                <span class="sr-only">Loading...</span>
-                            </div>
-                            {% if course.sections %}
-                                <div class="accordion" id="accordionExample" style="margin-top: 1rem;">
-                                    {% for section in course.sections %}
-                                        <div class="accordion-item">
-                                            <h2 class="accordion-header" id="heading{{ loop.index }}">
-                                                <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                                                        data-bs-target="#collapse{{ loop.index }}" aria-expanded="true"
-                                                        aria-controls="collapse{{ loop.index }}">
-                                                    <strong>{{ section.title }}</strong>
-                                                </button>
-                                            </h2>
-                                            <div id="collapse{{ loop.index }}" class="accordion-collapse collapse"
-                                                 aria-labelledby="heading{{ loop.index }}"
-                                                 data-bs-parent="#accordionExample">
-                                                <div class="accordion-body">
-                                                    {{ section.description|raw }}
-                                                </div>
-                                            </div>
+    <div class="row">
+        <!-- Main course card -->
+        <div class="col-md-9">
+            <div class="card d-flex">
+                {% if course.videoPathName is defined and course.videoPathName is not empty %}
+                    <video width="100%" height="400" controls>
+                        <source src="{{ generate_cloud_url(course.videoPathName) }}" type="video/mp4">
+                        <source src="{{ generate_cloud_url(course.videoPathName) }}" type="video/webm">
+                        <source src="{{ generate_cloud_url(course.videoPathName) }}" type="video/mpeg">
+                        Your browser does not support the video tag.
+                    </video>
+                {% else %}
+                    {% set cover = (course.cover is defined and course.cover is not empty) ? course.cover : asset('imgs/sqli_wall.png') %}
+                    <img class="card-img-top" src="{{ cover }}" alt="image of the course"
+                         style="height: 400px;">
+                {% endif %}
+                <div class="card-body">
+                    {% if course.description %}
+                        <p class="card-text">{{ course.description|raw|nl2br }}</p>
+                    {% endif %}
+                    <button id="favorite-toggle" class="btn btn-secondary">
+                        <i class="fas fa-star {% if isFavorite %}favorite{% else %}not-favorite{% endif %}"></i>
+                    </button>
+                    <div id="spinner" class="spinner-border text-primary" role="status" style="display: none;">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                    {% if course.sections %}
+                        <div class="accordion" id="accordionExample" style="margin-top: 1rem;">
+                            {% for section in course.sections %}
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="heading{{ loop.index }}">
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                                data-bs-target="#collapse{{ loop.index }}" aria-expanded="true"
+                                                aria-controls="collapse{{ loop.index }}">
+                                            <strong>{{ section.title }}</strong>
+                                        </button>
+                                    </h2>
+                                    <div id="collapse{{ loop.index }}" class="accordion-collapse collapse"
+                                         aria-labelledby="heading{{ loop.index }}"
+                                         data-bs-parent="#accordionExample">
+                                        <div class="accordion-body">
+                                            {{ section.description|raw }}
                                         </div>
-                                    {% endfor %}
+                                    </div>
                                 </div>
-                            {% endif %}
-
-                            <div class="lead">
-                                {{ course.tags }}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Author and Category card -->
-                <div class="col-md-3">
-                    <div class="card card-primary card-outline card-tabs">
-                        <div class="card-header p-0 pt-1 border-bottom-0">
-                            <ul class="nav nav-tabs" id="custom-tabs-three-tab" role="tablist">
-                                <li class="nav-item">
-                                    <a class="nav-link active" id="custom-tabs-three-home-tab" data-toggle="pill" href="#course_details_tab_content" role="tab" aria-controls="custom-tabs-three-home" aria-selected="true">Details</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" id="custom-tabs-three-profile-tab" data-toggle="pill" href="#course_attachments_tab_content" role="tab" aria-controls="custom-tabs-three-profile" aria-selected="false">Pièces jointes ({{ course.medias | length }})</a>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="card-body">
-                            <div class="tab-content" id="custom-tabs-three-tabContent">
-                                <div class="tab-pane fade show active" id="course_details_tab_content" role="tabpanel" aria-labelledby="custom-tabs-three-home-tab">
-                                    {% if course.author is defined and course.author is not null %}
-                                        <p class="card-text"><strong>Auteur:</strong> {{ course.author.name }}</p>
-                                    {% else %}
-                                        <p class="card-text"><strong>Auteur:</strong> Not available</p>
-                                    {% endif %}
-                                    {% if course.category is defined and course.category is not null %}
-                                        <p class="card-text"><strong>Categorie:</strong> {{ course.category.label }}</p>
-                                    {% else %}
-                                        <p class="card-text"><strong>Categorie:</strong> Not available</p>
-                                    {% endif %}
-                                    {% if course.url is defined and course.url is not null %}
-                                        <a href="https://www.udemy.com/{{ course.url }}" target="_blank">Read in UDEMY</a>
-                                    {% endif %}
-                                </div>
-                                <div class="tab-pane fade" id="course_attachments_tab_content" role="tabpanel" aria-labelledby="custom-tabs-three-profile-tab">
-                                    {% if course.medias and course.medias | length > 0 %}
-                                        <ul class="list-group">
-                                            {% for media in course.medias %}
-                                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                                    <a href="{{ generate_cloud_url(media.fileName) }}" download="{{ media.fileName }}">
-                                                        <i class="fas fa-file-download"></i> {{ media.fileName }}
-                                                    </a>
-                                                </li>
-                                            {% endfor %}
-                                        </ul>
-                                    {% else %}
-                                        <p>Aucune pièce jointe disponible.</p>
-                                    {% endif %}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <form id="summary-form" action="{{ path('app_generate_summary', {'id': course.id}) }}" method="post" style="display: inline;">
-                        <input type="hidden" name="_token" value="{{ csrf_token('generate_summary' ~ course.id) }}">
-                        <i class="fa-solid fa-spinner"></i>
-                        <a href="#" class="link-no-underline" onclick="document.getElementById('summary-form').submit(); return false;">
-                            Générez Résumé avec AI
-                        </a>
-                    </form>
-                    {% if summary is defined and summary is not empty %}
-                        <div class="card mt-3">
-                            <div class="card-header">
-                                <h4>Résumé du cours</h4>
-                            </div>
-                            <div class="card-body">
-                                <p>{{ summary|nl2br }}</p>
-                            </div>
-                        </div>
-                    {% else %}
-                        <div id="spinner-summary" class="spinner-border text-primary" role="status" style="display: none;">
-                            <span class="sr-only">Loading...</span>
+                            {% endfor %}
                         </div>
                     {% endif %}
+
+                    <div class="lead">
+                        {{ course.tags }}
                     </div>
                 </div>
             </div>
         </div>
-    </section>
+        <!-- Author and Category card -->
+        <div class="col-md-3">
+            <div class="card card-primary card-outline card-tabs">
+                <div class="card-header p-0 pt-1 border-bottom-0">
+                    <ul class="nav nav-tabs" id="custom-tabs-three-tab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="custom-tabs-three-home-tab" data-toggle="pill"
+                               href="#course_details_tab_content" role="tab"
+                               aria-controls="custom-tabs-three-home" aria-selected="true">Details</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="custom-tabs-three-profile-tab" data-toggle="pill"
+                               href="#course_attachments_tab_content" role="tab"
+                               aria-controls="custom-tabs-three-profile" aria-selected="false">Pièces jointes
+                                ({{ course.medias | length }})</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="card-body">
+                    <div class="tab-content" id="custom-tabs-three-tabContent">
+                        <div class="tab-pane fade show active" id="course_details_tab_content" role="tabpanel"
+                             aria-labelledby="custom-tabs-three-home-tab">
+                            {% if course.author is defined and course.author is not null %}
+                                <p class="card-text"><strong>Auteur:</strong> {{ course.author.name }}</p>
+                            {% else %}
+                                <p class="card-text"><strong>Auteur:</strong> Not available</p>
+                            {% endif %}
+                            {% if course.category is defined and course.category is not null %}
+                                <p class="card-text"><strong>Categorie:</strong> {{ course.category.label }}</p>
+                            {% else %}
+                                <p class="card-text"><strong>Categorie:</strong> Not available</p>
+                            {% endif %}
+                            {% if course.url is defined and course.url is not null %}
+                                <a href="https://www.udemy.com/{{ course.url }}" target="_blank">Read in
+                                    UDEMY</a>
+                            {% endif %}
+                        </div>
+                        <div class="tab-pane fade" id="course_attachments_tab_content" role="tabpanel"
+                             aria-labelledby="custom-tabs-three-profile-tab">
+                            {% if course.medias and course.medias | length > 0 %}
+                                <ul class="list-group">
+                                    {% for media in course.medias %}
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <a href="{{ generate_cloud_url(media.fileName) }}"
+                                               download="{{ media.fileName }}">
+                                                <i class="fas fa-file-download"></i> {{ media.fileName }}
+                                            </a>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                <p>Aucune pièce jointe disponible.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% if course.description is not empty %}
+                <form id="summary-form" action="{{ path('app_generate_summary', {'id': course.id}) }}"
+                      method="post" style="display: inline;">
+                    <input type="hidden" name="_token" value="{{ csrf_token('generate_summary' ~ course.id) }}">
+                    <a href="#" class="link-no-underline btn btn-sm btn-outline-primary"
+                       onclick="document.getElementById('summary-form').submit(); return false;">
+                        Générez Résumé avec AI
+                    </a>
+                </form>
+            {% endif %}
+            {% if summary is defined and summary is not empty %}
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h4>Résumé du cours</h4>
+                    </div>
+                    <div class="card-body">
+                        <p>{{ summary|nl2br }}</p>
+                    </div>
+                </div>
+            {% else %}
+                <div id="spinner-summary" class="spinner-border text-primary" role="status"
+                     style="display: none;">
+                    <span class="sr-only">Loading...</span>
+                </div>
+            {% endif %}
+        </div>
+    </div>
 {% endblock %}
 
 {% block custom_css %}
@@ -142,16 +152,19 @@
         .favorite {
             color: yellow;
         }
+
         .not-favorite {
             color: grey;
         }
+
         .spinner-border {
             margin-top: 1rem;
         }
+
         .link-no-underline {
-    color: black; /* Couleur du lien en noir */
-    text-decoration: none; /* Enlever le soulignement */
-}
+            color: black; /* Couleur du lien en noir */
+            text-decoration: none; /* Enlever le soulignement */
+        }
 
     </style>
 {% endblock %}

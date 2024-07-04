@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Course\Query\ItemQueryInterface;
 use App\Entity\Course;
 use App\Repository\FavoryRepository;
 use App\Service\CourseSummaryService;
@@ -22,14 +23,23 @@ class TogetherApiController extends AbstractController
     }
 
     #[Route('/summary/{id}', name: 'app_generate_summary', methods: ['POST'])]
-    public function generateSummary(Course $course,
+    public function generateSummary(
+        /* Course $course, */
+        int $id,
+        ItemQueryInterface $query,
         Security $security,
         FavoryRepository $favoriteRepository,
     ): Response {
-        $description = $course->getDescription();
+        $course = $query->findItem((string) $id);
+
+        if (null === $course) {
+            throw $this->createNotFoundException();
+        }
+
+        $description = $course['description'];
         $user = $security->getUser()->getUserIdentifier();
 
-        $isFavorite = $favoriteRepository->isFavorite($user, $course->getId());
+        $isFavorite = $favoriteRepository->isFavorite($user, $course['id']);
         $summary = $this->courseSummaryService->generateSummary($description);
 
         return $this->render('course/details.html.twig', [

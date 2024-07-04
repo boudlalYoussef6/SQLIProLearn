@@ -65,11 +65,9 @@ class IndexationMessageHandler
     #[AsMessageHandler]
     public function deleteIndexForCourse(RevokeIndexMessage $message): void
     {
-        $course = $this->courseRepository->find($message->getCourseReference());
+        $courseIdentifier = $message->getCourseReference();
 
-        if (null !== $course) {
-            $this->courseIndexer->removeNewIndex((string) $course->getId());
-        }
+        $this->courseIndexer->removeNewIndex((string) $courseIdentifier);
     }
 
     private function doNotify(Course $course): void

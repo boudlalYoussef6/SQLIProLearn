@@ -194,6 +194,8 @@ class CourseController extends AbstractController
     {
         $this->courseHandler->delete($course);
 
+        $this->addFlash('success', 'Le cours a été supprimé avec succès. Les modifications seront affichées bientôt.');
+
         return $this->redirectToRoute('app_my_courses');
     }
 
