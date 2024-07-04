@@ -18,12 +18,12 @@
                                 Your browser does not support the video tag.
                             </video>
                         {% else %}
-                            {% set cover = (course.image_480x270 is defined and course.image_480x270 is not empty) ? course.image_480x270 : asset(random(['images/php_Elephant.jpg', 'images/php_Elephant_V2.jpg', 'images/php_Elephant_V3.jpg'])) %}
+                            {% set cover = (course.image_480x270 is defined and course.image_480x270 is not empty) ? course.image_480x270 : asset('imgs/sqli_wall.png') %}
                             <img class="card-img-top" src="{{ cover }}" alt="image of the course" style="height: 270px; object-fit: cover;">
                         {% endif %}
                         <div class="card-body">
                             {% if course.description %}
-                                <p class="card-text">{{ course.description|raw }}</p>
+                                <p class="card-text">{{ course.description|raw|nl2br }}</p>
                             {% endif %}
                             <button id="favorite-toggle" class="btn btn-secondary">
                                 <i class="fas fa-star {% if isFavorite %}favorite{% else %}not-favorite{% endif %}"></i>
@@ -122,7 +122,7 @@
                                 <h4>Résumé du cours</h4>
                             </div>
                             <div class="card-body">
-                                <p>{{ summary }}</p>
+                                <p>{{ summary|nl2br }}</p>
                             </div>
                         </div>
                     {% else %}
