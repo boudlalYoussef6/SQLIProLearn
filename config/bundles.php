@@ -20,4 +20,5 @@ return [
     League\FlysystemBundle\FlysystemBundle::class => ['all' => true],
     FOS\ElasticaBundle\FOSElasticaBundle::class => ['all' => true],
     Symfony\UX\TwigComponent\TwigComponentBundle::class => ['all' => true],
+    Symfony\Bundle\MercureBundle\MercureBundle::class => ['all' => true], // Ajout du bundle Mercure
 ];

@@ -4,15 +4,18 @@ declare(strict_types=1);
 
 namespace App\Message\Handler;
 
+use App\Entity\Course;
 use App\Message\CreatedIndexMessage;
 use App\Message\EditIndexMessage;
 use App\Message\RevokeIndexMessage;
 use App\Repository\CourseRepository;
+use App\Server\Mercure\Publisher\PublisherInterface;
 use App\Service\Indexation\CourseIndexerInterface;
 use App\Transformer\CourseAdapterInterface;
 use App\Transformer\CourseEntityToModelTransformer;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class IndexationMessageHandler
 {
@@ -25,6 +28,8 @@ class IndexationMessageHandler
         CourseRepository $courseRepository,
         #[Autowire(service: CourseEntityToModelTransformer::class)]
         CourseAdapterInterface $adapter,
+        private readonly PublisherInterface $publisher,
+        private readonly UrlGeneratorInterface $generator,
     ) {
         $this->courseIndexer = $courseIndexer;
         $this->courseRepository = $courseRepository;
@@ -39,6 +44,8 @@ class IndexationMessageHandler
         if (null !== $course) {
             $normalizedCourse = $this->adapter->convert($course);
             $this->courseIndexer->createNewIndex((string) $course->getId(), $normalizedCourse);
+            // notify the users that a new course has been recently indexed & added
+            $this->doNotify($course);
         }
     }
 
@@ -63,5 +70,17 @@ class IndexationMessageHandler
         if (null !== $course) {
             $this->courseIndexer->removeNewIndex((string) $course->getId());
         }
+    }
+
+    private function doNotify(Course $course): void
+    {
+        $fullUrl = $this->generator->generate(
+            'app_course_details',
+            ['id' => $course->getId()],
+        );
+        $this->publisher->publish(
+            'http://localhost/books/1',
+            \json_encode(['course_url' => $fullUrl])
+        );
     }
 }

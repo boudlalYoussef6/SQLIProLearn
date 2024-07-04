@@ -37,12 +37,7 @@
     </div>
 {% endblock %}
 
-{% block custom_css %}
-    <link rel="stylesheet" href="{{ asset('plugins/toastr/toastr.min.css') }}">
-{% endblock custom_css %}
-
 {% block custom_js %}
     {{ parent() }}
-    <script src="{{ asset('plugins/toastr/toastr.min.js') }}"></script>
     <script src="{{ asset('controllers/favorite.manager.js') }}"></script>
 {% endblock custom_js %}
