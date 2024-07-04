@@ -35,9 +35,6 @@ class Course
     #[Groups(['course:read'])]
     private ?string $description = null;
 
-    #[ORM\OneToMany(targetEntity: Application::class, mappedBy: 'course', orphanRemoval: true)]
-    private Collection $applications;
-
     #[ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'courses', fetch: 'EAGER')]
     #[ORM\JoinColumn(name: 'category_id', referencedColumnName: 'id')]
     #[Groups(['course:read'])]
@@ -105,7 +102,6 @@ class Course
 
     public function __construct()
     {
-        $this->applications = new ArrayCollection();
         $this->sections = new ArrayCollection();
         $this->medias = new ArrayCollection();
         $this->viewHistories = new ArrayCollection();
@@ -138,36 +134,6 @@ class Course
     public function setDescription(?string $description): static
     {
         $this->description = $description;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Application>
-     */
-    public function getApplications(): Collection
-    {
-        return $this->applications;
-    }
-
-    public function addApplication(Application $application): static
-    {
-        if (!$this->applications->contains($application)) {
-            $this->applications->add($application);
-            $application->setCourse($this);
-        }
-
-        return $this;
-    }
-
-    public function removeApplication(Application $application): static
-    {
-        if ($this->applications->removeElement($application)) {
-            // set the owning side to null (unless already changed)
-            if ($application->getCourse() === $this) {
-                $application->setCourse(null);
-            }
-        }
 
         return $this;
     }
