@@ -57,7 +57,7 @@
                     {% for key,messages in app.flashes %}
                         <div class="alert alert-{{ key }}">
                         {% for message in messages %}
-                            <p>{{ message }}</p>
+                            <p>{{ message|nl2br }}</p>
                         {% endfor %}
                         </div>
                     {% endfor %}
@@ -71,7 +71,7 @@
             <div class="float-right d-none d-sm-inline">
                 Made By SQLI with <i class="fa-solid fa-heart"></i>
             </div>
-            <strong>Copyright &copy; 2024 <a href="https://adminlte.io">SQLIPROLEARNING</a>.</strong>
+            <strong>Copyright &copy; 2024 <a href="https://adminlte.io">SQLI-ProLearn</a>.</strong>
         </footer>
     </div>
 {% endblock body %}

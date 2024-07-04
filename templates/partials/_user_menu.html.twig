@@ -3,26 +3,38 @@
         data-accordion="false">
         <li class="nav-header">Mon espace</li>
         <li class="nav-item">
-            <a href="{{ url('app_course_show') }}" class="nav-link {% if app.current_route in ['app_course_show'] %}active{% endif %}">
+            <a href="{{ url('app_course_show') }}"
+               class="nav-link {% if app.current_route in ['app_course_show'] %}active{% endif %}">
                 <i class="fa-solid fa-book-bookmark"></i>
                 <p>Mes Favories</p>
             </a>
         </li>
         <li class="nav-item">
-            <a href="{{ url('app_my_courses') }}" class="nav-link {% if app.current_route in ['app_my_courses'] %}active{% endif %}">
+            <a href="{{ url('app_my_courses') }}"
+               class="nav-link {% if app.current_route in ['app_my_courses'] %}active{% endif %}">
                 <i class="fa-solid fa-address-card"></i>
                 <p>Mes cours</p>
             </a>
         </li>
+        <li class="nav-item">
+            <a href="{{ url('app_course_search') }}"
+               class="nav-link {% if app.current_route in ['app_my_courses'] %}active{% endif %}">
+                <i class="fa-solid fa-search"></i>
+                <p>Rechercher votre cours</p>
+            </a>
+        </li>
+        <hr style="color: white">
         <li class="nav-header">Menu principal</li>
         <li class="nav-item">
-            <a href="{{ url('app_course') }}" class="nav-link {% if app.current_route in ['app_course'] %}active{% endif %}">
+            <a href="{{ url('app_course') }}"
+               class="nav-link {% if app.current_route in ['app_course'] %}active{% endif %}">
                 <i class="fa-solid fa-book-open"></i>
                 <p>Catalogue des cours</p>
             </a>
         </li>
         <li class="nav-item {% if app.current_route in ['app_course_add', 'app_add_course_from_udemy'] %}menu-open{% endif %}">
-            <a href="#" class="nav-link {% if app.current_route in ['app_course_add', 'app_add_course_from_udemy'] %}active{% endif %}">
+            <a href="#"
+               class="nav-link {% if app.current_route in ['app_course_add', 'app_add_course_from_udemy'] %}active{% endif %}">
                 <i class="fa-solid fa-graduation-cap"></i>
                 <p>
                     Menu Principal
@@ -31,21 +43,17 @@
             </a>
             <ul class="nav nav-treeview">
                 <li class="nav-item">
-                    <a href="{{ url('app_course_add') }}" class="nav-link {% if app.current_route in ['app_course_add'] %}active{% endif %}">
+                    <a href="{{ url('app_course_add') }}"
+                       class="nav-link {% if app.current_route in ['app_course_add'] %}active{% endif %}">
                         <i class="fa-solid fa-plus"></i>
-                        <p>Ajouter un cours</p>
+                        <p>Nouveaux cours</p>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ url('app_add_course_from_udemy') }}" class="nav-link {% if app.current_route in ['app_add_course_from_udemy'] %}active{% endif %}">
+                    <a href="{{ url('app_add_course_from_udemy') }}"
+                       class="nav-link {% if app.current_route in ['app_add_course_from_udemy'] %}active{% endif %}">
                         <i class="fa-solid fa-plus"></i>
                         <p>Importer depuis UDEMY</p>
-                    </a>
-                </li>
-                  <li class="nav-item">
-                    <a href="{{ url('app_course_search') }}" class="nav-link {% if app.current_route in ['app_add_course_from_udemy'] %}active{% endif %}">
-                        <i class="fa-solid fa-plus"></i>
-                        <p>Rechercher votre cours</p>
                     </a>
                 </li>
             </ul>

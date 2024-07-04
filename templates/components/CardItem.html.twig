@@ -19,8 +19,8 @@
         </ul>
     </div>
 
-    {% set cover = (course.cover is defined and course.cover is not null) ? course.cover : asset(random(['images/php_Elephant.jpg', 'images/php_Elephant_V2.jpg', 'images/php_Elephant_V3.jpg'])) %}
-    <img class="card-img-top" src="{{ cover }}" alt="image of the course" style="height: 20vh; object-fit: cover;" />
+    {% set cover = (course.cover is defined and course.cover is not null) ? course.cover : asset('imgs/sqli_wall.png') %}
+    <img class="card-img-top" src="{{ cover }}" alt="image of the course" style="height: 350px; object-fit: cover;" />
 
     <div class="card-body" style="height: 80px">
         <p class="card-text">

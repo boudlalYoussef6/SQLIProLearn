@@ -1,15 +1,18 @@
 {% extends 'site.html.twig' %}
+
 {% block title %}Courses{% endblock %}
+
 {% import 'macros/header.html.twig' as header %}
 {% block page_header %}
     {{ header.main_page_header('Catalogue des cours') }}
 {% endblock page_header %}
+
 {% block content %}
     <div class="row">
         <div class="col-3">
             {{ render(controller(
                 'App\\Controller\\CategoryController::menu',
-                {selectedMenu: currentCategoryId ?? null }
+                { selectedMenu: currentCategoryId ?? null }
             )) }}
         </div>
         <div class="col-9">
@@ -21,7 +24,7 @@
             }) }}
         </div>
     </div>
-{% endblock %}
+{% endblock content %}
 
 {% block custom_css %}
     <link rel="stylesheet" href="{{ asset('plugins/toastr/toastr.min.css') }}">
