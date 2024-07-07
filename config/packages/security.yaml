@@ -6,6 +6,9 @@ security:
 
     # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
     providers:
+        custom_ldap_server:
+            id: custom_ldap_provider
+        # this provider will be kept in case we need to rollback
         ldap_server:
             ldap:
                 service: Symfony\Component\Ldap\Ldap
@@ -15,6 +18,7 @@ security:
                 uid_key: uid
                 default_roles: ROLE_USER
                 password_attribute: userPassword
+                extra_fields: [ 'employeeType', 'userPassword'  ]
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
@@ -23,17 +27,21 @@ security:
             pattern: ^/admin
         main:
             lazy: true
-            provider: ldap_server
+#            provider: ldap_server
+            provider: custom_ldap_server
             custom_authenticator: App\Security\CustomLdapAuthenticator
             logout:
                 path: app_logout
 
+    role_hierarchy:
+        ROLE_CRCI_MANAGER: ROLE_USER,
+        ROLE_NETWORK_HOLDER: ROLE_USER
+        ROLE_MANAGER: ROLE_USER
+        ROLE_ADMIN: [ROLE_CRCI_MANAGER, ROLE_NETWORK_HOLDER, ROLE_MANAGER]
 
     access_control:
           - { path: ^/login$, roles: PUBLIC_ACCESS }
           - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
-
-
 
 when@test:
     security:
