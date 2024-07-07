@@ -12,6 +12,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class UdemyController extends AbstractController
 {
@@ -22,6 +23,7 @@ class UdemyController extends AbstractController
     }
 
     #[Route('/udemy/add', name: 'app_add_course_from_udemy')]
+    #[IsGranted('ROLE_ADMIN')]
     public function addCourse(Request $request, CourseHandlerInterface $handler): Response
     {
         $form = $this->createForm(UdemyType::class);

@@ -3,51 +3,49 @@
 {% block title %}Derniers cours{% endblock %}
 
 {% block content %}
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-4">
-                {% if lastFourCourses is not empty %}
-                    <div class="card">
-                        <div class="card-header">
-                            Historiques de vos lectures
-                        </div>
-                        <div class="card-body">
-                            {% for viewHistory in lastFourCourses %}
-                                <div class="small-box bg-light">
-                                    <div class="inner">
-                                        <label class="h3">{{ viewHistory.course.label }}</label>
-                                        <p>
-                                            <i class="fa-solid fa-calendar-days"></i> {{ viewHistory.dateView | date('Y-m-d H:i:s') }}
-                                            <i class="fa-solid fa-eye"></i> {{ viewHistory.course.views }}
-                                        </p>
-                                    </div>
-                                    <a href="{{ url('app_course_details', {id: viewHistory.course.id}) }}"
-                                       class="small-box-footer">
-                                        Reprendre le cours <i class="fas fa-arrow-circle-right"></i>
-                                    </a>
+    <div class="row">
+        <div class="col-4">
+            {% if lastFourCourses is not empty %}
+                <div class="card">
+                    <div class="card-header">
+                        Historiques de vos lectures
+                    </div>
+                    <div class="card-body">
+                        {% for viewHistory in lastFourCourses %}
+                            <div class="small-box bg-light">
+                                <div class="inner">
+                                    <label class="h3">{{ viewHistory.course.label }}</label>
+                                    <p>
+                                        <i class="fa-solid fa-calendar-days"></i> {{ viewHistory.dateView | date('Y-m-d H:i:s') }}
+                                        <i class="fa-solid fa-eye"></i> {{ viewHistory.course.views }}
+                                    </p>
                                 </div>
-                            {% endfor %}
-                        </div>
-                    </div>
-                {% else %}
-                    <div class="alert alert-warning" role="alert">
-                        Aucun cours disponible pour le moment.
-                    </div>
-                {% endif %}
-            </div>
-            <div class="col-8">
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-header">
-                            Statistiques
-                        </div>
-                        <div class="card-body">
-                            <div class="chart-container">
-                                <canvas id="visitChart"></canvas>
+                                <a href="{{ url('app_course_details', {id: viewHistory.course.id}) }}"
+                                   class="small-box-footer">
+                                    Reprendre le cours <i class="fas fa-arrow-circle-right"></i>
+                                </a>
                             </div>
-                            <div class="chart-container large">
-                                <canvas id="viewsChart"></canvas>
-                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% else %}
+                <div class="alert alert-warning" role="alert">
+                    Aucun cours disponible pour le moment.
+                </div>
+            {% endif %}
+        </div>
+        <div class="col-8">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        Statistiques
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="visitChart"></canvas>
+                        </div>
+                        <div class="chart-container large">
+                            <canvas id="viewsChart"></canvas>
                         </div>
                     </div>
                 </div>

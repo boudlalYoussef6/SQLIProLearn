@@ -79,3 +79,15 @@ services:
     App\Course\Query\Decorator\FindIndexedCourseByReferenceQuery:
         arguments:
             $index: "@fos_elastica.index.course"
+
+    custom_ldap_provider:
+        class: App\Security\Provider\CustomLdapUserProvider
+        arguments:
+            $ldap: '@Symfony\Component\Ldap\Ldap'
+            $baseDn: '%env(LDAP_BASE_DN)%'
+            $searchDn: '%env(LDAP_SEARCH_DN)%'
+            $searchPassword: '%env(LDAP_SEARCH_PASSWORD)%'
+            $defaultRoles: ['ROLE_USER']
+            $uidKey: uid
+            $passwordAttribute: userPassword
+            $extraFields: ['employeeType', 'userPassword']

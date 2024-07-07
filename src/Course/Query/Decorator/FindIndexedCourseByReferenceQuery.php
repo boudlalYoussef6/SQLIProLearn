@@ -30,7 +30,7 @@ class FindIndexedCourseByReferenceQuery implements ItemQueryInterface
 
             return $response->getData();
         } catch (NotFoundException) {
-            /*return $this->query->findItem($identifier);*/
+            /* return $this->query->findItem($identifier); */
             return null;
         }
     }
