@@ -1,0 +1,71 @@
+<nav class="mt-2">
+    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
+        data-accordion="false">
+        <li class="nav-header">Mon espace</li>
+        <li class="nav-item">
+            <a href="{{ url('app_course_show') }}"
+               class="nav-link {% if app.current_route in ['app_course_show'] %}active{% endif %}">
+                <i class="fa-solid fa-book-bookmark"></i>
+                <p>Mes Favories</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ url('app_my_courses') }}"
+               class="nav-link {% if app.current_route in ['app_my_courses'] %}active{% endif %}">
+                <i class="fa-solid fa-address-card"></i>
+                <p>Mes cours</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ url('app_course_search') }}"
+               class="nav-link {% if app.current_route in ['app_course_search'] %}active{% endif %}">
+                <i class="fa-solid fa-search"></i>
+                <p>Rechercher votre cours</p>
+            </a>
+        </li>
+        <hr style="color: white">
+        <li class="nav-header">Menu principal</li>
+        <li class="nav-item">
+            <a href="{{ url('app_course') }}"
+               class="nav-link {% if app.current_route in ['app_course'] %}active{% endif %}">
+                <i class="fa-solid fa-book-open"></i>
+                <p>Catalogue des cours</p>
+            </a>
+        </li>
+        <li class="nav-item {% if app.current_route in ['app_course_add', 'app_add_course_from_udemy'] %}menu-open{% endif %}">
+            <a href="#"
+               class="nav-link {% if app.current_route in ['app_course_add', 'app_add_course_from_udemy'] %}active{% endif %}">
+                <i class="fa-solid fa-graduation-cap"></i>
+                <p>
+                    Menu Principal
+                    <i class="right fas fa-angle-left"></i>
+                </p>
+            </a>
+            <ul class="nav nav-treeview">
+                <li class="nav-item">
+                    <a href="{{ url('app_course_add') }}"
+                       class="nav-link {% if app.current_route in ['app_course_add'] %}active{% endif %}">
+                        <i class="fa-solid fa-plus"></i>
+                        <p>Nouveaux cours</p>
+                    </a>
+                </li>
+                {% if is_granted('ROLE_ADMIN') %}
+                    <li class="nav-item">
+                        <a href="{{ url('app_add_course_from_udemy') }}"
+                           class="nav-link {% if app.current_route in ['app_add_course_from_udemy'] %}active{% endif %}">
+                            <i class="fa-solid fa-plus"></i>
+                            <p>Importer depuis UDEMY</p>
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </li>
+        <li class="nav-item">
+            <a href="{{ url('app_logout') }}" class="nav-link">
+                <i class="fa-solid fa-power-off"></i>
+                <p>Logout</p>
+            </a>
+        </li>
+
+    </ul>
+</nav>

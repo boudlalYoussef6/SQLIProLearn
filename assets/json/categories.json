@@ -1,0 +1,18 @@
+[
+  {
+    "image": "path/to/image1.png",
+    "label": "PHP"
+  },
+  {
+    "image": "path/to/image2.png",
+    "label": "SYMFONY"
+  },
+  {
+    "image": "path/to/image3.png",
+    "label": "DRUPAL"
+  },
+  {
+    "image": "path/to/image4.png",
+    "label": "MAGENTO"
+  }
+]

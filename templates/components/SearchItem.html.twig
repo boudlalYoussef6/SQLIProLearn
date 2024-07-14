@@ -1,0 +1,18 @@
+{% extends 'components/CardItem.html.twig' %}
+{% block extra_items %}
+    {{ parent() }}
+    {% set isFavorite = is_favorite(course.id, app.user.userIdentifier) %}
+    <a class="dropdown-item btn-toggle-favorite" href="#"
+       data-favorite-on="Retirer du favoris"
+       data-favorite-off="Ajouter au favoris"
+       data-course-id="{{ course.id }}"
+       data-toggle-url="{{ path('app_favorite_toggle', {'id': course.id}) }}"
+       data-remove-url="{{ path('app_favorite_remove', {'id': course.id}) }}"
+       {% if isFavorite %}data-is-favorite="true"{% endif %}>
+        {% if isFavorite is same as(true) %}
+            <i class="fa-solid fa-star favorite"></i> Retirer du favoris
+        {% else %}
+            <i class="fa-regular fa-star not-favorite"></i> Ajouter au favoris
+        {% endif %}
+    </a>
+{% endblock %}

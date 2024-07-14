@@ -1,0 +1,45 @@
+{% extends 'course/crud_course.html.twig' %}
+{% block form_title %}
+    <h3 class="card-title">Modification</h3>
+{% endblock form_title %}
+{% import 'macros/header.html.twig' as header %}
+{% block page_header %}
+    {{ header.main_page_header('Modifier le cours') }}
+{% endblock page_header %}
+{% block attachments %}
+    {% for child in form.attachments %}
+        <div class="form-group">
+            {{ form_row(child, {'attr': {'class': 'form-control'}}) }}
+        </div>
+    {% endfor %}
+{% endblock attachments %}
+{% block media_container %}
+    <ul class="list-group">
+        {% for child in course.medias %}
+            {%  if child.id is not null  %}
+            <li class="list-group-item d-flex">
+                <a href="{{ url('app_delete_attachment', {
+                    courseId: course.id,
+                    mediaId: child.id,
+                    _delete_token: csrf_token( '__delete_media'),
+                }) }}" class="btn btn-danger mr-2">
+                    <i class="fa-solid fa-trash"></i>
+                </a>
+                <a href="{{ asset(generate_cloud_url(child.fileName)) }}" target="_blank">
+                    {{ child.fileName }}
+                </a>
+            </li>
+            {%  endif  %}
+        {% endfor %}
+    </ul>
+{% endblock media_container %}
+{% block preview_video_cover  %}
+    {% if course.videoPathName is defined and course.videoPathName is not empty %}
+        <video width="100%" height="400" controls>
+            <source src="{{ generate_cloud_url(course.videoPathName) }}" type="video/mp4">
+            <source src="{{ generate_cloud_url(course.videoPathName) }}" type="video/webm">
+            <source src="{{ generate_cloud_url(course.videoPathName) }}" type="video/mpeg">
+            Your browser does not support the video tag.
+        </video>
+    {% endif %}
+{%  endblock  %}

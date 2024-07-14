@@ -4,7 +4,10 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
+    app.media.cloud.public_url: '%env(AWS_S3_PUBLIC_ENDPOINT_URL)%:%env(int:AWS_S3_PUBLIC_ENDPOINT_PORT)%'
+    json_files_path: '%env(resolve:JSON_FILES_PATH)%'
 
+    TOGETHER_API_KEY: '%env(TOGETHER_API_KEY)%'
 services:
     # default configuration for services in *this* file
     _defaults:
@@ -19,6 +22,72 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
+    
+    App\EventListener\VisitListener:
+        tags:
+            - name: kernel.event_listener
+              event: Symfony\Component\Security\Http\Event\LoginSuccessEvent
+              method: onLoginSuccess
 
+    
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+    # Configuration AWS S3 / Minio
+    Aws\S3\S3Client:
+        class: Aws\S3\S3Client
+        arguments:
+            -
+                version: 'latest'
+                region: 'eu-east-1'
+                endpoint: '%env(AWS_S3_ENDPOINT_URL)%:%env(AWS_S3_ENDPOINT_PORT)%'
+                use_path_style_endpoint: true
+                credentials:
+                    key: '%env(AWS_S3_ACCESS_KEY)%'
+                    secret: '%env(AWS_S3_SECRET_KEY)%'
+
+    Symfony\Component\Ldap\Ldap:
+        arguments: [ '@Symfony\Component\Ldap\Adapter\ExtLdap\Adapter' ]
+        tags: [ 'ldap' ]
+
+    Symfony\Component\Ldap\Adapter\ExtLdap\Adapter:
+        arguments:
+            -   host: '%env(LDAP_URL)%'
+                port: '%env(int:LDAP_PORT)%'
+                options:
+                    protocol_version: 3
+                    referrals: false
+
+    Symfony\Component\Dotenv\Command\DotenvDumpCommand: ~
+
+    Redis:
+        # you can also use \RedisArray, \RedisCluster, \Relay\Relay or \Predis\Client classes
+        class: \Redis
+        calls:
+            - connect:
+                - '%env(REDIS_HOST)%'
+                - '%env(int:REDIS_PORT)%'
+
+    Symfony\Component\HttpFoundation\Session\Storage\Handler\RedisSessionHandler:
+        arguments:
+            - '@Redis'
+            # you can optionally pass an array of options. The only options are 'prefix' and 'ttl',
+            # which define the prefix to use for the keys to avoid collision on the Redis server
+            # and the expiration time for any given entry (in seconds), defaults are 'sf_s' and null:
+            # - { 'prefix': 'my_prefix', 'ttl': 600 }
+
+    App\Course\Query\Decorator\FindIndexedCourseByReferenceQuery:
+        arguments:
+            $index: "@fos_elastica.index.course"
+
+    custom_ldap_provider:
+        class: App\Security\Provider\CustomLdapUserProvider
+        arguments:
+            $ldap: '@Symfony\Component\Ldap\Ldap'
+            $baseDn: '%env(LDAP_BASE_DN)%'
+            $searchDn: '%env(LDAP_SEARCH_DN)%'
+            $searchPassword: '%env(LDAP_SEARCH_PASSWORD)%'
+            $defaultRoles: ['ROLE_USER']
+            $uidKey: uid
+            $passwordAttribute: userPassword
+            $extraFields: ['employeeType', 'userPassword']
