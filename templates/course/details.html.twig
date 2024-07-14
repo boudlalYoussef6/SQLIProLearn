@@ -26,7 +26,7 @@
                     {% if course.description %}
                         <p class="card-text">{{ course.description|raw|nl2br }}</p>
                     {% endif %}
-                    <button id="favorite-toggle" class="btn btn-secondary">
+                    <button id="favorite-toggle" class="btn btn-default">
                         <i class="fas fa-star {% if isFavorite %}favorite{% else %}not-favorite{% endif %}"></i>
                     </button>
                     <div id="spinner" class="spinner-border text-primary" role="status" style="display: none;">
@@ -94,7 +94,7 @@
                                 <p class="card-text"><strong>Categorie:</strong> Not available</p>
                             {% endif %}
                             {% if course.url is defined and course.url is not null %}
-                                <a href="https://www.udemy.com/{{ course.url }}" target="_blank">Read in
+                                <a href="https://www.udemy.com{{ course.url }}" target="_blank">Read in
                                     UDEMY</a>
                             {% endif %}
                         </div>
