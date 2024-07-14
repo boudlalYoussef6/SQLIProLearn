@@ -1,0 +1,21 @@
+.container {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.chart-container {
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.chart-container.large {
+    max-width: 700px;
+}
+
+canvas {
+    width: 100% !important;
+    height: auto !important;
+}

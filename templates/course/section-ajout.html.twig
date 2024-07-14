@@ -1,0 +1,73 @@
+{% extends 'site.html.twig' %}
+
+{% block title %}{{ course.label }}{% endblock %}
+
+{% block content %}
+    {{ form_start(form) }}
+    <div class="card">
+        <div class="card-body">
+            <h3>Ajouter Votre Section</h3>
+            <ul class="sections list-group" data-index="{{ form.sections|length > 0 ? form.sections|last.vars.name + 1 : 0 }}"
+                data-prototype="{{ form_widget(form.sections.vars.prototype)|e('html_attr') }}">
+                {% for section in form.sections %}
+                    <li class="list-group-item mb-3">
+                        <div class="form-group">
+                            {{ form_row(section.title, {'attr': {'class': 'form-control', 'placeholder': 'Title'}}) }}
+                        </div>
+                        <div class="form-group">
+                            {{ form_row(section.description, {'attr': {'class': 'form-control', 'placeholder': 'Description'}}) }}
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+            <button type="button" id="add-section" class="btn btn-secondary mt-3">Add Section</button>
+        </div>
+        <div class="card-footer">
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+    </div>
+    {{ form_end(form) }}
+{% endblock content %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Function to add delete listeners to delete buttons
+            function addDeleteListener(element) {
+                const deleteBtn = element.querySelector('.delete-section');
+                if (deleteBtn) {
+                    deleteBtn.addEventListener('click', function () {
+                        this.closest('li').remove();
+                    });
+                }
+            }
+
+            // Add delete listeners to existing delete buttons
+            document.querySelectorAll('.delete-section').forEach(addDeleteListener);
+
+            // Add new section form dynamically
+            document.getElementById('add-section').addEventListener('click', function () {
+                const container = this.parentElement.querySelector('.sections');
+                const index = parseInt(container.dataset.index);
+                const prototype = container.dataset.prototype;
+
+                const newForm = prototype.replace(/__name__/g, index);
+
+                const li = document.createElement('li');
+                li.classList.add('list-group-item', 'mb-3');
+                li.innerHTML = newForm;
+
+                container.appendChild(li);
+                container.dataset.index = index + 1;
+
+                // Apply form control class to the new fields
+                li.querySelectorAll('input, textarea, select').forEach(function(input) {
+                    input.classList.add('form-control');
+                });
+
+                addDeleteListener(li);
+            });
+        });
+    </script>
+{% endblock %}

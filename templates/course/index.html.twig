@@ -1,0 +1,32 @@
+{% extends 'site.html.twig' %}
+
+{% block title %}Courses{% endblock %}
+
+{% import 'macros/header.html.twig' as header %}
+{% block page_header %}
+    {{ header.main_page_header('Catalogue des cours') }}
+{% endblock page_header %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-3">
+            {{ render(controller(
+                'App\\Controller\\CategoryController::menu',
+                { selectedMenu: currentCategoryId ?? null }
+            )) }}
+        </div>
+        <div class="col-9">
+            {{ component('CoursesResult', {
+                result: courses.result,
+                favoriteCourses: favoriteCourses,
+                totalPages: courses.totalPages,
+                currentPage: currentPage,
+            }) }}
+        </div>
+    </div>
+{% endblock content %}
+
+{% block custom_js %}
+    {{ parent() }}
+    <script src="{{ asset('controllers/favorite.manager.js') }}"></script>
+{% endblock custom_js %}

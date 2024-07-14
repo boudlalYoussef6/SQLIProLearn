@@ -1,0 +1,38 @@
+<div class="card">
+    <div class="card-header d-flex p-0">
+        <h3 class="card-title font-weight-bold p-3">
+            #{{ course.id }} {{ course.label | length > 28 ? course.label | slice(0, 28) ~ '...' : course.label }}
+        </h3>
+        <ul class="nav nav-pills ml-auto p-2">
+            <li class="nav-item dropdown dropleft">
+                <a class="nav-link btn-default" data-toggle="dropdown" href="#">
+                    <i class="fa-solid fa-ellipsis-vertical"></i>
+                </a>
+                <div class="dropdown-menu">
+                    {% block extra_items %}
+                    <a class="dropdown-item" href="{{ url('app_course_details', {'id': course.id}) }}">
+                        <i class="fa-solid fa-eye"></i> Voir le cours
+                    </a>
+                    {% endblock %}
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    {% set cover = (course.cover is defined and course.cover is not null) ? course.cover : asset('imgs/sqli_wall.png') %}
+    <img class="card-img-top" src="{{ cover }}" alt="image of the course" style="height: 350px;" />
+
+    <div class="card-body" style="height: 80px">
+        <p class="card-text">
+            <span title="3 New Messages" class="badge bg-primary">{{ course.category.label }}</span>
+            {% if course.addedAt is defined and course.addedAt is not null %}
+                <span class="badge bg-danger">
+                    <i class="fa-solid fa-calendar-days"></i> {{ course.addedAt | date('d/m/Y') }}
+                </span>
+            {% endif %}
+            {% if course.idReference is defined and course.idReference is not null  %}
+                <span class="badge badge-info">Udemy</span>
+            {% endif %}
+        </p>
+    </div>
+</div>

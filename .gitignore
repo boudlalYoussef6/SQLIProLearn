@@ -23,3 +23,14 @@
 /public/assets/
 /assets/vendor/
 ###< symfony/asset-mapper ###
+
+./data
+/data/
+
+###> friendsofphp/php-cs-fixer ###
+/.php-cs-fixer.php
+/.php-cs-fixer.cache
+###< friendsofphp/php-cs-fixer ###
+/minio_data/
+/graylog_journal/
+/graylog_data/

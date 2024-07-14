@@ -1,0 +1,30 @@
+{% extends 'site.html.twig' %}
+{% block title %}Mes Cours{% endblock %}
+{% import 'macros/header.html.twig' as header %}
+{% block page_header %}
+    {{ header.main_page_header('Mes Cours') }}
+{% endblock page_header %}
+{% block content %}
+    <div class="callout callout-warning">
+        <p>La liste des cours que moi-même écrits</p>
+    </div>
+
+    <div class="row">
+        {% if courses|length > 0 %}
+            {% for course in courses %}
+                <div class="col-4">
+                    {{ component('MyCourses', {course: course})}}
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="alert alert-warning" role="alert">
+                Vous n'avez pas encore de cours.
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block custom_js %}
+    {{ parent() }}
+    <script src="{{ asset('controllers/favorite.manager.js') }}"></script>
+{% endblock custom_js %}

@@ -1,0 +1,68 @@
+fos_elastica:
+    clients:
+        default: { url: '%env(ELASTICSEARCH_URL)%' }
+    indexes:
+        course:
+            finder: ~
+            index_name: "course"  # Name of the Elasticsearch index
+            properties:
+                addedAt:
+                    type: date
+                id:
+                    type: integer
+                cover:
+                    type: text
+                url:
+                    type: text
+                label:
+                    type: text
+                description:
+                    type: text
+                videoPathName:
+                    type: text
+                author:
+                    type: object
+                    properties:
+                        name:
+                            type: text
+                category:
+                    type: object
+                    properties:
+                        id:
+                            type: integer
+                        label:
+                            type: text
+                sections:
+                    type: nested
+                    properties:
+                        id:
+                            type: integer
+                        title:
+                            type: text
+                        description:
+                            type: text
+                medias:
+                    type: nested
+                    properties:
+                        fileName:
+                            type: text
+                idReference:
+                    type: text
+                tags:
+                    type: text
+            persistence:
+                driver: orm
+                model: App\Entity\Course
+                listener: false
+
+        category:
+            index_name: "category"
+            properties:
+                id:
+                    type: integer
+                label:
+                    type: text
+            persistence:
+                driver: orm
+                model: App\Entity\Category
+                listener: false

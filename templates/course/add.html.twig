@@ -1,0 +1,8 @@
+{% extends 'course/crud_course.html.twig' %}
+{% block form_title %}
+    <h3 class="card-title">Créer un nouveau cours</h3>
+{% endblock form_title %}
+{% import 'macros/header.html.twig' as header %}
+{% block page_header %}
+    {{ header.main_page_header('Ajouter un nouveau cours') }}
+{% endblock page_header %}

@@ -2,13 +2,23 @@
 framework:
     secret: '%env(APP_SECRET)%'
     #csrf_protection: true
+    http_client:
+        scoped_clients:
+            udemy_client:
+                base_uri: 'https://www.udemy.com/'
+                auth_basic: '%env(UD_CLIENT_ID)%:%env(UD_CLIENT_SECRET)%'
+            ai_together:
+                base_uri: 'https://api.together.xyz'
+                auth_bearer: '%env(TOGETHER_API_KEY)%'
 
     # Note that the session will be started ONLY if you read or write from it.
-    session: true
+    session:
+        handler_id: Symfony\Component\HttpFoundation\Session\Storage\Handler\RedisSessionHandler
+
+    serializer: { enabled: true }
 
     #esi: true
     #fragments: true
-
 when@test:
     framework:
         test: true

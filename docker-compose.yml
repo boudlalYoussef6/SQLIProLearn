@@ -2,14 +2,14 @@ version: '3.7'
 
 services:
     server:
+        container_name: "sqli__learn-pro__webserver"
         build:
             context: .
             dockerfile: ./docker/server/Dockerfile
         expose:
-            - "9000"
             - "9003"
         ports:
-            - "80:80"
+            - "8000:80"
         working_dir: /var/www/html
         volumes:
             - ./:/var/www/html
@@ -18,9 +18,12 @@ services:
             - ./docker/xdebug/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
         depends_on:
             - database
+            - minio
         networks:
             - inner_net
+
     database:
+        container_name: "sqli__learn-pro__database"
         healthcheck:
             test: mysqladmin ping -h 127.0.0.1 -u root --password=$$MYSQL_ROOT_PASSWORD
             interval: 5s
@@ -38,7 +41,9 @@ services:
             MYSQL_DATABASE: 'database'
         networks:
             - inner_net
+
     myadmin:
+        container_name: "sqli__learn-pro__phpmyadmin"
         image: phpmyadmin/phpmyadmin:5
         environment:
             PMA_HOST: database
@@ -50,15 +55,201 @@ services:
             - inner_net
         volumes:
             - db_admin_data:/var/www/html
-    # mailcatcher:
-    #     networks:
-    #         - inner_net
-    #     image: yappabe/mailcatcher
-    #     ports:
-    #         - 1025:1025
-    #         - 1080:1080
+
+    mongodb:
+        container_name: "sqli__learn-pro__mongodb"
+        image: "mongo"
+        volumes:
+            - "mongodb_data:/data/db"
+        restart: "on-failure"
+        networks:
+            - inner_net
+
+    mongo-express:
+        container_name: "sqli__learn-pro__mongo-express"
+        networks:
+            - inner_net
+        image: mongo-express
+        restart: always
+        ports:
+            - "8081:8081"
+        environment:
+            ME_CONFIG_MONGODB_ADMINUSERNAME: root
+            ME_CONFIG_MONGODB_ADMINPASSWORD: example
+            ME_CONFIG_MONGODB_URL: mongodb://root:example@mongodb:27017/
+            ME_CONFIG_BASICAUTH_USER: ""
+            ME_CONFIG_BASICAUTH_PASS: ""
+
+    elasticsearch:
+        container_name: "sqli__learn-pro__elasticsearch"
+        image: "docker.elastic.co/elasticsearch/elasticsearch:7.12.1"
+        environment:
+            - node.name=elasticsearch
+            - cluster.name=docker-cluster
+            - bootstrap.memory_lock=true
+            - discovery.type=single-node
+            - xpack.security.enabled=false
+            - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+        ulimits:
+            memlock:
+                soft: -1
+                hard: -1
+        volumes:
+            - esdata:/usr/share/elasticsearch/data
+        ports:
+            - "9200:9200"
+        networks:
+            - inner_net
+
+    graylog:
+        container_name: "sqli__learn-pro__graylog"
+        image: "graylog/graylog:4.3.2"
+        depends_on:
+            - elasticsearch
+            - mongodb
+        entrypoint: "/usr/bin/tini -- wait-for-it elasticsearch:9200 --  /docker-entrypoint.sh"
+        environment:
+            GRAYLOG_PASSWORD_SECRET: somepasswordpepper
+            # to generate a password hash, type: echo -n admin | shasum -a 256
+            GRAYLOG_ROOT_PASSWORD_SHA2: 8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918
+            GRAYLOG_HTTP_BIND_ADDRESS: "0.0.0.0:9002"
+            GRAYLOG_HTTP_EXTERNAL_URI: "http://localhost:9002/"
+            GRAYLOG_ELASTICSEARCH_HOSTS: "http://elasticsearch:9200"
+            GRAYLOG_MONGODB_URI: "mongodb://mongodb:27017/graylog"
+        ports:
+            - "5044:5044/tcp"   # Beats
+            - "5140:5140/udp"   # Syslog
+            - "5141:5141/tcp"   # Syslog
+            - "5555:5555/tcp"   # RAW TCP
+            - "5556:5556/udp"   # RAW TCP
+            - "9002:9002/tcp"   # Server API
+            - "12201:12201/tcp" # GELF TCP
+            - "12202:12202/udp" # GELF UDP
+            - "13301:13301/tcp" # Forwarder data
+            - "13302:13302/tcp" # Forwarder config
+        volumes:
+            - "./graylog_data:/usr/share/graylog/data/data"
+            - "./graylog_journal:/usr/share/graylog/data/journal"
+        restart: "on-failure"
+        networks:
+            - inner_net
+
+    openldap:
+        container_name: "sqli__learn-pro__openldap"
+        image:  osixia/openldap:latest
+        hostname: openldap
+        ports:
+            - "389:389"
+            - "636:636"
+        volumes:
+            - ./data/certificates:/container/service/slapd/assets/certs
+            - ./data/slapd/database:/var/lib/ldap
+            - ./data/slapd/config:/etc/ldap/slapd.d
+        networks:
+            - inner_net
+        environment:
+            - LDAP_ORGANISATION=ramhlocal
+            - LDAP_DOMAIN=ramhlocal.com
+            - LDAP_ADMIN_USERNAME=admin
+            - LDAP_ADMIN_PASSWORD=admin_pass
+            - LDAP_CONFIG_PASSWORD=config_pass
+            - "LDAP_BASE_DN=dc=ramhlocal,dc=com"
+            - LDAP_TLS_CRT_FILENAME=server.crt
+            - LDAP_TLS_KEY_FILENAME=server.key
+            - LDAP_TLS_CA_CRT_FILENAME=ramhlocal.com.ca.crt
+            - LDAP_READONLY_USER=true
+            - LDAP_READONLY_USER_USERNAME=user-ro
+            - LDAP_READONLY_USER_PASSWORD=ro_pass
+
+    phpldapadmin:
+        container_name: 'sqli__learn-pro__php-ldap-admin'
+        image: osixia/phpldapadmin:latest
+        hostname: 'phpldapadmin'
+        ports:
+            - "8082:80"
+        environment:
+            - PHPLDAPADMIN_LDAP_HOSTS=openldap
+            - PHPLDAPADMIN_HTTPS=false
+        depends_on:
+            - openldap
+        networks:
+            - inner_net
+
+    rabbitmq:
+        container_name: "rabbitmq_server"
+        image: rabbitmq:3-management-alpine
+        environment:
+            - RABBITMQ_DEFAULT_USER=guest
+            - RABBITMQ_DEFAULT_PASS=guest
+        ports:
+            - "5672:5672"
+            - "15672:15672"
+        networks:
+            - inner_net
+
+    minio:
+        image: minio/minio
+        container_name: minio
+        ports:
+            - "9000:9000"
+            - "9001:9001"
+        environment:
+            MINIO_ROOT_USER: your-access-key
+            MINIO_ROOT_PASSWORD: your-secret-key
+        volumes:
+            - ./minio_data:/data
+        command: server /data --console-address ":9001"
+        networks:
+            - inner_net
+    
+    redis:
+        container_name: "sqli__learn-pro__redis"
+        image: redis:latest
+        ports:
+            - "6379:6379"
+        networks:
+            - inner_net
+
+    redis-commander:
+        container_name: "sqli__learn-pro__redis-commander"
+        image: rediscommander/redis-commander:latest
+        environment:
+            - REDIS_HOSTS=local:redis:6379
+        ports:
+            - "8083:8081"
+        networks:
+            - inner_net
+
+    mercure:
+        container_name: sqli__learn-pro__mercure
+        image: dunglas/mercure
+        restart: unless-stopped
+        environment:
+            SERVER_NAME: ':80'
+            MERCURE_PUBLISHER_JWT_KEY: '!ChangeThisMercureHubJWTSecretKey!'
+            MERCURE_SUBSCRIBER_JWT_KEY: '!ChangeThisMercureHubJWTSecretKey!'
+            MERCURE_EXTRA_DIRECTIVES: 'cors_origins http://localhost:8000'
+        networks:
+            - inner_net
+        command: /usr/bin/caddy run --config /etc/caddy/Caddyfile
+        ports:
+            - "9999:80"
+        volumes:
+            - caddy_data:/data
+            - caddy_config:/config
+            - ./docker/caddy/:/etc/caddy/
+
 volumes:
     db_data:
     db_admin_data:
+    kibana-data:
+    mongodb_data:
+    graylog_data:
+    graylog_journal:
+    esdata:
+    minio-data:
+    caddy_data:
+    caddy_config:
+
 networks:
     inner_net:

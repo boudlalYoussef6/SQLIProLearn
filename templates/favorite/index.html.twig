@@ -1,0 +1,25 @@
+{% extends 'site.html.twig' %}
+{% block title %}Mes Cours Favoris{% endblock %}
+{% import 'macros/header.html.twig' as header %}
+{% block page_header %}
+    {{ header.main_page_header('Mes favoris') }}
+{% endblock page_header %}
+{% block content %}
+    <div class="row mb-2">
+        {% for favorite in favoriteCollection %}
+            <div class="col-md-4">
+                {{ component('SearchItem', {course: favorite.course, favoriteCourses: []}) }}
+            </div>
+        {% else %}
+            <div class="col-12">
+                <div class="alert alert-warning" role="alert">
+                    Aucun cours favori trouvé.
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
+{% block custom_js %}
+    {{ parent() }}
+    <script src="{{ asset('controllers/favorite.manager.js') }}">
+{% endblock custom_js %}
