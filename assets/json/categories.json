@@ -1,18 +1,98 @@
 [
   {
-    "image": "path/to/image1.png",
-    "label": "PHP"
+    "image": "",
+    "label": "Marketing numérique"
   },
   {
-    "image": "path/to/image2.png",
-    "label": "SYMFONY"
+    "image": "",
+    "label": "Optimisation des moteurs de recherche"
   },
   {
-    "image": "path/to/image3.png",
-    "label": "DRUPAL"
+    "image": "",
+    "label": "Marketing dans les médias sociaux"
   },
   {
-    "image": "path/to/image4.png",
-    "label": "MAGENTO"
+    "image": "",
+    "label": "Image de marque"
+  },
+  {
+    "image": "",
+    "label": "Principes de base du marketing"
+  },
+  {
+    "image": "",
+    "label": "Analyses et automatisation marketing"
+  },
+  {
+    "image": "",
+    "label": "Relations publiques"
+  },
+  {
+    "image": "",
+    "label": "Publicité payante"
+  },
+  {
+    "image": "",
+    "label": "Marketing vidéo et mobile"
+  },
+  {
+    "image": "",
+    "label": "Marketing de contenu"
+  },
+  {
+    "image": "",
+    "label": "Growth Hacking"
+  },
+  {
+    "image": "",
+    "label": "Marketing d'affiliation"
+  },
+  {
+    "image": "",
+    "label": "Marketing produits"
+  },
+  {
+    "image": "",
+    "label": "Marketing - Divers"
+  },
+  {
+    "image": "",
+    "label": "Développement Web"
+  },
+  {
+    "image": "",
+    "label": "Science des données"
+  },
+  {
+    "image": "",
+    "label": "Développement mobile"
+  },
+  {
+    "image": "",
+    "label": "Langages de programmation"
+  },
+  {
+    "image": "",
+    "label": "Développement de jeux"
+  },
+  {
+    "image": "",
+    "label": "Conception et développement de bases de données"
+  },
+  {
+    "image": "",
+    "label": "Tests de logiciels"
+  },
+  {
+    "image": "",
+    "label": "Génie logiciel"
+  },
+  {
+    "image": "",
+    "label": "Outils de développement logiciel"
+  },
+  {
+    "image": "",
+    "label": "Développement sans code"
   }
 ]
